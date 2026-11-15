@@ -37,8 +37,10 @@ document.addEventListener('keydown', function (e) {
     if (typeof wpIs === 'function' && wpIs() && weDirty()) { e.preventDefault(); setTimeout(closeEditor, 0); }
     return; // Only the root page lets Minecraft close the Editor screen.
   }
+  if (typeof weReadOnly === 'function' && weReadOnly() && ctrl && ['k', 'i', 's'].indexOf(k) >= 0) { e.preventDefault(); return; }
   if (ctrl && k === 'k') { e.preventDefault(); if ($('modal')) closeModal(); else openPalette(); return; }
   if ($('modal')) return;
+  if (typeof weReadOnly === 'function' && weReadOnly()) { if (ctrl) e.preventDefault(); return; }
   var tag = e.target && e.target.tagName ? e.target.tagName.toLowerCase() : '', typing = tag === 'input' || tag === 'textarea';
   if (ctrl && k === 'i') { e.preventDefault(); openImport(); return; }
   if (ctrl && k === 'z' && !e.shiftKey) { if (typing) return; e.preventDefault(); Store.undo(); return; }

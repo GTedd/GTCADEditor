@@ -213,13 +213,15 @@ public final class EditorPrefs {
             case "winH" -> { min = 200; max = 1000; }
             case "uiScale" -> { min = 0; max = 4; }
             case "codeFontSize" -> { min = 8; max = 20; }
+            case "pageOpacity" -> { min = 30; max = 100; }
+            case "winX", "winY" -> { min = -1; max = 32768; }
             default -> { return null; }
         }
         if (!primitive.isNumber()) return null;
         try {
             int number = primitive.getAsBigDecimal().intValueExact();
             // Zero is the explicit "use the responsive default" marker for saved window geometry.
-            return ((number >= min && number <= max) || (number == 0 && !key.equals("codeFontSize"))) ? value : null;
+            return ((number >= min && number <= max) || (number == 0 && switch (key) { case "heroWidth", "advNavWidth", "advListWidth", "winW", "winH" -> true; default -> false; })) ? value : null;
         } catch (ArithmeticException | NumberFormatException ignored) { return null; }
     }
     private static JsonElement validItemHistory(JsonElement value) {

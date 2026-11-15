@@ -12,7 +12,7 @@
 - 数据由 `tools/gen-ui-data.mjs` 生成到 `js/data.js`；图标集由 `tools/extract-mc-icons.mjs` 生成（仅浏览器预览，不进游戏）。
 - 校验：`bash tools/oriel.sh oriel_check '{"projectId":"item-editor"}'`；截图：`bash tools/shot.sh <尺寸> <动作文件> <名>`。
 
-- 样式在 `assets/cadeditor/ui/editor.css` 一个文件里：Ore 斜角纹理（窗体、按钮、输入框、物品格、开关、滑块、分页）+ 扁平卡片，字体 `oriel:pixel` 8px，窗口居中、最大 560×296（大 GUI 下放大到 700×410）。带纹理的元素不要设 `-mc-tint`，图标颜色用 `--ico`。
+- 样式在 `assets/cadeditor/ui/editor.css` 一个文件里：Ore 斜角纹理（窗体、按钮、输入框、物品格、开关、滑块、分页）+ 扁平卡片。字体与密度遵守[界面规范](EDITOR-UI-RULES.md)，当前字体偏好见[操作说明](EDITOR-INTERACTION.md)。窗口化支持顶栏拖动与位置／尺寸记忆；背景默认 60% 不透明，子窗口跟随滑条并使用 10px 磨砂。带纹理的元素不要设 `-mc-tint`，图标颜色用 `--ico`。
 - 左侧物品可在 2D 图标 / 3D 模型间切换。页面不能写磁盘：宿主在打开页面时传 `prefs.heroView` 与 `hostPrefs:true`，切换后页面发 `oriel.send('prefs',{key:'heroView',value:'2d'|'3d'})`，宿主（`EditorPrefs`，`config/cadeditor-ui.json`）保存。没有宿主（文件夹预览）时只在本次打开期间记住，默认 3D。
 
 宿主接线使用 Oriel 0.11 文档中的现有 API：`OrielScreens.open(url, {stack: ...})`，页面读取 `oriel.data.stack` 并调用 `OrielEditor.open`。`comps` 是组件覆盖补丁，非完整默认组件表；`removed` 是 `{短组件ID:1}`；`slot` 是宿主生成的对象，页面原样回传。

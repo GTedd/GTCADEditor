@@ -25,13 +25,17 @@ public final class EditorPrefsTest {
                     {"debug", "true", "false"},
                     {"heroWidth", "0", "100", "320"}, {"winW", "0", "320", "1600"},
                     {"winH", "0", "200", "1000"}, {"uiScale", "0", "1", "2", "3", "4"},
-                    {"codeFontSize", "8", "12", "20"}}) {
+                    {"codeFontSize", "8", "12", "20"}, {"pageOpacity", "30", "60", "100"},
+                    {"winX", "-1", "0", "32768"}, {"winY", "-1", "0", "32768"}}) {
                 for (int i = 1; i < item.length; i++) {
                     send(store, item[0], item[i]);
                     check(store.read().get(item[0]).equals(JsonParser.parseString(item[i])), "valid boundary " + item[0]);
                 }
             }
             JsonObject valid = store.read();
+            for (String bad : new String[]{"0", "29", "101", "60.5", "\"60\"", "true"}) send(store, "pageOpacity", bad);
+            for (String key : new String[]{"winX", "winY"}) for (String bad : new String[]{"-2", "32769", "10.5", "\"10\""}) send(store, key, bad);
+            check(store.read().equals(valid), "opacity and position share strict persistence bounds");
             store.accept(null); store.accept(JsonNull.INSTANCE);
             store.accept(JsonParser.parseString("[]"));
             store.accept(JsonParser.parseString("{\"key\":true,\"value\":1}"));

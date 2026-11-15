@@ -6,14 +6,14 @@ var Labels = {};
 /* 关于：名称、作者、简介和链接（设置弹窗的「关于」区读这里；版本号由宿主在页面数据的 about.version 里带来） */
 Labels.about = {
   name: 'CAD Editor',
-  tagline: I18n.en("cadeditor.ui.labels.4eeb57be9e"),
-  author: I18n.en("cadeditor.ui.labels.1adfc89d8f"),
-  authorRole: I18n.en("cadeditor.ui.labels.0960d278e3"),
+  tagline: I18n.t("cadeditor.ui.labels.4eeb57be9e"),
+  author: I18n.t("cadeditor.ui.labels.1adfc89d8f"),
+  authorRole: I18n.t("cadeditor.ui.labels.0960d278e3"),
   feedbackGroup: '305562948',
   links: [
     { icon: 'code', title: 'GitHub', show: 'Rinorsi/CAD-Editor-Recast', url: 'https://github.com/Rinorsi/CAD-Editor-Recast' },
-    { icon: 'play', title: I18n.en("cadeditor.ui.labels.acfb839ad1"), show: 'b23.tv/hjUvs0c', url: 'https://b23.tv/hjUvs0c' },
-    { icon: 'heart', title: I18n.en("cadeditor.ui.labels.c6b3c91215"), show: 'afdian.com/a/Rinorsi', url: 'https://afdian.com/a/Rinorsi' }
+    { icon: 'play', title: I18n.t("cadeditor.ui.labels.acfb839ad1"), show: 'b23.tv/hjUvs0c', url: 'https://b23.tv/hjUvs0c' },
+    { icon: 'heart', title: I18n.t("cadeditor.ui.labels.c6b3c91215"), show: 'afdian.com/a/Rinorsi', url: 'https://afdian.com/a/Rinorsi' }
   ]
 };
 /* SLOT_ZH */

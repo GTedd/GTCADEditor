@@ -1,8 +1,10 @@
 # 发版清单
 
-当前版本：<!-- editor-version -->0.99.8<!-- /editor-version -->。唯一版本定义为根目录 `gradle.properties` 的 `version`；元数据 `${version}` 由 Gradle 展开。新的文档版本引用使用上述标记；历史版本、验收回执、已发布更新日志保持原样。
+当前版本：<!-- editor-version -->0.99.9<!-- /editor-version -->。唯一版本定义为根目录 `gradle.properties` 的 `version`；元数据 `${version}` 由 Gradle 展开。新的文档版本引用使用上述标记；历史版本、验收回执、已发布更新日志保持原样。
 
-1. 改版本：大批功能更新交付时推进版本；用户明确指定保持版本时优先遵守。当前修订为0.99.8；原包原样补发无需升版。执行 `pwsh -File tools/bump-version.ps1 -Version <新版本> -DryRun`，审阅后去掉 `-DryRun`。同步 README、docs 当前版本标记、CHANGELOG 未发布章节、元数据模板。补全中文玩家更新日志，删掉开发中占位描述。
+0.99.9 包含界面偏好、磨砂、客户端只读与属性加成修订，玩家改动见[更新日志](../CHANGELOG.md)，验证入口与边界见[测试说明](TESTING.md)。本地交付包、选包说明及详细验收回执不随源码分发；尚未完成游戏服务器实测。源码同步不代表正式发布，下面的发版清单仍需在计划发布时按授权执行。
+
+1. 改版本：大批功能更新交付时推进版本；用户明确指定保持版本时优先遵守。当前修订见页首，原包原样补发无需升版。执行 `pwsh -File tools/bump-version.ps1 -Version <新版本> -DryRun`，审阅后去掉 `-DryRun`。同步 README、docs 当前版本标记、CHANGELOG 未发布章节、元数据模板。补全中文玩家更新日志，删掉开发中占位描述。
 2. 全部功能合并后统一验收：`pwsh -File tools/accept-all.ps1 -Full`；其余五目标运行 `tools/smoke-matrix.ps1`。保留失败、重试和最终证据。可选内存采样：`pwsh -File tools/live-test/run.ps1 -Driver memory -MemoryMinutes 3 -EvidenceRoot <新的独立目录>`。
 3. 打包：`pwsh -File tools/build-all.ps1`，等待共享 Gradle 锁，不结束别人的进程。输出 `../Oriel-UI-Workspace/dist/editor-<版本>-<日期>/`，六个目标 jar 平铺同一目录，附 CHANGELOG.md、README.md 与 SHA256SUMS.txt。
 4. 发行目录运行 `sha256sum -c SHA256SUMS.txt`（Git Bash / Linux），确认恰好六项全部通过；检查 metadata 版本、UI、平台 services 与测试代码隔离。图标/作者/链接元数据与 docs/branding 一致。
@@ -47,7 +49,7 @@ Oriel 默认已内嵌，不要求玩家另装或配置 Oriel 平台项目 ID。�
 
 ## Oriel 内嵌发行与开发热更新
 
-当前 <!-- editor-version -->0.99.8<!-- /editor-version --> 默认使用 Jar-in-Jar 内嵌未修改的 Oriel 0.15.0 瘦包。依赖范围为同 minor（低于0.16），保留库 mod id 及第三方声明。不内嵌完整版、模板、showcase 或开发探针。玩家无需另装 Oriel；Fabric API 仍需安装。
+当前 <!-- editor-version -->0.99.9<!-- /editor-version --> 默认使用 Jar-in-Jar 内嵌未修改的 Oriel 0.15.0 瘦包。依赖范围为同 minor（低于0.16），保留库 mod id 及第三方声明。不内嵌完整版、模板、showcase 或开发探针。玩家无需另装 Oriel；Fabric API 仍需安装。
 
 开发环境继续使用官方热更新：Gradle runClient 配置 oriel.sourceRoot 指向 common；直接运行发行 jar 做开发，使用实例自己的 config/oriel/dev-sources.properties。开发路径和配置不放进发行目录。Java 库更新仍需重启。
 

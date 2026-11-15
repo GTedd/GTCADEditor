@@ -32,15 +32,15 @@ for (const h of [z,e]) {
   const text = '{"名称":"玩家自己的中文 %1$s",unknown:{values:[B;1b,2b],long:9223372036854775807L,special:Infinityd}}';
   assert.equal(h.c.nbtMerge(h.c.parseSnbt(text), h.c.nbtParse(text)), text, 'typed NBT and user Chinese are literal');
   const about = h.doc.createElement('div'); h.c.Prefs.about = {version:'0.99.8'}; h.c.aboutSection(about);
-  assert.doesNotMatch(about.textContent, /[㐀-鿿]/u);
+  if (h === z) assert.match(about.textContent, /[㐀-鿿]/u); else assert.doesNotMatch(about.textContent, /[㐀-鿿]/u);
   assert.match(about.textContent, /305562948/); assert.match(about.textContent, /Rinorsi/);
   const toasts = []; h.c.toast = text => toasts.push(text); h.c.Prefs.hostClip = true;
-  about.querySelectorAll('.k-btn').find(b => b.textContent === 'Copy group ID').click();
-  assert.equal(toasts[0], 'Copied QQ group ID');
+  about.querySelectorAll('.k-btn').find(b => b.textContent === h.c.I18n.t('cadeditor.ui.screens.46e651c95c')).click();
+  assert.equal(toasts[0], h.c.I18n.t(key('已复制%1$s'), h.c.I18n.t('cadeditor.ui.screens.c26e9a4097')));
   assert.equal(h.sent.find(([channel]) => channel === 'clipboard')[1].text, '305562948');
   h.c.Prefs.hostClip = false;
-  about.querySelectorAll('.k-btn').find(b => b.textContent === 'Copy group ID').click();
-  assert.doesNotMatch(h.root.querySelector('.k-modal').textContent, /[㐀-鿿]/u, 'manual copy remains English');
+  about.querySelectorAll('.k-btn').find(b => b.textContent === h.c.I18n.t('cadeditor.ui.screens.46e651c95c')).click();
+  if (h === z) assert.match(h.root.querySelector('.k-modal').textContent, /[㐀-鿿]/u); else assert.doesNotMatch(h.root.querySelector('.k-modal').textContent, /[㐀-鿿]/u);
 }
 assert.equal(e.c.LABEL_ICON[e.c.I18n.t(key('声音'))], 'music', 'label-keyed icon maps work in English');
 assert.equal(e.c.WORLD_SEC_ICON[e.c.I18n.t(key('玩家皮肤'))], 'user');

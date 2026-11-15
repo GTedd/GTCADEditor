@@ -239,6 +239,7 @@ var WorldDrafts = {
   timer: null, restoring: false, written: {}, offered: {}, clears: {},
   scope: function () { return Prefs.vals && Prefs.vals.worldDraftScope; },
   key: function (world) {
+    if (world && world.readOnly) return null;
     var s = world && world.slot, scope = this.scope(); if (!s || !scope) return null;
     if (s.kind === 'entity' && !s.uuid) return null;
     return 'world|' + scope + '|' + JSON.stringify(s.kind === 'block' ? [s.kind, s.dim, s.x, s.y, s.z, world.type || world.block] : [s.kind, s.dim, s.uuid, world.type]);
@@ -303,6 +304,7 @@ var WorldDrafts = {
     return nbtPrint(merge(nbtParse(base), nbtParse(mine), nbtParse(current)), true);
   },
   restore: function (packet, changed) {
+    if (typeof weReadOnly === 'function' && weReadOnly()) return;
     var state; try { state = nbtRestore(packet.state, packet.types); } catch (error) { Drafts.failed({ reason: I18n.t("cadeditor.ui.drafts.cf2e8ceb57", (String(error.message || error))) }); return; } this.restoring = true;
     try {
       WE.text = changed ? this.rebaseText(packet.base.snbt, state.text, WE.w.snbt) : state.text;

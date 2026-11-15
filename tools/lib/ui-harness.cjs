@@ -5,7 +5,7 @@ const path = require('node:path');
 const vm = require('node:vm');
 
 class Element {
-  constructor(tag) { this.tagName = String(tag).toUpperCase(); this.children = []; this.attrs = {}; this.style = {}; this.events = {}; this.value = ''; this._text = ''; this.parentNode = null; this.scrollTop = 0; }
+  constructor(tag) { this.tagName = String(tag).toUpperCase(); this.children = []; this.attrs = {}; this.style = { setProperty(k, v) { this[k] = String(v); } }; this.events = {}; this.value = ''; this._text = ''; this.parentNode = null; this.scrollTop = 0; }
   get className() { return this.attrs.class || ''; } set className(x) { this.attrs.class = x; }
   get id() { return this.attrs.id; } set id(x) { this.attrs.id = x; }
   get firstChild() { return this.children[0] || null; }

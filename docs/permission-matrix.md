@@ -1,4 +1,6 @@
-# 权限审计（2026-11-09）
+# 权限审计
+
+2026-11-13 增补：服务端没有 CAD Editor 请求通道时，交互距离内方块／实体可打开客户端已同步信息的只读页，不要求额外写权限。顶部常驻只读提示，禁止字段修改、应用、撤销、恢复草稿及相关快捷键；宿主 `WorldPageTarget.Binding.bind` 独立拒绝 apply/undo，返回 `read_only`。不发送世界写入，不查询完整服务端 NBT。已有服务端通道的权限拒绝仍沿用实际原因，详见[客户端只读协议](world-edit-contract.md#客户端只读快照2026-11-13)。以下原有权限审计以 2026-11-09 为基线。
 
 完整 Editor 服务端通道的权威权限为 ServerPlayer.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER)，每笔写入重新检查。管理员不受创造、生存、冒险、旁观影响；非管理员保留既有创造写回，其它模式拒绝。旧配置 permissionLevel / creativeOnly 继续读取兼容旧文件，但不再覆盖该规则。服务端未安装时，下列受限原版命令路径由服务器逐笔授权；本机保险库管理不要求 OP。
 

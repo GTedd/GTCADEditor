@@ -4243,5 +4243,17 @@
   "cadeditor.ui.structure.a422843c76": "坐标 Y",
   "cadeditor.ui.structure.fa764a2108": "坐标 Z",
   "cadeditor.ui.structure.fee60ae594": "条目",
-  "cadeditor.ui.common.painting": "绘制界面"
+  "cadeditor.ui.common.painting": "绘制界面",
+  "cadeditor.ui.settings.page_opacity": "页面背景不透明度",
+  "cadeditor.ui.settings.page_opacity_hint": "30%–100%，默认 60%；点击数字可输入",
+  "cadeditor.ui.world.readonly": "只读 · 服务端未安装 CAD Editor，无法编辑数据",
+  "cadeditor.ui.world.synced": "已同步数据",
+  "cadeditor.ui.world.partial": "仅显示打开时客户端已同步的信息，完整 NBT 未同步。",
+  "cadeditor.ui.world.synced_snapshot": "客户端快照 · 仅供查看",
+  "cadeditor.ui.world.dimension": "维度",
+  "cadeditor.ui.world.type_id": "类型 ID",
+  "cadeditor.ui.world.position": "坐标",
+  "cadeditor.ui.world.name": "名称",
+  "cadeditor.ui.world.uuid": "UUID",
+  "cadeditor.ui.world.health": "生命值"
 }

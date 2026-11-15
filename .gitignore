@@ -77,3 +77,13 @@ node_modules/
 .env.*
 !.env.example
 *.log
+
+# 图标重绘的本地中间产物（生成脚本与源图），只留在本机
+/tools/pixelize-branding.py
+/tools/branding/
+
+# 本地交接与交付验收记录，保留在本机
+/docs/HANDOFF.md
+/docs/releases/0.99.8-ui-readonly.md
+/docs/releases/0.99.9.md
+/docs/releases/0.99.9-attributes.md

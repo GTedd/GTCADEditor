@@ -4243,5 +4243,17 @@
   "cadeditor.ui.structure.a422843c76": "Y coordinate",
   "cadeditor.ui.structure.fa764a2108": "Z coordinate",
   "cadeditor.ui.structure.fee60ae594": "Entries",
-  "cadeditor.ui.common.painting": "Rendering UI"
+  "cadeditor.ui.common.painting": "Rendering UI",
+  "cadeditor.ui.settings.page_opacity": "Page background opacity",
+  "cadeditor.ui.settings.page_opacity_hint": "30%–100%, default 60%; click the number to type",
+  "cadeditor.ui.world.readonly": "Read only · CAD Editor is not installed on the server; data editing is unavailable",
+  "cadeditor.ui.world.synced": "Synced data",
+  "cadeditor.ui.world.partial": "Only data synced to this client when opened is shown. Complete NBT is unavailable.",
+  "cadeditor.ui.world.synced_snapshot": "Client snapshot · Read only",
+  "cadeditor.ui.world.dimension": "Dimension",
+  "cadeditor.ui.world.type_id": "Type ID",
+  "cadeditor.ui.world.position": "Position",
+  "cadeditor.ui.world.name": "Name",
+  "cadeditor.ui.world.uuid": "UUID",
+  "cadeditor.ui.world.health": "Health"
 }

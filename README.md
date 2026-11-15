@@ -39,9 +39,9 @@ CAD Editor（Component And Data Editor）的换代重写，界面基于 [Oriel U
 
 按键都在“控制”设置里的“CAD Editor”分类，可以改：编辑 = I，保险库 = O。按住 Shift 再按 I：只改手里的物品，空手就改自己。
 
-当前版本：<!-- editor-version -->0.99.8<!-- /editor-version --> · [更新日志](CHANGELOG.md) · [发版清单](docs/RELEASE.md)
+当前版本：<!-- editor-version -->0.99.9<!-- /editor-version --> · [更新日志](CHANGELOG.md) · [发版清单](docs/RELEASE.md)
 
-高级多行编辑、特殊浮点数、背包格完整编辑及窗口缩放设置见[操作说明](docs/EDITOR-INTERACTION.md)；出错定位见[写回日志](docs/INVENTORY-WRITE-DIAGNOSTICS.md)。
+高级多行编辑、特殊浮点数、背包格完整编辑及窗口偏好见[操作说明](docs/EDITOR-INTERACTION.md)。页面背景默认 60% 不透明，可用 30%–100% 滑条或点击数字调整；半透明子窗口带磨砂，窗口化顶栏可拖动并记住位置。目前仅开放暗色模式，关于页跟随游戏语言。出错定位见[写回日志](docs/INVENTORY-WRITE-DIAGNOSTICS.md)。
 
 ## 下载
 
@@ -62,6 +62,8 @@ Minecraft 26.1.2 / 26.2 / 26.3 · Fabric 或 NeoForge · Java 25 · **对应版�
 ## 安装
 
 **客户端必装，服务端选装。** 房主未安装时仍可连接；完整服务端编辑能力需要房主安装并授权。
+
+服务端未安装 CAD Editor 时，也能打开交互距离内方块／实体的只读页面。顶部常驻“只读 · 服务端未安装 CAD Editor，无法编辑数据”，只显示打开时客户端已同步的信息及方块状态，无法修改、应用、撤销或恢复草稿。完整服务端 NBT 与世界写入仍需服务端模组。
 
 `mods/` 里放 与加载器及游戏版本匹配的 CAD Editor；正式包内嵌 Oriel 0.15.0，无需另装 Oriel，Fabric 还需 Fabric API。创造模式保留原版写回。服务端未装本模组时，获得原版 execute/item 命令权限的生存玩家也可修改自己的普通背包 0..35（第1～36格）；主手绑定打开时的槽位，装备、副手、容器及世界/其他玩家仍需服务端模组；有原版命令权限也可从本地保险库取出到自己的空槽。命令写回只在收到服务器同步后确认成功，部分匹配保护不等于完整 CAS；少量原版反馈可能通知本人、其他 OP 并记录控制台，不向普通非 OP 玩家广播，插件额外转发未知。详见[能力与限制](docs/client-only-hotbar.md)。
 
@@ -119,6 +121,8 @@ node tools/ui-contract-test.cjs                              # 界面测试（�
 ## 文档
 
 世界编辑：[协议](docs/world-edit-contract.md) · [方块](docs/world-block-edit.md) · [实体](docs/world-entity-contract.md)。组件结构：[component-schema](docs/component-schema-contract.md)；保险库：[vault](docs/vault-contract.md)；验收：[测试说明](docs/TESTING.md)（回执仅本地保留）。
+
+0.99.9 新增界面偏好、磨砂与客户端只读，并修复属性加成编辑；改动见[更新日志](CHANGELOG.md)，验证入口与边界见[测试说明](docs/TESTING.md)。
 
 宿主搜索：[源码调研与性能](docs/search-architecture.md) · [search消息契约](docs/search-contract.md)。搜索架构参考 [JEI](https://github.com/mezz/JustEnoughItems)、[REI](https://github.com/shedaniel/RoughlyEnoughItems)、[EMI](https://github.com/emilyploszaj/emi) 的索引、缓存与可见网格思路，采用自主实现，未复制其代码；版本与文件许可见调研报告。
 

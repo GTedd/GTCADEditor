@@ -20,6 +20,9 @@ var Prefs = {
     Snd.on = this.get('uiSound', true) !== false;
     applyUiMotion(this.get('uiAnimations', true) !== false);
     applyUiFont(this.get('uiFont', 'mc'));
+    applyPageOpacity(this.get('pageOpacity', 60));
+    UI.theme = 'dark'; document.documentElement.setAttribute('data-theme', 'dark');
+    UI.winX = windowPos(this.get('winX', -1)); UI.winY = windowPos(this.get('winY', -1));
     UI.stageOpen = this.get('stageOpen', true) !== false; UI.statsOpen = this.get('statsOpen', true) !== false;
     UI.windowMode = windowModeClamp(this.get('windowMode', 'remember'));
     UI.maxed = UI.windowMode === 'maximized' || (UI.windowMode === 'remember' && this.get('windowMax', false) === true);
@@ -40,6 +43,12 @@ var Prefs = {
 /* Native DocumentDriver scale owns layout, painting and input. DOM coordinates are already logical. */
 function uiScaleClamp(v) { return typeof v === 'number' && v >= 0 && v <= 4 && Math.floor(v) === v ? v : 0; }
 function uiScaleFactor() { return 1; }
+function applyPageOpacity(v) {
+  v = typeof v === 'number' && isFinite(v) && Math.floor(v) === v ? clampN(v, 30, 100) : 60;
+  UI.pageOpacity = v;
+  document.documentElement.style.setProperty('--page-opacity', v + '%');
+  document.documentElement.setAttribute('data-page-translucent', v < 100 ? 'true' : 'false');
+}
 function uiMotionEnabled() { return UI.animations !== false; }
 /* 界面字体：mc = 游戏自带字体（默认），smooth = 平滑的常规黑体。字号和版式不变，只换字体族 */
 function applyUiFont(v) {
@@ -218,6 +227,7 @@ function returnFromNestedItem() {
 /* ---------- 顶栏 / 底栏 / 左栏的公共零件（物品页和世界页共用，不要各写一份） ---------- */
 /* 顶栏左半：图标 + 标题 + 类别标签 + 空白。o = { icon（元素）, title, crumb, crumbTitle（可省） } */
 function edTopHead(bar, o) {
+  if (!bar._windowDrag) { bar._windowDrag = true; bar.addEventListener('mousedown', startWindowDrag); }
   bar.appendChild(h('span', { class: 'eb-ico' }, [o.icon]));
   bar.appendChild(h('span', { class: 'ttl', text: o.title }));
   var ca = { class: 'crumb', text: o.crumb }; if (o.crumbTitle !== undefined) ca.title = o.crumbTitle;
@@ -383,7 +393,9 @@ function applyWinStyle() {
   var d = Store.doc(), info = d ? KIND_INFO[kindOfItem(d.id)] : null, s = '--cat:' + (info ? info.color : '#6cc349') + ';';
   var vp = uiViewport(), vw = vp.width, vh = vp.height, ww = UI.winW && vw ? Math.min(UI.winW, vw - 20) : UI.winW, wh = UI.winH && vh ? Math.min(UI.winH, vh - 20) : UI.winH;
   if (ww) s += '--ww:' + ww + 'px;'; if (wh) s += '--wh:' + wh + 'px;'; if (UI.heroW) s += '--hw:' + Math.min(UI.heroW, Math.max(110, Math.floor(((ww || vw) - 20) * 0.45))) + 'px;';
-  var w = $('win'); if (!w) return; w.setAttribute('style', s); w.classList.toggle('max', !!UI.maxed);
+  var positioned = UI.winX != null && UI.winY != null;
+  if (positioned) s += '--wx:' + UI.winX + 'px;--wy:' + UI.winY + 'px;';
+  var w = $('win'); if (!w) return; w.setAttribute('style', s); w.classList.toggle('max', !!UI.maxed); w.classList.toggle('positioned', positioned);
   scheduleFit();
   if (!UI.dragging) { setTimeout(scheduleFit, 160); setTimeout(scheduleFit, 520); }
 }
@@ -424,10 +436,26 @@ function startSplit(e) {
   var scale = uiScaleFactor(), x0 = e.clientX, w0 = $('hero').getBoundingClientRect().width / scale;
   dragTrack(e, function (ev) { UI.heroW = clampN(Math.round(w0 + (ev.clientX - x0) / scale), 110, Math.min(320, Math.max(110, Math.floor(uiViewport().width * 0.45)))); applyWinStyle(); }, function () { Prefs.set('heroWidth', UI.heroW); });
 }
+function windowPos(v) { return typeof v === 'number' && isFinite(v) && Math.floor(v) === v && v >= 0 && v <= 32768 ? v : null; }
+function startWindowDrag(e) {
+  if (UI.maxed || (e.button !== undefined && e.button !== 0)) return;
+  if (e.target && e.target.closest && e.target.closest('.k-btn, .k-ibtn, .k-search, .k-back, button, input, select, textarea, a, [role=button]')) return;
+  var win = $('win'); if (!win) return;
+  var scale = uiScaleFactor(), r = win.getBoundingClientRect(), sx = e.clientX, sy = e.clientY, moved = false;
+  dragTrack(e, function (ev) {
+    var dx = (ev.clientX - sx) / scale, dy = (ev.clientY - sy) / scale;
+    if (!moved && Math.abs(dx) + Math.abs(dy) < 3) return;
+    moved = true; var vp = uiViewport();
+    UI.winX = Math.round(clampN(r.left / scale + dx, 10, Math.max(10, vp.width - r.width / scale - 10)));
+    UI.winY = Math.round(clampN(r.top / scale + dy, 10, Math.max(10, vp.height - r.height / scale - 10)));
+    applyWinStyle();
+  }, function () { if (moved) { Prefs.set('winX', UI.winX); Prefs.set('winY', UI.winY); } });
+}
 function startResize(e) {
   if (UI.maxed || (e.button !== undefined && e.button !== 0)) return;
   var scale = uiScaleFactor(), vp = uiViewport(), r = $('win').getBoundingClientRect(), x0 = e.clientX, y0 = e.clientY, w0 = r.width / scale, h0 = r.height / scale;
-  dragTrack(e, function (ev) { UI.winW = clampN(Math.round(w0 + 2 * (ev.clientX - x0) / scale), 320, Math.max(320, Math.min(1600, vp.width - 20))); UI.winH = clampN(Math.round(h0 + 2 * (ev.clientY - y0) / scale), 200, Math.max(200, Math.min(1000, vp.height - 20))); applyWinStyle(); }, function () { Prefs.set('winW', UI.winW); Prefs.set('winH', UI.winH); });
+  var positioned = UI.winX != null && UI.winY != null, factor = positioned ? 1 : 2;
+  dragTrack(e, function (ev) { UI.winW = clampN(Math.round(w0 + factor * (ev.clientX - x0) / scale), 320, Math.max(320, Math.min(1600, vp.width - (positioned ? r.left / scale + 10 : 20)))); UI.winH = clampN(Math.round(h0 + factor * (ev.clientY - y0) / scale), 200, Math.max(200, Math.min(1000, vp.height - (positioned ? r.top / scale + 10 : 20)))); applyWinStyle(); }, function () { Prefs.set('winW', UI.winW); Prefs.set('winH', UI.winH); });
 }
 /* 窗口把手：世界页（方块 / 实体 / 玩家）和物品页共用。#win 是同一个元素，缩放角只建一次 */
 function makeSplit() {
@@ -1327,7 +1355,7 @@ function changeRow(change) {
 }
 
 /* ==================== 命令面板 ==================== */
-function toggleTheme() { UI.theme = UI.theme === 'dark' ? 'light' : 'dark'; document.documentElement.setAttribute('data-theme', UI.theme); }
+function toggleTheme() { UI.theme = 'dark'; document.documentElement.setAttribute('data-theme', 'dark'); }
 function toggleStyle() { UI.style = UI.style === 'ore' ? 'smooth' : 'ore'; document.documentElement.setAttribute('data-style', UI.style); }
 function paletteItems() {
   var out = [];
@@ -1340,7 +1368,7 @@ function paletteItems() {
     act(I18n.t("cadeditor.ui.screens.f2fe44d99c"), I18n.t("cadeditor.ui.screens.e4104c8cc9"), 'Ctrl+I', openImport, 'download');
     if (UI.page) UI.page.cards.forEach(function (c) { act(I18n.t("cadeditor.ui.screens.2213f3af42", (c.spec.title)), I18n.t("cadeditor.ui.screens.c71a069dc5"), '', function () { c.el.classList.remove('collapsed'); if (c.el.scrollIntoView) c.el.scrollIntoView(); }, 'tag'); });
   }
-  act(I18n.t("cadeditor.ui.screens.6e050c1155"), '', '', toggleTheme, 'sun'); act(I18n.t("cadeditor.ui.screens.66584da91b"), I18n.t("cadeditor.ui.screens.a5e0ba1a6f"), '', toggleStyle, 'palette');
+  act(I18n.t("cadeditor.ui.screens.66584da91b"), I18n.t("cadeditor.ui.screens.a5e0ba1a6f"), '', toggleStyle, 'palette');
   return out;
 }
 function openPalette() {
@@ -1384,7 +1412,7 @@ function openImport() {
 /* 设置：界面本身的偏好，和「高级」（原始数据、命令）分开 */
 function openSettings() {
   var host = h('div', { class: 'set-pages' }), cur = 'ui', notes = null, noteState = {open:{}, groups:{}};
-  var tabs = [{ id: 'ui', icon: 'palette', label: I18n.t("cadeditor.ui.picker.785d65c70f") }, { id: 'adv', icon: 'gear', label: I18n.t("cadeditor.ui.screens.d6e61888b0") }, { id: 'changelog', icon: 'list', label: I18n.t("cadeditor.ui.common.changelog") }, { id: 'about', icon: 'star', label: I18n.en("cadeditor.ui.common.about") }];
+  var tabs = [{ id: 'ui', icon: 'palette', label: I18n.t("cadeditor.ui.picker.785d65c70f") }, { id: 'adv', icon: 'gear', label: I18n.t("cadeditor.ui.screens.d6e61888b0") }, { id: 'changelog', icon: 'list', label: I18n.t("cadeditor.ui.common.changelog") }, { id: 'about', icon: 'star', label: I18n.t("cadeditor.ui.common.about") }];
   var bar = h('div', { class: 'ed-tabs settings-tabs' });
   function paint() {
     if (notes) { notes.dispose(); notes = null; }
@@ -1426,13 +1454,16 @@ function advSettings(host, page) {
   row('play', I18n.t("cadeditor.ui.screens.fb69acb593"), I18n.t("cadeditor.ui.screens.03b548f37f"), motion.el);
   var fontSeg = kSeg([{ v: 'mc', label: I18n.t("cadeditor.ui.screens.dc9578fa4e") }, { v: 'smooth', label: I18n.t("cadeditor.ui.screens.b3275d61c8") }], UI.font === 'smooth' ? 'smooth' : 'mc', function (v) { applyUiFont(v); Prefs.set('uiFont', v); });
   row('edit', I18n.t("cadeditor.ui.screens.52a039f438"), I18n.t("cadeditor.ui.screens.96fe4741ca"), fontSeg.el);
-  var th1 = kSeg([{ v: 'dark', label: I18n.t("cadeditor.ui.screens.29edc1452e") }, { v: 'light', label: I18n.t("cadeditor.ui.screens.300cb57725") }], UI.theme, function (v) { if (v !== UI.theme) toggleTheme(); });
-  row('sparkle', I18n.t("cadeditor.ui.screens.788db1cfec"), I18n.t("cadeditor.ui.screens.4911e5de44"), th1.el);
+  var opacity = kNumber(UI.pageOpacity, { min: 30, max: 100, softMin: 30, softMax: 100, step: 1, unit: '%', onChange: function (v) {
+    applyPageOpacity(v); Prefs.set('pageOpacity', UI.pageOpacity);
+  } });
+  opacity.el.id = 'editor-page-opacity';
+  row('palette', I18n.t("cadeditor.ui.settings.page_opacity"), I18n.t("cadeditor.ui.settings.page_opacity_hint"), opacity.el);
   var hv = kSeg([{ v: '3d', label: '3D' }, { v: '2d', label: '2D' }], UI.heroView, function (v) { UI.heroView = v; Prefs.set('heroView', v); drawHero(); });
   row('cube', I18n.t("cadeditor.ui.screens.0e2ac6a780"), I18n.t("cadeditor.ui.screens.a16df9f13d"), hv.el);
   } else {
   box.appendChild(xSec('maximize', I18n.t("cadeditor.ui.screens.9efe01f647")));
-  row('maximize', I18n.t("cadeditor.ui.screens.c3cc36f628"), I18n.t("cadeditor.ui.screens.081f7638e0"), kBtn(I18n.t("cadeditor.ui.common.reset"), function () { UI.winW = 0; UI.winH = 0; UI.heroW = 0; UI.maxed = false; applyWinStyle(); Prefs.set('winW', 0); Prefs.set('winH', 0); Prefs.set('heroWidth', 0); Prefs.set('windowMax', false); drawTopbar(); toast(I18n.t("cadeditor.ui.screens.a904d30b18"), 'ok'); }, { icon: 'undo' }));
+  row('maximize', I18n.t("cadeditor.ui.screens.c3cc36f628"), I18n.t("cadeditor.ui.screens.081f7638e0"), kBtn(I18n.t("cadeditor.ui.common.reset"), function () { UI.winW = 0; UI.winH = 0; UI.heroW = 0; UI.winX = null; UI.winY = null; UI.maxed = false; applyWinStyle(); Prefs.set('winW', 0); Prefs.set('winH', 0); Prefs.set('heroWidth', 0); Prefs.set('windowMax', false); Prefs.set('winX', -1); Prefs.set('winY', -1); drawTopbar(); toast(I18n.t("cadeditor.ui.screens.a904d30b18"), 'ok'); }, { icon: 'undo' }));
   box.appendChild(xSec('bug', I18n.t("cadeditor.ui.screens.a3ba53fadb")));
   var t = kToggle(Prefs.get('debug', false) === true, function (on) { Prefs.set('debug', on); if (on) dbg(I18n.t("cadeditor.ui.screens.0358adb354")); }, '');
   row('bug', I18n.t("cadeditor.ui.screens.d09ed8ce71"), I18n.t("cadeditor.ui.screens.1e61d4f009"), t.el);
@@ -1446,14 +1477,14 @@ function aboutSection(host) {
   var A = Labels.about, ver = Prefs.about && Prefs.about.version;
   box.appendChild(h('div', { class: 'ab-head' }, [
     h('img', { class: 'ab-logo', src: 'logo.png', alt: '' }),
-    h('div', { class: 'ab-tx' }, [h('div', { class: 'ab-name', text: A.name }), h('div', { class: 'k-sub', text: ver && ver !== 'unknown' ? I18n.en("cadeditor.ui.screens.9179160d84", (ver)) : A.tagline })])
+    h('div', { class: 'ab-tx' }, [h('div', { class: 'ab-name', text: A.name }), h('div', { class: 'k-sub', text: ver && ver !== 'unknown' ? I18n.t("cadeditor.ui.screens.9179160d84", (ver)) : A.tagline })])
   ]));
   box.appendChild(xRow({ icon: uiIcon('crown', 14), title: A.author, sub: A.authorRole }));
-  box.appendChild(xRow({ icon: uiIcon('users', 14), title: I18n.en("cadeditor.ui.screens.c5449dc57f"), sub: A.feedbackGroup,
-    right: kBtn(I18n.en("cadeditor.ui.screens.46e651c95c"), function () { copyText(A.feedbackGroup, I18n.en("cadeditor.ui.screens.c26e9a4097"), 'en_us'); }, { icon: 'copy' }) }));
+  box.appendChild(xRow({ icon: uiIcon('users', 14), title: I18n.t("cadeditor.ui.screens.c5449dc57f"), sub: A.feedbackGroup,
+    right: kBtn(I18n.t("cadeditor.ui.screens.46e651c95c"), function () { copyText(A.feedbackGroup, I18n.t("cadeditor.ui.screens.c26e9a4097")); }, { icon: 'copy' }) }));
   A.links.forEach(function (l) {
-    var open = h('a', { class: 'k-btn ab-btn', href: l.url, title: I18n.en("cadeditor.ui.screens.a7df97f3b6") }, [uiIcon('external', 12)]);
-    var copy = kBtn('', function () { copyText(l.url, I18n.en("cadeditor.ui.screens.4de2acbb94", (l.title)), 'en_us'); }, { icon: 'copy', title: I18n.en("cadeditor.ui.screens.4c6de01bbe") });
+    var open = h('a', { class: 'k-btn ab-btn', href: l.url, title: I18n.t("cadeditor.ui.screens.a7df97f3b6") }, [uiIcon('external', 12)]);
+    var copy = kBtn('', function () { copyText(l.url, I18n.t("cadeditor.ui.screens.4de2acbb94", (l.title))); }, { icon: 'copy', title: I18n.t("cadeditor.ui.screens.4c6de01bbe") });
     box.appendChild(xRow({ icon: uiIcon(l.icon, 14), title: l.title, sub: l.show, right: h('div', { class: 'ab-acts' }, [open, copy]) }));
   });
   host.appendChild(box);

@@ -677,7 +677,12 @@ function wEnchants(c, val, commit, ctx) {
 var OPS = Labels.opShort;
 var SLOTS = ['any', 'mainhand', 'offhand', 'hand', 'head', 'chest', 'legs', 'feet', 'armor', 'body', 'saddle'];
 var SLOT_ZH = Labels.slot;
-function attributeSlotOptions() { return Reg.options('enum:equipment_slot_group') || (Reg.preview() ? SLOTS.map(function (s) { return { v: s, label: SLOT_ZH[s] || s }; }) : []); }
+function attributeSlotOptions() { return Reg.enumOptions('equipment_slot_group', SLOTS.map(function (s) { return { v: s, label: SLOT_ZH[s] || s }; })); }
+function attributeSlotLabel(slot) {
+  slot = slot || 'any';
+  var entry = attributeSlotOptions().filter(function (e) { return e.v === slot; })[0];
+  return entry ? entry.label : (SLOT_ZH[slot] || slot);
+}
 function wAttrMods(c, val, commit, ctx) {
   var cur = Array.isArray(val) ? val : [];
   var box = h('div', { class: 'ed-attrs' }), list = h('div', { class: 'ed-list' });
@@ -688,7 +693,7 @@ function wAttrMods(c, val, commit, ctx) {
       var openKey = 'attr' + i, isOpen = UIOpen[openKey] !== false;
       var rm = h('div', { class: 'ed-mini del', text: '×', title: I18n.t("cadeditor.ui.forms.1a2f334854") }); activate(rm, function () { cur.splice(i, 1); commit(cur, {}); draw(); });
       var amt = typeof m.amount === 'number' ? m.amount : 0;
-      var sumTxt = (m.operation === 'add_value' ? (amt >= 0 ? '+' : '') + fmtNum(amt) : (amt >= 0 ? '+' : '') + fmtNum(amt * 100) + '%') + ' · ' + (SLOT_ZH[m.slot || 'any'] || m.slot);
+      var sumTxt = (m.operation === 'add_value' ? (amt >= 0 ? '+' : '') + fmtNum(amt) : (amt >= 0 ? '+' : '') + fmtNum(amt * 100) + '%') + ' · ' + attributeSlotLabel(m.slot);
       var card = h('div', { class: 'ed-card' + (isOpen ? ' open' : '') });
       var head = h('div', { class: 'ed-card-h' }, [icon('sliders'), h('span', { class: 'ttl', text: a ? a.name : (id || I18n.t("cadeditor.ui.forms.2013a38df7")) }), h('span', { class: 'sm', text: sumTxt }), h('div', { class: 'ed-it-tools' }, [rm])]);
       head.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('.ed-it-tools')) return; UIOpen[openKey] = !(UIOpen[openKey] !== false); card.classList.toggle('open'); });

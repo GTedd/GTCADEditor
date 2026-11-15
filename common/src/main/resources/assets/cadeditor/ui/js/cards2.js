@@ -37,6 +37,11 @@ var AMT_LIMIT = 2048;
 
 function modsList() { return Ctx.get('attribute_modifiers') || []; }
 function saveMods(list) { Ctx.setSmart('attribute_modifiers', list, { label: I18n.t("cadeditor.ui.cards2.7fbf16993d") }); }
+function nextModId(type, list) {
+  var base = 'cadeditor:' + shortId(type).replace(/[^a-z0-9_./-]/g, '_') + '_', n = list.length + 1;
+  while (list.some(function (m) { return m.id === base + n; })) n++;
+  return base + n;
+}
 function slotHit(m, slots) { var s = m.slot || 'any'; return s === 'any' || slots.indexOf(s) >= 0; }
 function attrSum(type, slots) { var s = 0; modsList().forEach(function (m) { if (shortId(m.type) === type && m.operation === 'add_value' && slotHit(m, slots)) s += nbtNumberValue(m.amount); }); return s; }
 function attrAmountSchema() {
@@ -48,7 +53,7 @@ function attrAmountSchema() {
 /* 把某属性在这些槽位的"总值"调整为 target（base 为玩家基础值）；只改主修饰器，其余保持原样 */
 function setAttrTotal(type, slots, target, base, make) {
   var list = modsList(), prim = -1, others = 0;
-  list.forEach(function (m, i) { if (prim < 0 && m.id === make.id && shortId(m.type) === type && m.operation === 'add_value') prim = i; });
+  list.forEach(function (m, i) { if (prim < 0 && m.id === make.id && shortId(m.type) === type && m.operation === 'add_value' && slotHit(m, slots)) prim = i; });
   if (prim < 0) list.forEach(function (m, i) { if (prim < 0 && shortId(m.type) === type && m.operation === 'add_value' && slotHit(m, slots)) prim = i; });
   list.forEach(function (m, i) { if (i !== prim && shortId(m.type) === type && m.operation === 'add_value' && slotHit(m, slots)) others += nbtNumberValue(m.amount); });
   var amt = nbtNumberValue(target) - base - others;
@@ -58,7 +63,7 @@ function setAttrTotal(type, slots, target, base, make) {
     if (!sc || !(isNaN(amt) ? sc.allowNaN : amt > 0 ? sc.allowPositiveInfinity : sc.allowNegativeInfinity)) throw new Error(I18n.t("cadeditor.ui.cards2.5fb881460a"));
     amt = nbtSpecialScalar(amt, sc.nbtType);
   }
-  if (prim >= 0) list[prim].amount = amt; else list.push({ type: attrFull(type), id: make.id, amount: amt, operation: 'add_value', slot: make.slot });
+  if (prim >= 0) list[prim].amount = amt; else list.push({ type: attrFull(type), id: list.some(function (m) { return m.id === make.id; }) ? nextModId(type, list) : make.id, amount: amt, operation: 'add_value', slot: make.slot });
   saveMods(list);
 }
 
@@ -139,10 +144,8 @@ CARDS.attackSpeed = function () {
 /* 其它属性（自由添加 / 编辑所有修饰器）：折叠态是预览行，点开编辑，可拖拽排序 */
 var OPMODES = Labels.opLong;
 function modSummary(m) { var add = m.operation === 'add_value', amount = nbtNumberValue(m.amount); if (!isFinite(amount)) return numLabel(amount); var v = add ? amount : amount * 100; return (v >= 0 ? '+' : '') + bigOrNum(+v.toFixed(3)) + (add ? '' : '%'); }
-CARDS.extraAttrs = function (exclude, title) {
-  exclude = exclude || [];
-  function mine() { return modsList().filter(function (m) { return exclude.indexOf(shortId(m.type)) < 0; }); }
-  var card = kCard({ id: 'xattrs', icon: 'sliders', title: title || I18n.t("cadeditor.ui.cards2.a49074b4d1"), desc: I18n.t("cadeditor.ui.cards2.f94c036df2"), comps: ['attribute_modifiers'], span: 2, value: function () { var n = mine().length; return n ? I18n.t("cadeditor.ui.cards2.a9ab3a5f38", (n)) : ''; } }, Ctx);
+CARDS.extraAttrs = function (title) {
+  var card = kCard({ id: 'xattrs', icon: 'sliders', title: title || I18n.t("cadeditor.ui.cards1.da654dc4b2"), desc: I18n.t("cadeditor.ui.cards2.f94c036df2"), comps: ['attribute_modifiers'], span: 2, value: function () { var n = modsList().length; return n ? I18n.t("cadeditor.ui.cards2.a9ab3a5f38", (n)) : ''; } }, Ctx);
   var list = h('div', { class: 'k-sortlist' });
   var openIdx = -1;
   function draw() {
@@ -150,37 +153,35 @@ CARDS.extraAttrs = function (exclude, title) {
     var all = modsList(), n = 0;
     all.forEach(function (m, idx) {
       var t = shortId(m.type);
-      if (exclude.indexOf(t) >= 0) return;
       n++;
       var info = ATIDX[t], isAdd = m.operation === 'add_value', isOpen = openIdx === idx;
       /* 一行里直接改数值；展开才出现“计算方式 / 生效位置 / 删除” */
       var val = nbtNumberValue(m.amount) * (isAdd ? 1 : 100), headRef = null;
       var num = xNumCtl(isFinite(val) ? +val.toFixed(4) : val, { special: attrAmountSchema, min: -1e15, max: 1e15, step: isAdd ? 0.5 : 5, unit: isAdd ? '' : '%', noSlider: true, onChange: function (v) { var amount = nbtNumberValue(v) / (isAdd ? 1 : 100); nbtPut(all[idx], 'amount', isFinite(amount) ? amount : nbtSpecialScalar(amount, attrAmountSchema().nbtType)); saveMods(all); } }, true);
-      var row = xRow({ grip: true, chevron: true, icon: attrIconEl(t), title: attrName(t), sub: (SLOT_ZH[m.slot || 'any'] || m.slot) + (isAdd ? '' : I18n.t("cadeditor.ui.cards2.a4e509f80f")), tip: info ? info.desc : I18n.t("cadeditor.ui.cards2.9836dd5816", (m.type)), right: num.el, onDelete: function () { all.splice(idx, 1); openIdx = -1; saveMods(all); draw(); }, open: isOpen, onHead: function () { openIdx = isOpen ? -1 : idx; draw(); } });
+      var row = xRow({ grip: true, chevron: true, icon: attrIconEl(t), title: attrName(t), sub: attributeSlotLabel(m.slot) + (isAdd ? '' : I18n.t("cadeditor.ui.cards2.a4e509f80f")), tip: info ? info.desc : I18n.t("cadeditor.ui.cards2.9836dd5816", (m.type)), right: num.el, onDelete: function () { all.splice(idx, 1); openIdx = -1; saveMods(all); draw(); }, open: isOpen, onHead: function () { openIdx = isOpen ? -1 : idx; draw(); } });
       if (isOpen) {
         var opsel = { el: combo({ options: function () { return Reg.enumOptions('attribute_operation', OPMODES); }, value: m.operation || '', free: true, onPick: function (v) { all[idx].operation = v; saveMods(all); draw(); } }) };
         var slotSel = { el: combo({ options: attributeSlotOptions, value: m.slot || 'any', free: true, placeholder: I18n.t("cadeditor.ui.cards2.9b3b16e5b4"), onPick: function (v) { all[idx].slot = v; saveMods(all); draw(); } }) };
         row.appendChild(h('div', { class: 'k-xbody x2' }, [h('div', { class: 'x2r' }, [h('span', { class: 'x2l' }, [uiIcon('sliders', 14), h('span', { text: I18n.t("cadeditor.ui.cards2.a96675295d") })]), opsel.el]), h('div', { class: 'x2r' }, [h('span', { class: 'x2l' }, [uiIcon('pin', 14), h('span', { text: I18n.t("cadeditor.ui.cards2.35f1ad7628") })]), slotSel.el]), h('div', { class: 'x2f' }, [h('span', { class: 'k-sub', text: isAdd ? '' : I18n.t("cadeditor.ui.cards2.2485487922") })])]));
       }
-      onContext(row, function () { return [{ label: I18n.t("cadeditor.ui.cards2.eff3012bf5"), icon: 'copy', run: function () { all.splice(idx + 1, 0, clone(m)); all[idx + 1].id = 'cadeditor:' + t + '_' + (all.length); saveMods(all); draw(); } }, { sep: 1 }, { label: I18n.t("cadeditor.ui.common.delete"), icon: 'trash', danger: 1, run: function () { all.splice(idx, 1); saveMods(all); draw(); } }]; });
+      onContext(row, function () { return [{ label: I18n.t("cadeditor.ui.cards2.eff3012bf5"), icon: 'copy', run: function () { var copy = clone(m); copy.id = nextModId(m.type, all); all.splice(idx + 1, 0, copy); openIdx = idx + 1; saveMods(all); draw(); } }, { sep: 1 }, { label: I18n.t("cadeditor.ui.common.delete"), icon: 'trash', danger: 1, run: function () { all.splice(idx, 1); openIdx = -1; saveMods(all); draw(); } }]; });
       list.appendChild(row);
     });
     if (!n) list.appendChild(xEmpty(I18n.t("cadeditor.ui.cards2.c709cff956")));
   }
-  kSortable(list, { onMove: function (from, to) { var vis = []; modsList().forEach(function (m, i) { if (exclude.indexOf(shortId(m.type)) < 0) vis.push(i); }); var all = modsList(); var a = vis[from], b = vis[to]; var x = all.splice(a, 1)[0]; all.splice(b, 0, x); openIdx = -1; saveMods(all); draw(); } });
+  kSortable(list, { onMove: function (from, to) { var all = modsList(), x = all.splice(from, 1)[0]; all.splice(to, 0, x); openIdx = -1; saveMods(all); draw(); } });
   var add = xAdd(I18n.t("cadeditor.ui.cards2.ca2d78680b"));
   activate(add, function () {
-    var selected = {}; modsList().forEach(function (m) { if (exclude.indexOf(shortId(m.type)) < 0) selected[Reg.full(m.type)] = 1; });
-    openAttrPicker({ exclude: exclude, selected: selected, onConfirm: function (ids) {
-      var wanted = {}, have = {}; ids.forEach(function (id) { wanted[Reg.full(id)] = 1; });
-      var l = modsList().filter(function (m) { var keep = exclude.indexOf(shortId(m.type)) >= 0 || wanted[Reg.full(m.type)]; if (keep) have[Reg.full(m.type)] = 1; return keep; });
+    /* 修饰器允许同类多条；这里仅新增，不按属性类型同步或删除已有项。 */
+    openAttrPicker({ onConfirm: function (ids) {
+      var l = modsList();
       var slot = Ctx.kind() === 'armor' ? ((Ctx.get('equippable') || {}).slot || 'any') : 'mainhand';
-      ids.forEach(function (full) { if (have[full]) return; have[full] = 1; var base = 'cadeditor:' + shortId(full).replace(/[^a-z0-9_./-]/g, '_') + '_', n = l.length + 1; while (l.some(function (m) { return m.id === base + n; })) n++; l.push({ type: full, id: base + n, amount: 1, operation: 'add_value', slot: slot }); });
+      ids.forEach(function (id) { var full = Reg.full(id); l.push({ type: full, id: nextModId(full, l), amount: 1, operation: 'add_value', slot: slot }); });
       openIdx = l.length - 1; saveMods(l); draw();
     } });
   });
   card.body.appendChild(h('div', { class: 'k-scrollbox tall' }, [list])); card.body.appendChild(add); draw();
-  card.live.push(function () { var key = JSON.stringify(mine()); if (card._key !== key) { card._key = key; if (!list.querySelector('.k-xrow.open')) draw(); } });
+  card.live.push(function () { var key = JSON.stringify(modsList()); if (card._key !== key) { card._key = key; if (!list.querySelector('.k-xrow.open')) draw(); } });
   return card;
 };
 

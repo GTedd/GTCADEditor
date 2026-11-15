@@ -99,7 +99,8 @@ function drawDetail() {
 function detailize(card, o) {
   var cid = o.cid, head = card.el.firstChild, sum = head && head.querySelector('.k-csum'), chev = head && head.querySelector('.k-chev');
   if (!head || card.el.classList.contains('in-detail')) return;
-  var always = o.key === 'trim' || (Array.isArray(o.key) && o.key[0] === 'trim');
+  var key = Array.isArray(o.key) ? o.key[0] : o.key;
+  var always = key === 'trim' || key === 'extraAttrs';
   function on() { return always || (!!cid && Ctx.has(cid)); }
   function paint() { card.el.classList.toggle('det-on', on()); if (sum) sum.textContent = ''; }
   card.live.push(paint); paint();

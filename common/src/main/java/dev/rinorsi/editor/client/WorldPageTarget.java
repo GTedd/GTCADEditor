@@ -18,11 +18,13 @@ public final class WorldPageTarget {
         else throw new IllegalArgumentException(EditorI18n.tr("cadeditor.message.worldpagetarget.b548316a38"));
         return slot;
     }
-    public record Binding(JsonObject slot,String revision) {
+    public record Binding(JsonObject slot,String revision,boolean readOnly) {
+        public Binding(JsonObject slot,String revision){this(slot,revision,false);}
         public Binding {slot=slot.deepCopy();}
         @Override public JsonObject slot(){return slot.deepCopy();}
-        public static Binding opened(JsonObject world){return new Binding(StackCodec.object(world,"slot"),StackCodec.string(world,"revision"));}
+        public static Binding opened(JsonObject world){return new Binding(StackCodec.object(world,"slot"),StackCodec.string(world,"revision"),world.has("readOnly")&&world.get("readOnly").getAsBoolean());}
         public JsonObject bind(JsonObject edit,boolean undo) {
+            if(readOnly)throw new EditorSessions.Failure("read_only",EditorI18n.tr("cadeditor.ui.world.readonly"));
             var supplied=StackCodec.object(edit,"slot");
             if(!WorldEditSessions.sameTarget(slot,supplied)||!Objects.equals(slot.get("token"),supplied.get("token")))throw new IllegalArgumentException(EditorI18n.tr("cadeditor.message.worldpagetarget.9bbb09830b"));
             var request=edit.deepCopy();request.addProperty("op",undo?"undo":"apply");request.add("slot",slot.deepCopy());request.addProperty("revision",revision);return request;

@@ -469,14 +469,13 @@ function kBlockState(value, onChange, o) {
   return box;
 }
 /* ---- 属性：读游戏当前的 attribute 注册表（含模组属性） ---- */
-function openAttrPicker(o) {   /* o: { exclude:[short ids], onConfirm(fullIds) } */
-  var present = {}; (o.exclude || []).forEach(function (x) { present[Reg.full(x)] = 1; });
+function openAttrPicker(o) {   /* o: { onConfirm(fullIds) }；只新增修饰器，允许选择已有的属性类型 */
   function entries() {
     var src = Reg.options('attribute') || (Reg.preview() ? EDATA.attrs.map(function (a) { return { v: Reg.full(a.id), label: a.name, sub: a.desc || a.id }; }) : []);
     return src.map(function (e) { return { full: Reg.full(e.v), name: optLabel(e), sub: e.v, icon: function () { return attrIconEl(shortId(e.v)); } }; });
   }
   var cats = [{ id: 'all', name: I18n.t("cadeditor.ui.picker.5c55a67935"), icon: 'grid' }, { id: 'mod', name: I18n.t("cadeditor.ui.picker.9ea6b4816b"), icon: 'cube', filter: function (e) { return Reg.isMod(e.full); } }];
-  openPicker({ kind: 'attr', emptyReg: 'attribute', title: I18n.t("cadeditor.ui.cards2.ca2d78680b"), sub: I18n.t("cadeditor.ui.picker.d96f8b3fb3"), icon: 'plus', entriesFn: entries, cats: cats, selected: o.selected, locked: present, live: !Reg.preview(), searchHint: I18n.t("cadeditor.ui.picker.8b686dfe76"), custom: { placeholder: '' }, onConfirm: o.onConfirm });
+  openPicker({ kind: 'attr', emptyReg: 'attribute', title: I18n.t("cadeditor.ui.cards2.ca2d78680b"), sub: I18n.t("cadeditor.ui.picker.d96f8b3fb3"), icon: 'plus', entriesFn: entries, cats: cats, live: !Reg.preview(), searchHint: I18n.t("cadeditor.ui.picker.8b686dfe76"), custom: { placeholder: '' }, onConfirm: o.onConfirm });
 }
 
 /* ---- 标签 / 条目 单选：工具规则、免疫伤害、修理材料。标签与条目都读游戏实时注册表，常用快捷项排最前，也可手输 #模组id:标签 ----

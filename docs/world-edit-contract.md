@@ -9,15 +9,39 @@
 ## 入口及页面数据
 
 - 默认 I 键统一编辑目标，O 打开保险库；均在原版控制设置中可改键，语言键为 key.cadeditor.edit / key.cadeditor.vault。
-- I 顺序：容器界面悬停物品 → Shift 时主手物品／空手自己 → 距离内准星实体（包括玩家） → 带方块实体的方块 → 主手物品 → 空手时带状态属性的普通方块 → 自己。石头等无可编辑内容的普通方块不算目标。服务端拒绝后显示原因，不切换目标。
+- I 顺序：容器界面悬停物品 → Shift 时主手物品／空手自己 → 距离内准星实体（包括玩家） → 带方块实体的方块 → 主手物品 → 空手时带状态属性的普通方块 → 自己。没有服务端请求通道时，最后一个方块分支也接受无状态的普通方块用于只读查看；保留手持物品优先级。服务端拒绝后显示原因，不切换目标。
 - 在线玩家的精确接口、服务端原版权限与撤销见 [world-player-contract.md](world-player-contract.md)。
 - 客户端命令 /cadeditor block、/cadeditor entity：读取准星目标。/cadeditor block x y z 支持绝对整数坐标，仍受服务器交互距离限制。
 - 不解析相对坐标，不允许跨维度编辑，不提供移动目标操作。实体准星命中使用 UUID，网络实体 id 只是提示。
 - 网络 open 也可只给实体 id；服务端马上解析为 UUID，后续会话必须使用返回的规范化 slot，防止 id 重用。
-- 客户端与服务器都需要模组。没有服务器 request 通道时显示 UNAVAILABLE：服务器未安装物品工坊；不尝试原版创造物品包降级写世界。
+- 世界写入需要客户端与服务器都安装模组。没有服务器 request 通道时，方块／实体改用下面的客户端只读快照；自身玩家沿用独立的原版命令适配及权限规则。已有服务端通道但被权限或目标检查拒绝时仍显示实际拒绝原因，不伪装成“未安装”，不尝试原版创造物品包降级写世界。
 - 同一 cadeditor:ui/index.html 页面，世界模式初始数据为 oriel.data.world（**没有 stack**）。UI 应以 world.kind 分支；未接入前界面不保证可用。
 - apply / undo 页面消息由宿主在游戏线程转发。目标 slot 与 revision 绑定宿主上一次 opened/saved，页面不能换目标或伪造新基线。
 - 保存成功 patch world 与 result；失败只 patch result，保留页面草稿。页面应显示服务端 reason。
+
+## 客户端只读快照（2026-11-13）
+
+当 `ClientPlatform.canSend(EditorPackets.Request.TYPE)` 为 false 时，`WorldEditorClient.open` 使用 `ClientWorldView.snapshot` 构造 `oriel.data.world` 并打开同一页面，不创建服务端会话或发送世界 open。方块仍检查区块已加载及交互距离；实体仍检查实体存在、UUID 与交互距离。
+
+| 字段 | 只读模式语义 |
+|---|---|
+| `readOnly` / `partial` | 均为 true；展示客户端已同步快照，不是完整服务端数据 |
+| `canUndo` | false |
+| `revision` | `client-view-` 加随机 UUID，只标识本次本地快照，不是服务端写入版本 |
+| `snbt` / `nbt` | `{}` 字符串／空对象占位，不表示目标没有 NBT，不允许导出为完整权威数据 |
+| `slot` / `kind` / `type` | 真实目标定位与注册 ID；不带服务端会话 token |
+| `client_values` | 键为编辑器翻译键，值来自当前客户端：维度、类型、坐标；实体另有名称、UUID，LivingEntity 另有已同步生命 |
+| `client_properties` | 仅方块：当前真实 BlockState 属性名与值 |
+| `block` / `has_block_entity` | 仅方块：真实方块 ID 与当前状态是否声明方块实体 |
+| `client_name` | 仅实体：实际客户端显示名称 |
+
+页面只显示“已同步数据”标签，顶部在滚动体之外常驻 `只读 · 服务端未安装 CAD Editor，无法编辑数据`（英文及资源包覆盖走同一翻译键 `cadeditor.ui.world.readonly`）。数据是打开时快照，不持续刷新；不通过临时默认实体重建完整服务端状态。
+
+页面层的 `weReadOnly` 禁止 `wePut/weApply/weUndo/weSend`；不创建可写字段与应用／撤销入口，拦截操作搜索、导入、保存及根页撤销等快捷键。`WorldDrafts.key` 返回 null、`restore` 提前退出，不提供恢复、不写入或清空旧权威草稿。设置、拖动、最大化和关闭仍可用。
+
+宿主层 `WorldPageTarget.Binding.opened` 从打开数据捕获只读标记并绑定目标。`bind` 在构造 apply/undo 请求前抛出 `EditorSessions.Failure("read_only", ...)`；页面提交中修改或移除 readOnly 不能解除宿主绑定。关闭页面跳过服务端 close。
+
+诊断事件为 `client.world.readonly_open`，记录目标种类、类型及 `source=client_synced snapshot=true writes=false`。只读不增加读取服务端私有 NBT 的能力，也不授予任何服务端写权限。该增量从 0.99.9 提供，验证入口与边界见[测试说明](TESTING.md)。
 
 ## 沿用网络包和 envelope
 

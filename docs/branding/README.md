@@ -8,6 +8,7 @@
 | `icon-plate-256.png` | 256×256 | 当前 GitHub README 顶部（显示宽度 128）与 UI 图标 |
 | `logo-transparent-512.png` | 512×512 | 历史透明素材，保留供旧引用使用 |
 | `logo-transparent-256.png` | 256×256 | 历史透明素材，保留供旧引用使用 |
+| `cover-16x10-2048.png` | 2048×1280 | 16:10 横版封面，沿用当前图标并扩展像素背景 |
 
 Fabric、NeoForge 模组列表、Modrinth 项目与 GitHub README 使用当前 **plate** 图标；`ui/logo.png` 与 `icon-plate-256.png` 相同。历史透明素材不表示本次新图标的透明版本。
 

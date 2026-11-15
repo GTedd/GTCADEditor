@@ -6,6 +6,7 @@
 
 var WE = { w: null, text: '', slots: {}, pending: null, tab: '', seq: 0, obj: null, timer: null, err: '' };
 function weActive() { return !!WE.w && !(typeof NestedItem !== 'undefined' && NestedItem); }
+function weReadOnly() { return !!(WE.w && WE.w.readOnly); }
 var WorldTextCache = {baseSource:null, base:null, source:null, normalized:null, error:false};
 function weBase() {
   if (WorldTextCache.baseSource !== WE.w.snbt) {
@@ -22,9 +23,10 @@ function weDirtyText() {
   }
   return WorldTextCache.error || WorldTextCache.normalized !== weBase();
 }
-function weDirty() { return (typeof pxDirtyCount === 'function' && pxDirtyCount() > 0) || weDirtyText() || Object.keys(WE.slots).length > 0 || (typeof weViewsDirty === 'function' && weViewsDirty()) || (typeof evDirty === 'function' && evDirty()); }
+function weDirty() { return !weReadOnly() && ((typeof pxDirtyCount === 'function' && pxDirtyCount() > 0) || weDirtyText() || Object.keys(WE.slots).length > 0 || (typeof weViewsDirty === 'function' && weViewsDirty()) || (typeof evDirty === 'function' && evDirty())); }
 function weName() {
   var w = WE.w;
+  if (w.readOnly && w.client_name) return w.client_name;
   if (w.player) return (w.player.name || I18n.t("cadeditor.ui.vaultworld.991e63fe29")) + (w.player.self ? I18n.t("cadeditor.ui.worldedit.4bb17ff691") : '');
   if (w.kind === 'block') { var bid = shortId(w.block || w.type); return Reg.nameOf2('block', w.block || w.type) || nameOfItem(bid) || humanId(bid); }
   return entityName(w.type);
@@ -41,6 +43,7 @@ function weOpen(world, saved) {
   if (typeof WorldDrafts !== 'undefined') WorldDrafts.opened(!!saved);
 }
 function weTabs() {
+  if (weReadOnly()) return [{ id: 'readonly', label: I18n.t("cadeditor.ui.world.synced"), icon: 'eye' }];
   var w = WE.w, t = [], noBE = w.kind === 'block' && w.has_block_entity === false;
   if (w.kind === 'block' && weViewGroups().length) { var vi = weViewTabInfo(); t.push({ id: 'view', label: vi.label, icon: vi.icon }); }
   if (!noBE && w.container && w.container.slots) t.push({ id: 'container', label: I18n.t("cadeditor.ui.pages.6d23f04b26"), icon: 'chest' });
@@ -85,6 +88,11 @@ function drawWorldTop() {
     back.style.marginRight = '6px'; bar.appendChild(back);
   }
   edTopHead(bar, { icon: w.kind === 'block' ? itemIcon(shortId(w.block || w.type), 22) : w.player ? itemIcon('player_head', 22) : entityIcon(w.type, 22), title: weName(), crumb: w.kind === 'block' ? I18n.t("cadeditor.ui.picker.2753766d18") : w.player ? (w.player.preset ? I18n.t("cadeditor.ui.vault.d4f6dca6d8") : w.player.offline ? I18n.t("cadeditor.ui.worldedit.e0b611fd8c") : I18n.t("cadeditor.ui.vaultworld.991e63fe29")) : I18n.t("cadeditor.ui.picker.eb4308300e") });
+  if (weReadOnly()) {
+    bar.appendChild(kBtn(I18n.t("cadeditor.ui.common.settings"), openSettings, { icon: 'sliders' }));
+    bar.appendChild(edMaxBtn()); bar.appendChild(edCloseBtn(I18n.t("cadeditor.ui.common.close"), closeEditor));
+    return;
+  }
   var un = h('div', { class: 'k-ibtn' + (w.canUndo ? '' : ' dis'), title: I18n.t("cadeditor.ui.worldedit.cba28b7504") }, [uiIcon('undo', 14)]);
   activate(un, function () { if (WE.w.canUndo) weUndo(); });
   bar.appendChild(un);
@@ -103,6 +111,7 @@ function drawWorldTop() {
 function weMarkDirty() { drawWorldTop(); drawWorldFoot(); if (typeof WorldDrafts !== 'undefined') WorldDrafts.touch(); }
 function drawWorldFoot() {
   var f = clear($('footer')), w = WE.w, s = w.slot || {};
+  if (weReadOnly()) { f.classList.remove('has-problem'); f.appendChild(h('span', { class: 'it', text: I18n.t("cadeditor.ui.world.synced_snapshot"), title: I18n.t("cadeditor.ui.world.partial") })); return; }
   var errors = []; if (WE.err) errors.push(WE.err);
   if (typeof weViewProblems === 'function') errors = errors.concat(weViewProblems());
   if (typeof wpCommandNote === 'function' && wpCommandNote()) errors.push(wpCommandNote());
@@ -119,6 +128,11 @@ function drawWorldFoot() {
 }
 function drawWorldScreen() {
   var host = clear($('screen')), w = WE.w;
+  var outer = host; outer.classList.toggle('world-readonly-page', weReadOnly());
+  if (weReadOnly()) {
+    outer.appendChild(h('div', { class: 'world-readonly-banner', role: 'status', text: I18n.t("cadeditor.ui.world.readonly") }));
+    host = h('div', { class: 'ec world-readonly-content' }); outer.appendChild(host);
+  }
   applyWinStyle();
   var hero = h('aside', { class: 'ed-hero', id: 'hero' });
   var right = h('section', { class: 'ed-right' }), tabbar = h('div', { class: 'ed-tabs', id: 'tabbar' }), body = h('div', { class: 'ed-body', id: 'edbody' });
@@ -136,6 +150,15 @@ function drawWorldScreen() {
   weTabBody(body);
 }
 function weTabBody(body) {
+  if (weReadOnly()) {
+    body.appendChild(kHint(I18n.t("cadeditor.ui.world.partial"), 'note'));
+    var values = WE.w.client_values || {};
+    Object.keys(values).forEach(function (key) { body.appendChild(xRow({ title: I18n.t(key), right: h('span', { class: 'world-readonly-value', text: String(values[key]), title: String(values[key]) }) })); });
+    var properties = WE.w.client_properties || {};
+    if (Object.keys(properties).length) body.appendChild(xSec('sliders', I18n.t("cadeditor.ui.rules.a528d413f7")));
+    Object.keys(properties).forEach(function (key) { body.appendChild(xRow({ title: wePropName(key), sub: key, right: h('span', { class: 'world-readonly-value', text: wePropVal(properties[key]) }) })); });
+    weTools(); return;
+  }
   ES_WAIT = false; WE.toolsExtra = null;   // 本页要放进工具行的控件，由标签页的画法填
   if (typeof wpCommandCaps === 'function' && wpCommandCaps()) {
     body.appendChild(kHint(wpCommandNote()));
@@ -211,6 +234,7 @@ function weObj() {
   return WE.obj;
 }
 function wePut() {
+  if (weReadOnly()) return;
   var ref; try { ref = nbtParse(WE.text); } catch (e) { ref = nbtParse(WE.w.snbt); }
   try { WE.text = nbtPrint(nbtParse(nbtMerge(WE.obj, ref)), true); WE.err = ''; } catch (e) { WE.err = String(e.message || e); }
   weMarkDirty(); weHeroLive();
@@ -256,6 +280,7 @@ function weDataTab(body) {
 
 /* ---------- 应用 / 撤销 / 回执 ---------- */
 function weApply() {
+  if (weReadOnly()) return;
   flushPendingCode();
   if (typeof weViewProblems === 'function' && weViewProblems().length) { drawWorldFoot(); return; }
   if (WE.pending) { toast(I18n.t("cadeditor.ui.vaultworld.53871cb811"), 'info', 'we-wait'); return; }
@@ -280,10 +305,12 @@ function weApply() {
   weSend('apply', msg, I18n.t("cadeditor.ui.worldedit.c34df32374"));
 }
 function weUndo() {
+  if (weReadOnly()) return;
   if (WE.pending) return;
   weSend('undo', { requestId: 'w-' + Date.now() + '-' + (++WE.seq), slot: clone(WE.w.slot) }, I18n.t("cadeditor.ui.worldedit.d32f69ae73"));
 }
 function weSend(op, msg, note, draftSnapshot) {
+  if (weReadOnly()) return;
   var sent = (typeof oriel !== 'undefined' && oriel.send) ? oriel.send(op, msg) : false;
   if (!sent) { toast(I18n.t("cadeditor.ui.worldedit.2cad51fbc8"), 'error'); return; }
   WE.lastSendAt = Date.now(); WE.pending = msg.requestId; WE.lastMsg = { op: op, msg: msg, note: note }; toast(note, 'info', 'we-pending');
@@ -394,6 +421,12 @@ function weDroppedPreview(st, view) {
 function weHero() {
   var hero = $('hero'); if (!hero || !WE.w) return;
   var w = WE.w, isBlock = w.kind === 'block', scrollTop = hero.scrollTop, oldEnt = hero.querySelector('.k-ent'); clear(hero);
+  if (weReadOnly()) {
+    hero.appendChild(h('div', { class: 'ed-stage' }, [isBlock ? itemIcon(shortId(w.block || w.type), 48) : entityIcon(w.type, 48)]));
+    hero.appendChild(h('div', { class: 'ed-name sm', text: weName() }));
+    hero.appendChild(h('div', { class: 'k-sub', text: w.type, title: w.type }));
+    return;
+  }
   var can3d = typeof ED_MC === 'undefined', view = can3d && UI.heroView === '3d' ? '3d' : '2d';
   var bid = isBlock ? shortId(w.block || w.type) : '';
   var isPlayer = !!w.player, psrc = isPlayer ? (w.player.self ? { player: true } : (w.slot && /^[0-9]+$/.test(String(w.slot.id)) ? { id: w.slot.id } : null)) : null;

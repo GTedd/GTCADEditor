@@ -91,7 +91,7 @@ public final class WorldEditorClient {
         var picked=editorHit(mc);
         if(picked instanceof EntityHitResult e)return mc.player.isWithinEntityInteractionRange(e.getEntity(),0)?EditDispatch.Hit.ENTITY:EditDispatch.Hit.NONE;
         if(mc.hitResult instanceof BlockHitResult b&&b.getType()!=HitResult.Type.MISS&&mc.player.isWithinBlockInteractionRange(b.getBlockPos(),0)){
-            var state=mc.level.getBlockState(b.getBlockPos());if(state.hasBlockEntity())return EditDispatch.Hit.BLOCK_ENTITY;if(!state.getProperties().isEmpty())return EditDispatch.Hit.BLOCK_STATE;
+            var state=mc.level.getBlockState(b.getBlockPos());if(state.hasBlockEntity())return EditDispatch.Hit.BLOCK_ENTITY;if(!state.getProperties().isEmpty()||!ClientPlatform.get().canSend(EditorPackets.Request.TYPE))return EditDispatch.Hit.BLOCK_STATE;
         }return EditDispatch.Hit.NONE;
     }
     private static void open(String kind, JsonObject pos) {
@@ -99,7 +99,7 @@ public final class WorldEditorClient {
         try {
             if (!ClientPlatform.get().canSend(EditorPackets.Request.TYPE)) {
                 if(kind.equals("player")&&pos==null){openCommandSelf(mc,null);return;}
-                throw new EditorSessions.Failure("UNAVAILABLE", EditorI18n.tr("cadeditor.message.worldeditorclient.6ddbd7ca26"));
+                if(kind.equals("player"))throw new EditorSessions.Failure("UNAVAILABLE", EditorI18n.tr("cadeditor.message.worldeditorclient.6ddbd7ca26"));
             }
             var target = new JsonObject(); target.addProperty("dim", mc.level.dimension().identifier().toString());
             var picked = editorHit(mc);
@@ -117,6 +117,7 @@ public final class WorldEditorClient {
                 target.addProperty("uuid", hit.getEntity().getStringUUID()); target.addProperty("id", hit.getEntity().getId());
                 if(hit.getEntity() instanceof net.minecraft.world.entity.player.Player)target.addProperty("player","online");
             }
+            if(!ClientPlatform.get().canSend(EditorPackets.Request.TYPE)){show(ClientWorldView.snapshot(mc,target));return;}
             beginOpen(target,null);
         } catch (RuntimeException e) { EditorWriteLog.failure("client.world.open_failure",opening,"kind="+kind,e);opening = null; openingOwner=null; message((e instanceof EditorSessions.Failure f ? f.code + "：" : "") + e.getMessage()); }
     }
@@ -229,7 +230,7 @@ public final class WorldEditorClient {
         owner.driver().onMessage("undo", value -> Minecraft.getInstance().execute(() -> apply(owner, value, true)));
         owner.driver().onClose(() -> {
             if (screen != owner) return;
-            try{if(binding!=null&&presetPage==null)closeTarget(binding.slot());}finally{if(selfCommands!=null)selfCommands.cancel();selfCommands=null;screen=null;binding=null;presetPage=null;pending=null;openingPreset=null;}
+            try{if(binding!=null&&!binding.readOnly()&&presetPage==null)closeTarget(binding.slot());}finally{if(selfCommands!=null)selfCommands.cancel();selfCommands=null;screen=null;binding=null;presetPage=null;pending=null;openingPreset=null;}
         });
     }
     private static void apply(OrielScreen owner, JsonElement value, boolean undo) {

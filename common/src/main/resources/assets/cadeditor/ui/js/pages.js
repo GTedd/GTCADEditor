@@ -24,8 +24,6 @@ var RARITY_ZH = Labels.rarityZh;
 var APPEAR = [I18n.t("cadeditor.ui.pages.9429cf767d"), 'name', 'lore', I18n.t("cadeditor.ui.pages.4c8f1f582d"), 'rarity', 'glint', 'tooltip', 'model'];
 var DURA = [I18n.t("cadeditor.ui.pages.b256d36975"), 'maxDamage', 'damage', 'unbreakable', I18n.t("cadeditor.ui.pages.3f8b176571"), 'repair', 'resist', I18n.t("cadeditor.ui.pages.8993b3dd5f"), 'stack'];
 var ENCH = [I18n.t("cadeditor.ui.pages.e7372f0f17"), ['enchants', 'enchantments'], I18n.t("cadeditor.ui.pages.ed3309f235"), 'enchantable'];
-var ATTR_MAIN = ['attack_damage', 'attack_speed'];
-var ATTR_ARMOR = ['armor', 'armor_toughness', 'knockback_resistance'];
 
 /* 每类物品的分页。cards 里：字符串=CARDS 的键；[键, 参数…]=带参数调用 */
 var PAGES = {
@@ -35,13 +33,13 @@ var PAGES = {
   ],
   melee: [
     { id: 'look', label: I18n.t("cadeditor.ui.eschema.86a63f23a0"), icon: 'palette', cards: APPEAR },
-    { id: 'combat', label: I18n.t("cadeditor.ui.pages.a642a31e11"), icon: 'sword', cards: [I18n.t("cadeditor.ui.pages.420cbb05db"), 'attackDamage', 'attackSpeed', I18n.t("cadeditor.ui.pages.1e7c304026"), 'weapon', 'reach', 'swing', 'cooldown', I18n.t("cadeditor.ui.pages.4404169836"), ['extraAttrs', ATTR_MAIN]] },
+    { id: 'combat', label: I18n.t("cadeditor.ui.pages.a642a31e11"), icon: 'sword', cards: [I18n.t("cadeditor.ui.pages.420cbb05db"), 'attackDamage', 'attackSpeed', I18n.t("cadeditor.ui.pages.1e7c304026"), 'weapon', 'reach', 'swing', 'cooldown', I18n.t("cadeditor.ui.pages.4404169836"), 'extraAttrs'] },
     { id: 'dura', label: I18n.t("cadeditor.ui.pages.5ad0c596f2"), icon: 'shield', cards: DURA },
     { id: 'ench', label: I18n.t("cadeditor.ui.cards1.5cfebda177"), icon: 'enchant', cards: ENCH },
   ],
   tool: [
     { id: 'look', label: I18n.t("cadeditor.ui.eschema.86a63f23a0"), icon: 'palette', cards: APPEAR },
-    { id: 'mine', label: I18n.t("cadeditor.ui.pages.9f9181976d"), icon: 'pickaxe', cards: [I18n.t("cadeditor.ui.pages.79c98c68e8"), 'tool', I18n.t("cadeditor.ui.pages.914604c69e"), 'attackDamage', 'attackSpeed', 'weapon', 'swing', I18n.t("cadeditor.ui.pages.4404169836"), ['extraAttrs', ATTR_MAIN]] },
+    { id: 'mine', label: I18n.t("cadeditor.ui.pages.9f9181976d"), icon: 'pickaxe', cards: [I18n.t("cadeditor.ui.pages.79c98c68e8"), 'tool', I18n.t("cadeditor.ui.pages.914604c69e"), 'attackDamage', 'attackSpeed', 'weapon', 'swing', I18n.t("cadeditor.ui.pages.4404169836"), 'extraAttrs'] },
     { id: 'dura', label: I18n.t("cadeditor.ui.pages.5ad0c596f2"), icon: 'shield', cards: DURA },
     { id: 'ench', label: I18n.t("cadeditor.ui.cards1.5cfebda177"), icon: 'enchant', cards: ENCH },
   ],
@@ -49,18 +47,18 @@ var PAGES = {
     { id: 'look', label: I18n.t("cadeditor.ui.eschema.86a63f23a0"), icon: 'palette', cards: APPEAR },
     { id: 'dura', label: I18n.t("cadeditor.ui.pages.5ad0c596f2"), icon: 'shield', cards: DURA },
     { id: 'ench', label: I18n.t("cadeditor.ui.cards1.5cfebda177"), icon: 'enchant', cards: ENCH },
-    { id: 'attrs', label: I18n.t("cadeditor.ui.eschema.86de52d178"), icon: 'sliders', cards: [I18n.t("cadeditor.ui.pages.4622d51844"), ['extraAttrs', [], I18n.t("cadeditor.ui.cards1.da654dc4b2")], I18n.t("cadeditor.ui.pages.403b5b4b74"), 'cooldown'] },
+    { id: 'attrs', label: I18n.t("cadeditor.ui.eschema.86de52d178"), icon: 'sliders', cards: [I18n.t("cadeditor.ui.pages.4622d51844"), 'extraAttrs', I18n.t("cadeditor.ui.pages.403b5b4b74"), 'cooldown'] },
   ],
   shield: [
     { id: 'look', label: I18n.t("cadeditor.ui.eschema.86a63f23a0"), icon: 'palette', cards: APPEAR },
     { id: 'banner', label: I18n.t("cadeditor.ui.pages.3bab4b496f"), icon: 'banner', cards: [I18n.t("cadeditor.ui.pages.06da4480d4"), ['auto', 'banner_patterns'], ['auto', 'base_color'], I18n.t("cadeditor.ui.pages.0dc860a536"), ['auto', 'provides_banner_patterns']] },
     { id: 'dura', label: I18n.t("cadeditor.ui.pages.5ad0c596f2"), icon: 'shield', cards: DURA },
     { id: 'ench', label: I18n.t("cadeditor.ui.cards1.5cfebda177"), icon: 'enchant', cards: ENCH },
-    { id: 'attrs', label: I18n.t("cadeditor.ui.eschema.86de52d178"), icon: 'sliders', cards: [I18n.t("cadeditor.ui.pages.4622d51844"), ['extraAttrs', [], I18n.t("cadeditor.ui.cards1.da654dc4b2")]] },
+    { id: 'attrs', label: I18n.t("cadeditor.ui.eschema.86de52d178"), icon: 'sliders', cards: [I18n.t("cadeditor.ui.pages.4622d51844"), 'extraAttrs'] },
   ],
   armor: [
     { id: 'look', label: I18n.t("cadeditor.ui.eschema.86a63f23a0"), icon: 'palette', cards: APPEAR },
-    { id: 'def', label: I18n.t("cadeditor.ui.pages.b7f0047c1f"), icon: 'chestplate', cards: [I18n.t("cadeditor.ui.pages.dacb520591"), 'equip', I18n.t("cadeditor.ui.pages.389b7b9058"), 'armorValue', 'armorToughness', 'knockbackResist', I18n.t("cadeditor.ui.pages.cb8428439a"), 'trim', 'dye', I18n.t("cadeditor.ui.pages.f52f6e61d9"), 'glider', ['extraAttrs', ATTR_ARMOR]] },
+    { id: 'def', label: I18n.t("cadeditor.ui.pages.b7f0047c1f"), icon: 'chestplate', cards: [I18n.t("cadeditor.ui.pages.dacb520591"), 'equip', I18n.t("cadeditor.ui.pages.389b7b9058"), 'armorValue', 'armorToughness', 'knockbackResist', I18n.t("cadeditor.ui.pages.cb8428439a"), 'trim', 'dye', I18n.t("cadeditor.ui.pages.f52f6e61d9"), 'glider', 'extraAttrs'] },
     { id: 'dura', label: I18n.t("cadeditor.ui.pages.5ad0c596f2"), icon: 'shield', cards: DURA },
     { id: 'ench', label: I18n.t("cadeditor.ui.cards1.5cfebda177"), icon: 'enchant', cards: ENCH },
   ],
@@ -244,7 +242,7 @@ function describeDiffRows(x, d) {
 function A(cid) { return ['auto', cid]; }
 var UNIVERSAL = [
   { id: 'u-ability', label: I18n.t("cadeditor.ui.pages.25f5ce57a1"), alt: I18n.t("cadeditor.ui.pages.9c7a9fcee9"), home: ['eat', 'potion', 'fx'], icon: 'wand', desc: I18n.t("cadeditor.ui.pages.b11df3fcda"), cards: [I18n.t("cadeditor.ui.pages.27cc7942cb"), 'equip', 'glider', I18n.t("cadeditor.ui.pages.0b506e50e1"), 'food', 'consumable', 'consumeEffects', A('use_effects'), 'remainder', A('potion_duration_scale'), A('ominous_bottle_amplifier'), I18n.t("cadeditor.ui.pages.f7f5cb52bb"), 'tool', 'cooldown', 'deathProtection', A('intangible_projectile')] },
-  { id: 'u-combat', label: I18n.t("cadeditor.ui.pages.efdbdc281a"), alt: I18n.t("cadeditor.ui.pages.0db284d5d2"), home: ['combat', 'mine', 'def'], icon: 'sword', desc: I18n.t("cadeditor.ui.pages.952746eb1e"), cards: [I18n.t("cadeditor.ui.pages.914604c69e"), 'attackDamage', 'attackSpeed', 'weapon', 'reach', 'swing', A('minimum_attack_charge'), A('damage_type'), A('kinetic_weapon'), A('piercing_weapon'), I18n.t("cadeditor.ui.pages.44103babf6"), 'armorValue', 'armorToughness', 'knockbackResist', A('blocks_attacks'), ['extraAttrs', [], I18n.t("cadeditor.ui.cards1.da654dc4b2")]] },
+  { id: 'u-combat', label: I18n.t("cadeditor.ui.pages.efdbdc281a"), alt: I18n.t("cadeditor.ui.pages.0db284d5d2"), home: ['combat', 'mine', 'def'], icon: 'sword', desc: I18n.t("cadeditor.ui.pages.952746eb1e"), cards: [I18n.t("cadeditor.ui.pages.914604c69e"), 'attackDamage', 'attackSpeed', 'weapon', 'reach', 'swing', A('minimum_attack_charge'), A('damage_type'), A('kinetic_weapon'), A('piercing_weapon'), I18n.t("cadeditor.ui.pages.44103babf6"), 'armorValue', 'armorToughness', 'knockbackResist', A('blocks_attacks'), 'extraAttrs'] },
   { id: 'u-dura', label: I18n.t("cadeditor.ui.pages.65f8a0c53c"), alt: I18n.t("cadeditor.ui.pages.d8342f76fe"), home: ['dura', 'stack'], icon: 'shield', desc: I18n.t("cadeditor.ui.pages.53c5f102ca"), cards: [I18n.t("cadeditor.ui.pages.4355f0c1c2")].concat(DURA, [I18n.t("cadeditor.ui.pages.e7372f0f17"), 'enchantable', ['enchants', 'enchantments']]) },
   { id: 'u-look', label: I18n.t("cadeditor.ui.pages.5a82d25625"), alt: I18n.t("cadeditor.ui.pages.37dd813da8"), icon: 'palette', desc: I18n.t("cadeditor.ui.pages.356ed7402b"), cards: [I18n.t("cadeditor.ui.pages.0145dbe4dd")].concat(APPEAR, [A('item_name'), A('tooltip_style'), A('custom_model_data'), I18n.t("cadeditor.ui.pages.6e44a00a1c"), 'dye', 'trim', A('provides_trim_material'), I18n.t("cadeditor.ui.pages.08c18efb84"), A('break_sound'), A('note_block_sound'), A('instrument'), A('jukebox_playable')]) },
   { id: 'u-banner', label: I18n.t("cadeditor.ui.pages.3bab4b496f"), alt: I18n.t("cadeditor.ui.pages.3bab4b496f"), icon: 'banner', desc: I18n.t("cadeditor.ui.pages.188d4444cb"), cards: [I18n.t("cadeditor.ui.pages.dc07545728"), A('banner_patterns'), A('base_color'), I18n.t("cadeditor.ui.pages.0dc860a536"), A('provides_banner_patterns')] },

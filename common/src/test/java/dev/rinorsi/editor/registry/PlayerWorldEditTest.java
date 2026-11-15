@@ -54,6 +54,11 @@ public final class PlayerWorldEditTest {
         edit.add("slot",b.slot());edit.addProperty("revision","page-cannot-select-revision");var apply=b.bind(edit,false);check(apply.get("revision").getAsString().equals("new-revision")&&apply.getAsJsonObject("slot").equals(target),"new host slot and revision bound atomically");check(b.bind(edit,true).get("op").getAsString().equals("undo"),"undo uses same current binding");
         edit.getAsJsonObject("slot").addProperty("token","old");try{b.bind(edit,false);throw new AssertionError("old same-target token accepted");}catch(IllegalArgumentException expected){checks++;}
         var detached=b.slot();detached.addProperty("uuid","changed");check(b.slot().get("uuid").getAsString().equals(uuid),"binding slots are detached copies");
+        var view=new JsonObject();view.add("slot",target.deepCopy());view.addProperty("revision","client-view");view.addProperty("readOnly",true);
+        var readOnly=dev.rinorsi.editor.client.WorldPageTarget.Binding.opened(view);view.addProperty("readOnly",false);
+        edit.add("slot",readOnly.slot());
+        reject(()->readOnly.bind(edit,false),"read_only");reject(()->readOnly.bind(edit,true),"read_only");
+        check(readOnly.readOnly(),"host read-only state cannot be changed by page payload");
         var sessions=new WorldEditSessions();var actor=UUID.randomUUID();var data=WorldNbt.parse("{id:'minecraft:player',UUID:'fixture'}");var old=sessions.open(actor,self,data);var current=sessions.open(actor,target,data);
         reject(()->sessions.require(actor,self,old.revision,data),"session_lost");sessions.close(actor,self);check(sessions.require(actor,target,current.revision,data)==current,"old close cannot remove replacement session");sessions.close(actor,target);reject(()->sessions.require(actor,target,current.revision,data),"session_lost");
     }
