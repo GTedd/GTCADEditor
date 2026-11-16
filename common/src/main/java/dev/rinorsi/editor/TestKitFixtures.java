@@ -2,7 +2,7 @@ package dev.rinorsi.editor;
 /** Audited 26.1.2 Codec fixtures; empty audit values enriched and revalidated at runtime.
  * Source: research/editor/minecraft-editor-baseline/audit/item-components-26.1.2/results.json. */
 final class TestKitFixtures {
- static final String JSON = """
+    static final String JSON = """
 [
   {
     "n": 1,
@@ -915,8 +915,9 @@ final class TestKitFixtures {
   }
 ]
  """;
- static final String EXPECTED = """
+    static final String EXPECTED = """
 ["custom_model_data", "custom_name", "dyed_color", "enchantment_glint_override", "item_model", "item_name", "lore", "rarity", "tooltip_display", "tooltip_style", "break_sound", "damage", "damage_resistant", "max_damage", "max_stack_size", "repair_cost", "repairable", "unbreakable", "attack_range", "attribute_modifiers", "blocks_attacks", "damage_type", "kinetic_weapon", "minimum_attack_charge", "piercing_weapon", "swing_animation", "tool", "weapon", "enchantable", "enchantments", "stored_enchantments", "consumable", "death_protection", "food", "intangible_projectile", "ominous_bottle_amplifier", "suspicious_stew_effects", "use_cooldown", "use_effects", "use_remainder", "banner_patterns", "base_color", "equippable", "glider", "provides_banner_patterns", "provides_trim_material", "trim", "bees", "block_entity_data", "block_state", "bucket_entity_data", "bundle_contents", "can_break", "can_place_on", "charged_projectiles", "container", "container_loot", "custom_data", "debug_stick_state", "entity_data", "lock", "pot_decorations", "profile", "lodestone_tracker", "map_color", "map_decorations", "map_id", "recipes", "writable_book_content", "written_book_content", "dye", "firework_explosion", "fireworks", "instrument", "jukebox_playable", "note_block_sound", "potion_contents", "potion_duration_scale", "axolotl/variant", "cat/collar", "cat/sound_variant", "cat/variant", "chicken/sound_variant", "chicken/variant", "cow/sound_variant", "cow/variant", "fox/variant", "frog/variant", "horse/variant", "llama/variant", "mooshroom/variant", "painting/variant", "parrot/variant", "pig/sound_variant", "pig/variant", "rabbit/variant", "salmon/size", "sheep/color", "shulker/color", "tropical_fish/base_color", "tropical_fish/pattern", "tropical_fish/pattern_color", "villager/variant", "wolf/collar", "wolf/sound_variant", "wolf/variant", "zombie_nautilus/variant"]
  """;
- private TestKitFixtures() {}
+
+    private TestKitFixtures() {}
 }

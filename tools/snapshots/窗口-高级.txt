@@ -6,7 +6,7 @@ div.advwin.k-modal
     div.grow
     div.k-mini "×"
   div.advbody
-    div.advnav
+    div.advnav.resizable-pane [style="width:108px;min-width:40px;max-width:calc(100% - 176px);"]
       div.advnav-i.on
         img.o-ico [src="oriel:textures/icons/list.png" style="height:16px;width:16px"]
         span "全部组件"
@@ -16,9 +16,10 @@ div.advwin.k-modal
       div.advnav-i
         img.o-ico [src="oriel:textures/icons/clock.png" style="height:16px;width:16px"]
         span "修改历史"
+    div.ed-column-split [title="拖动调整栏宽；双击恢复；方向键微调" role="separator"]
     div.advmain
       div.adv
-        div.adv-l
+        div.adv-l.resizable-pane [style="width:150px;min-width:84px;max-width:calc(100% - 86px);"]
           div.k-sbox
             input.k-input [placeholder="筛选 107 个组件" type="text"]
             div.k-btn.k-sbtn [title="搜索（也可以按回车）"]
@@ -348,6 +349,7 @@ div.advwin.k-modal
             div.adv-row [title="minecraft:zombie_nautilus/variant\nzombie_nautilus/variant"]
               span.z "变种 · zombie_nautilus"
               i.inherit.st
+        div.ed-column-split [title="拖动调整栏宽；双击恢复；方向键微调" role="separator"]
         div.adv-r
           div.k-empty "在左边选一个组件，查看并编辑它的原始数据。"
   div.k-medge-r [title="拖动调整宽度"]

@@ -1,8 +1,7 @@
 package dev.rinorsi.editor.vault;
 
-import dev.rinorsi.editor.EditorI18n;
-
 import com.google.gson.*;
+import dev.rinorsi.editor.EditorI18n;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.*;
@@ -10,48 +9,102 @@ import java.util.*;
 /** One canonical serialization/hash per section; matching compares only fixed-size digests. */
 final class PlayerPresetHash {
     private PlayerPresetHash() {}
-    static String section(String name,JsonElement value,VaultStore.Validator validator) {
-        var canonical=value.deepCopy();
-        if(Set.of("inventory","equipment","ender").contains(name)) {
-            var slots=canonical.getAsJsonObject().getAsJsonArray("slots");
-            for(var raw:slots) {
-                var row=raw.getAsJsonObject();var stack=row.getAsJsonObject("stack");
-                if(!stack.has("empty")) {
+
+    static String section(String name, JsonElement value, VaultStore.Validator validator) {
+        var canonical = value.deepCopy();
+        if (Set.of("inventory", "equipment", "ender").contains(name)) {
+            var slots = canonical.getAsJsonObject().getAsJsonArray("slots");
+            for (var raw : slots) {
+                var row = raw.getAsJsonObject();
+                var stack = row.getAsJsonObject("stack");
+                if (!stack.has("empty")) {
                     JsonObject nativeStack;
-                    try{nativeStack=validator.validate(stack).stack();}catch(VaultStore.Failure e){throw e;}catch(RuntimeException e){throw new VaultStore.Failure("INVALID_STACK",EditorI18n.tr("cadeditor.message.playerpresethash.b54458a994", (e.getMessage())));}
-                    var clean=new JsonObject();
+                    try {
+                        nativeStack = validator.validate(stack).stack();
+                    } catch (VaultStore.Failure e) {
+                        throw e;
+                    } catch (RuntimeException e) {
+                        throw new VaultStore.Failure(
+                                "INVALID_STACK",
+                                EditorI18n.tr(
+                                        "cadeditor.message.playerpresethash.vanilla_minecraft_item_verification",
+                                        (e.getMessage())));
+                    }
+                    var clean = new JsonObject();
                     // Exclude slot/label/UI metadata; typed sidecars remain part of identity.
-                    for(String key:List.of("id","count","comps","removed","component_snbt"))if(nativeStack.has(key))clean.add(key,nativeStack.get(key));
-                    row.add("stack",clean);
+                    for (String key : List.of("id", "count", "comps", "removed", "component_snbt"))
+                        if (nativeStack.has(key)) clean.add(key, nativeStack.get(key));
+                    row.add("stack", clean);
                 }
             }
-            canonical.getAsJsonObject().add("slots",ordered(slots,"slot",true));
-        }else if(name.equals("attributes")||name.equals("effects")) {
-            if(name.equals("attributes"))for(var raw:canonical.getAsJsonArray()) {
-                var attribute=raw.getAsJsonObject();if(attribute.has("modifiers"))attribute.add("modifiers",ordered(attribute.getAsJsonArray("modifiers"),"id",false));
-            }
-            canonical=ordered(canonical.getAsJsonArray(),"id",false);
+            canonical.getAsJsonObject().add("slots", ordered(slots, "slot", true));
+        } else if (name.equals("attributes") || name.equals("effects")) {
+            if (name.equals("attributes"))
+                for (var raw : canonical.getAsJsonArray()) {
+                    var attribute = raw.getAsJsonObject();
+                    if (attribute.has("modifiers"))
+                        attribute.add("modifiers", ordered(attribute.getAsJsonArray("modifiers"), "id", false));
+                }
+            canonical = ordered(canonical.getAsJsonArray(), "id", false);
         }
-        try{return HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(sorted(canonical).toString().getBytes(StandardCharsets.UTF_8)));}
-        catch(java.security.NoSuchAlgorithmException e){throw new IllegalStateException(e);}
-    }
-    private static JsonArray ordered(JsonArray array,String field,boolean numeric) {
-        var rows=new ArrayList<JsonObject>();var seen=new HashSet<String>();
-        for(var raw:array) {
-            if(!raw.isJsonObject()||!raw.getAsJsonObject().has(field))throw new VaultStore.Failure("BAD_REQUEST",EditorI18n.tr("cadeditor.message.playerpresethash.28443a421b", (field)));
-            var row=raw.getAsJsonObject();String identity=row.get(field).getAsString();if(!seen.add(identity))throw new VaultStore.Failure("BAD_REQUEST",EditorI18n.tr("cadeditor.message.playerpresethash.04ec304c2b", (identity)));rows.add(row);
+        try {
+            return HexFormat.of()
+                    .formatHex(MessageDigest.getInstance("SHA-256")
+                            .digest(sorted(canonical).toString().getBytes(StandardCharsets.UTF_8)));
+        } catch (java.security.NoSuchAlgorithmException e) {
+            throw new IllegalStateException(e);
         }
-        rows.sort(numeric?Comparator.comparingInt(r->r.get(field).getAsInt()):Comparator.comparing(r->r.get(field).getAsString()));
-        var result=new JsonArray();rows.forEach(result::add);return result;
     }
-    static String template(JsonObject value){
-        try{return HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(sorted(value).toString().getBytes(StandardCharsets.UTF_8)));}
-        catch(java.security.NoSuchAlgorithmException e){throw new IllegalStateException(e);}
+
+    private static JsonArray ordered(JsonArray array, String field, boolean numeric) {
+        var rows = new ArrayList<JsonObject>();
+        var seen = new HashSet<String>();
+        for (var raw : array) {
+            if (!raw.isJsonObject() || !raw.getAsJsonObject().has(field))
+                throw new VaultStore.Failure(
+                        "BAD_REQUEST",
+                        EditorI18n.tr("cadeditor.message.playerpresethash.preset_entry_missing", (field)));
+            var row = raw.getAsJsonObject();
+            String identity = row.get(field).getAsString();
+            if (!seen.add(identity))
+                throw new VaultStore.Failure(
+                        "BAD_REQUEST",
+                        EditorI18n.tr("cadeditor.message.playerpresethash.preset_entry_repeats", (identity)));
+            rows.add(row);
+        }
+        rows.sort(
+                numeric
+                        ? Comparator.comparingInt(r -> r.get(field).getAsInt())
+                        : Comparator.comparing(r -> r.get(field).getAsString()));
+        var result = new JsonArray();
+        rows.forEach(result::add);
+        return result;
     }
+
+    static String template(JsonObject value) {
+        try {
+            return HexFormat.of()
+                    .formatHex(MessageDigest.getInstance("SHA-256")
+                            .digest(sorted(value).toString().getBytes(StandardCharsets.UTF_8)));
+        } catch (java.security.NoSuchAlgorithmException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
     private static JsonElement sorted(JsonElement value) {
-        if(value.isJsonObject()){var o=new JsonObject();for(String key:new TreeSet<>(value.getAsJsonObject().keySet()))o.add(key,sorted(value.getAsJsonObject().get(key)));return o;}
-        if(value.isJsonArray()){var a=new JsonArray();value.getAsJsonArray().forEach(v->a.add(sorted(v)));return a;}
-        if(value.isJsonPrimitive()&&value.getAsJsonPrimitive().isNumber())return new JsonPrimitive(value.getAsBigDecimal().stripTrailingZeros());
+        if (value.isJsonObject()) {
+            var o = new JsonObject();
+            for (String key : new TreeSet<>(value.getAsJsonObject().keySet()))
+                o.add(key, sorted(value.getAsJsonObject().get(key)));
+            return o;
+        }
+        if (value.isJsonArray()) {
+            var a = new JsonArray();
+            value.getAsJsonArray().forEach(v -> a.add(sorted(v)));
+            return a;
+        }
+        if (value.isJsonPrimitive() && value.getAsJsonPrimitive().isNumber())
+            return new JsonPrimitive(value.getAsBigDecimal().stripTrailingZeros());
         return value;
     }
 }

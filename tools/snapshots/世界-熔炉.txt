@@ -27,7 +27,7 @@ div
         img.o-ico [src="oriel:textures/icons/down.png" style="height:8px;width:8px"]
       span "预览"
       div.grow
-      div.ed-view.k-seg [title="方块预览：2D 图标 / 3D 模型（会记住你的选择）"]
+      div.ed-view.k-seg [title="2D 图标 / 3D 模型"]
         div.k-segi.on "2D"
         div.k-segi "3D"
     div.ed-stage
@@ -84,9 +84,9 @@ div
                 div.k-num.k-xnum
                   div.k-numrow
                     div.k-stepper
-                      div.k-step [title="减少（按住 Shift 一次 ×10）"] "−"
-                      input.k-input.k-numin [type="text" value="0"]
-                      div.k-step [title="增加（按住 Shift 一次 ×10）"] "+"
+                      div.k-step [title="减少（Shift 加速）"] "−"
+                      input.k-input.k-numin [placeholder="未设置" type="text" value="0"]
+                      div.k-step [title="增加（Shift 加速）"] "+"
                       span.u "刻"
                       span.k-big [style="display:none"]
                   div.k-numerr [style="display:none"]
@@ -98,9 +98,9 @@ div
                 div.k-num.k-xnum
                   div.k-numrow
                     div.k-stepper
-                      div.k-step [title="减少（按住 Shift 一次 ×10）"] "−"
-                      input.k-input.k-numin [type="text" value="0"]
-                      div.k-step [title="增加（按住 Shift 一次 ×10）"] "+"
+                      div.k-step [title="减少（Shift 加速）"] "−"
+                      input.k-input.k-numin [placeholder="未设置" type="text" value="0"]
+                      div.k-step [title="增加（Shift 加速）"] "+"
                       span.u "刻"
                       span.k-big [style="display:none"]
                   div.k-numerr [style="display:none"]
@@ -112,9 +112,9 @@ div
                 div.k-num.k-xnum
                   div.k-numrow
                     div.k-stepper
-                      div.k-step [title="减少（按住 Shift 一次 ×10）"] "−"
-                      input.k-input.k-numin [type="text" value="0"]
-                      div.k-step [title="增加（按住 Shift 一次 ×10）"] "+"
+                      div.k-step [title="减少（Shift 加速）"] "−"
+                      input.k-input.k-numin [placeholder="未设置" type="text" value="0"]
+                      div.k-step [title="增加（Shift 加速）"] "+"
                       span.u "刻"
                       span.k-big [style="display:none"]
                   div.k-numerr [style="display:none"]
@@ -126,14 +126,14 @@ div
                 div.k-num.k-xnum
                   div.k-numrow
                     div.k-stepper
-                      div.k-step [title="减少（按住 Shift 一次 ×10）"] "−"
-                      input.k-input.k-numin [type="text" value="0"]
-                      div.k-step [title="增加（按住 Shift 一次 ×10）"] "+"
+                      div.k-step [title="减少（Shift 加速）"] "−"
+                      input.k-input.k-numin [placeholder="未设置" type="text" value="0"]
+                      div.k-step [title="增加（Shift 加速）"] "+"
                       span.u "刻"
                       span.k-big [style="display:none"]
                   div.k-numerr [style="display:none"]
                   div.k-numwarn [style="display:none"]
-            div.k-sub "游戏运行时会自己推进这些数；你没改的项，保存时以当时的实际进度为准。"
+            div.k-desc.k-sub [title="游戏运行时会自己推进这些数；你没改的项，保存时以当时的实际进度为准。"] "游戏运行时会自己推进这些数；你没改的项，保存时以当时的实际进度为准。"
           div.k-div
 ## footer
 div
@@ -174,7 +174,7 @@ div
         img.o-ico [src="oriel:textures/icons/down.png" style="height:8px;width:8px"]
       span "预览"
       div.grow
-      div.ed-view.k-seg [title="方块预览：2D 图标 / 3D 模型（会记住你的选择）"]
+      div.ed-view.k-seg [title="2D 图标 / 3D 模型"]
         div.k-segi.on "2D"
         div.k-segi "3D"
     div.ed-stage
@@ -232,14 +232,25 @@ div
                     img.o-ico [src="oriel:textures/icons/layers.png" style="height:16px;width:16px"]
                   div.k-btn.kc-tool [title="复制"]
                     img.o-ico [src="oriel:textures/icons/copy.png" style="height:16px;width:16px"]
-                div.kc-fonts [title="仅调整 SNBT 字号，不改变全局界面比例或内容"]
-                  div.k-btn.sm [title="缩小 SNBT 字号"]
+                  div.k-btn.kc-tool [title="折叠"]
+                    img.o-ico [src="oriel:textures/icons/layers_cards.png" style="height:16px;width:16px"]
+                  div.k-btn.kc-tool [title="查找与替换（Ctrl+F / Ctrl+H，跳转 Ctrl+G）"]
+                    img.o-ico [src="oriel:textures/icons/search.png" style="height:16px;width:16px"]
+                  div.k-btn.kc-tool [title="补全：输入时自动弹出（Ctrl+Space 立即显示）"]
+                    img.o-ico [src="oriel:textures/icons/sparkle.png" style="height:16px;width:16px"]
+                  div.k-btn.kc-tool [title="编辑光标处的字符串（Ctrl+O）"]
+                    img.o-ico [src="oriel:textures/icons/external.png" style="height:16px;width:16px"]
+                div.kc-fonts [title="仅调整 SNBT 字号，不改变全局界面比例或内容；也可按住 Ctrl 滚动滚轮"]
+                  div.k-btn.sm [title="缩小 SNBT 字号（Ctrl+滚轮向下）"]
                     span "A−"
                   span.kc-font-label "12"
-                  div.k-btn.sm [title="放大 SNBT 字号"]
+                  div.k-btn.sm [title="放大 SNBT 字号（Ctrl+滚轮向上）"]
                     span "A+"
               div.kc-surface
-                textarea.ed-snbt.kc-ta [value="{\n  id: \"minecraft:furnace\",\n  x: 1,\n  y: 2,\n  z: 3\n}" style="fontSize:12px;height:360px;lineHeight:14px;minHeight:80px"]
+                div.kc-gut [style="height:360px;width:10px"]
+                  div.kc-gut-in [style="top:4px"]
+                    div.kc-fm [style="height:14px;lineHeight:14px;top:0px"] "−"
+                textarea.ed-snbt.kc-ta [value="{\n  id: \"minecraft:furnace\",\n  x: 1,\n  y: 2,\n  z: 3\n}" style="fontSize:12px;height:360px;lineHeight:14px;minHeight:80px;paddingLeft:13px"]
                 div.k-sub.kc-st "✓ SNBT 有效 · 6 行"
               div.kc-diagnostic [style="display:none"]
             div.k-btn

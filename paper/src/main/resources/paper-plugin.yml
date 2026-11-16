@@ -1,0 +1,54 @@
+name: CADEditor
+version: '${version}'
+main: cn.gtedd.cadeditorpaper.CadEditorPaperPlugin
+api-version: '${minecraftVersion}'
+description: 'CAD Editor ${version} server for Paper: item, block, entity and player editing for clients running the CAD Editor mod, with an edit history and permission nodes.'
+authors: [ GTedd ]
+# Commands (/cadeditor ...) are registered with Brigadier by the plugin. Permission nodes and their defaults are listed in
+# plugins/CADEditor/cadeditor.json and README.md; an explicit grant or denial from a permission plugin always wins.
+# Listed for permission plugins (LuckPerms and others can suggest them). "default: false" only means Bukkit grants none
+# of them by itself: until a permission plugin sets a node, CAD Editor applies its own default (operator level, game
+# mode, cadeditor.json), and an explicit grant or denial always wins.
+permissions:
+  cadeditor.use:
+    description: 'Any server-side CAD Editor feature; false blocks all of them. Editor default: everyone.'
+    default: false
+  cadeditor.item.edit:
+    description: 'Write own inventory and open-container slots in any game mode. Editor default: admin level.'
+    default: false
+  cadeditor.item.creative:
+    description: 'Creative-mode item writes without item.edit. Editor default: creative players (creativeItemEdit).'
+    default: false
+  cadeditor.item.bypass:
+    description: 'Exempt from cadeditor.json itemRules (banned items, restricted components, command click events). Editor default: admin level.'
+    default: false
+  cadeditor.world.read:
+    description: 'Read block entity and entity data in reach. Editor default: admin level (or creative if creativeWorldEdit).'
+    default: false
+  cadeditor.world.edit:
+    description: 'Write and undo block entity and entity data. Editor default: admin level (or creative if creativeWorldEdit).'
+    default: false
+  cadeditor.player.edit:
+    description: 'Read and edit online players, oneself included. Editor default: admin level.'
+    default: false
+  cadeditor.player.offline:
+    description: 'Player list and offline player files. Editor default: admin level.'
+    default: false
+  cadeditor.vault.give:
+    description: 'Server-side vault give outside creative mode. Editor default: admin level.'
+    default: false
+  cadeditor.testkit:
+    description: '/cadeditor testkit. Editor default: admin level or creative players.'
+    default: false
+  cadeditor.history.own:
+    description: 'View own history records. Editor default: everyone.'
+    default: false
+  cadeditor.history.view:
+    description: 'View all history records. Editor default: admin level.'
+    default: false
+  cadeditor.history.edit:
+    description: 'Add manual records, change notes and tags. Editor default: admin level.'
+    default: false
+  cadeditor.history.delete:
+    description: 'Delete and purge history records (each deletion is recorded). Editor default: operator level 4.'
+    default: false

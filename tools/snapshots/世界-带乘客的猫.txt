@@ -27,7 +27,7 @@ div
         img.o-ico [src="oriel:textures/icons/down.png" style="height:8px;width:8px"]
       span "预览"
       div.grow
-      div.ed-view.k-seg [title="2D 显示图标 / 3D 显示生物（会记住你的选择）"]
+      div.ed-view.k-seg [title="2D 图标 / 3D 生物"]
         div.k-segi.on "2D"
         div.k-segi "3D"
     div.ed-stage
@@ -77,7 +77,8 @@ div
         div.k-btn [title="把调好的整只生物存起来，之后在任何选择生物的地方取出"]
           img.o-ico [src="oriel:textures/icons/chest.png" style="height:16px;width:16px"]
           span "存入保险库"
-        div.ed-sounds
+        div.egg-actions
+          div.ed-sounds
       div.es-panel
         div.k-list
           div.k-card.w-card [data-card="es:外观"]
@@ -159,9 +160,9 @@ div
                     div.k-num.k-xnum
                       div.k-numrow
                         div.k-stepper
-                          div.k-step [title="减少（按住 Shift 一次 ×10）"] "−"
-                          input.k-input.k-numin [type="text" value="10"]
-                          div.k-step [title="增加（按住 Shift 一次 ×10）"] "+"
+                          div.k-step [title="减少（Shift 加速）"] "−"
+                          input.k-input.k-numin [placeholder="未设置" type="text" value="10"]
+                          div.k-step [title="增加（Shift 加速）"] "+"
                           span.k-big [style="display:none"]
                       div.k-numerr [style="display:none"]
                       div.k-numwarn [style="display:none"]
@@ -256,13 +257,13 @@ div
                   div.k-xhead
                     div.tx [title="minecraft:scale"]
                       div.z "体型"
-                      div.s "大小倍数，1 是原样；默认 1 · 范围 0.0625 ~ 16"
+                      div.s "默认 1 · 范围 0.0625 ~ 16"
                     div.k-num.k-xnum
                       div.k-numrow
                         div.k-stepper
-                          div.k-step [title="减少（按住 Shift 一次 ×10）"] "−"
-                          input.k-input.k-numin [type="text" value="1"]
-                          div.k-step [title="增加（按住 Shift 一次 ×10）"] "+"
+                          div.k-step [title="减少（Shift 加速）"] "−"
+                          input.k-input.k-numin [placeholder="未设置" type="text" value="1"]
+                          div.k-step [title="增加（Shift 加速）"] "+"
                           span.k-big [style="display:none"]
                         div.k-slider
                           div.tr
@@ -277,15 +278,15 @@ div
                         div.k-preset "4"
                 div.k-srow.k-xrow
                   div.k-xhead
-                    div.tx [title="minecraft:max_health"]
+                    div.tx [title="minecraft:max_health\n降低上限时，超出的当前值会同步降低。"]
                       div.z "Max Health"
-                      div.s "默认 10 · 范围 1 ~ 1024；降低后若当前值超限，会同步降至实际生效上限"
+                      div.s "默认 10 · 范围 1 ~ 1024"
                     div.k-num.k-xnum
                       div.k-numrow
                         div.k-stepper
-                          div.k-step [title="减少（按住 Shift 一次 ×10）"] "−"
-                          input.k-input.k-numin [type="text" value="10"]
-                          div.k-step [title="增加（按住 Shift 一次 ×10）"] "+"
+                          div.k-step [title="减少（Shift 加速）"] "−"
+                          input.k-input.k-numin [placeholder="未设置" type="text" value="10"]
+                          div.k-step [title="增加（Shift 加速）"] "+"
                           span.k-big [style="display:none"]
                       div.k-numerr [style="display:none"]
                       div.k-numwarn [style="display:none"]
@@ -297,9 +298,9 @@ div
                     div.k-num.k-xnum
                       div.k-numrow
                         div.k-stepper
-                          div.k-step [title="减少（按住 Shift 一次 ×10）"] "−"
-                          input.k-input.k-numin [type="text" value="0.3"]
-                          div.k-step [title="增加（按住 Shift 一次 ×10）"] "+"
+                          div.k-step [title="减少（Shift 加速）"] "−"
+                          input.k-input.k-numin [placeholder="未设置" type="text" value="0.3"]
+                          div.k-step [title="增加（Shift 加速）"] "+"
                           span.k-big [style="display:none"]
                       div.k-numerr [style="display:none"]
                       div.k-numwarn [style="display:none"]
@@ -311,9 +312,9 @@ div
                     div.k-num.k-xnum
                       div.k-numrow
                         div.k-stepper
-                          div.k-step [title="减少（按住 Shift 一次 ×10）"] "−"
-                          input.k-input.k-numin [type="text" value="3"]
-                          div.k-step [title="增加（按住 Shift 一次 ×10）"] "+"
+                          div.k-step [title="减少（Shift 加速）"] "−"
+                          input.k-input.k-numin [placeholder="未设置" type="text" value="3"]
+                          div.k-step [title="增加（Shift 加速）"] "+"
                           span.k-big [style="display:none"]
                       div.k-numerr [style="display:none"]
                       div.k-numwarn [style="display:none"]
@@ -325,9 +326,9 @@ div
                     div.k-num.k-xnum
                       div.k-numrow
                         div.k-stepper
-                          div.k-step [title="减少（按住 Shift 一次 ×10）"] "−"
-                          input.k-input.k-numin [type="text" value="16"]
-                          div.k-step [title="增加（按住 Shift 一次 ×10）"] "+"
+                          div.k-step [title="减少（Shift 加速）"] "−"
+                          input.k-input.k-numin [placeholder="未设置" type="text" value="16"]
+                          div.k-step [title="增加（Shift 加速）"] "+"
                           span.k-big [style="display:none"]
                       div.k-numerr [style="display:none"]
                       div.k-numwarn [style="display:none"]
@@ -339,9 +340,9 @@ div
                     div.k-num.k-xnum
                       div.k-numrow
                         div.k-stepper
-                          div.k-step [title="减少（按住 Shift 一次 ×10）"] "−"
-                          input.k-input.k-numin [type="text" value="0"]
-                          div.k-step [title="增加（按住 Shift 一次 ×10）"] "+"
+                          div.k-step [title="减少（Shift 加速）"] "−"
+                          input.k-input.k-numin [placeholder="未设置" type="text" value="0"]
+                          div.k-step [title="增加（Shift 加速）"] "+"
                           span.k-big [style="display:none"]
                       div.k-numerr [style="display:none"]
                       div.k-numwarn [style="display:none"]
@@ -426,7 +427,6 @@ div
                       img.es-ghost.o-ico [src="oriel:textures/icons/cart.png" style="height:16px;width:16px"]
                     span.es-gearl "鞍"
             div.k-div
-      div.k-sub "位置、UUID 等其余字段在「数据」页用 SNBT 编辑。"
 ## footer
 div
   span.it
@@ -466,7 +466,7 @@ div
         img.o-ico [src="oriel:textures/icons/down.png" style="height:8px;width:8px"]
       span "预览"
       div.grow
-      div.ed-view.k-seg [title="2D 显示图标 / 3D 显示生物（会记住你的选择）"]
+      div.ed-view.k-seg [title="2D 图标 / 3D 生物"]
         div.k-segi.on "2D"
         div.k-segi "3D"
     div.ed-stage
@@ -577,7 +577,7 @@ div
                   img.o-ico [src="oriel:textures/icons/close.png" style="height:16px;width:16px"]
                   span "赶下去"
             div.wp-addbox [style="display:none"]
-              div.k-sub "新生物会按游戏的规则判断能不能骑上去"
+              div.k-desc.k-sub [title="新生物会按游戏的规则判断能不能骑上去"] "新生物会按游戏的规则判断能不能骑上去"
               div.egg-who
                 div.egg-ico
                   img.o-ico [src="oriel:textures/icons/paw.png" style="height:32px;width:32px"]
@@ -587,7 +587,14 @@ div
                 div.k-btn
                   img.o-ico [src="oriel:textures/icons/grid.png" style="height:16px;width:16px"]
                   span "更换生物"
-                div.ed-sounds
+                div.k-btn [title="把调好的整只生物存起来，之后在任何选择生物的地方取出"]
+                  img.o-ico [src="oriel:textures/icons/chest.png" style="height:16px;width:16px"]
+                  span "存入保险库"
+                div.egg-actions
+                  div.ed-sounds
+                  div.k-btn
+                    img.o-ico [src="oriel:textures/icons/edit.png" style="height:16px;width:16px"]
+                    span "编辑生物"
               div.k-srow.k-xrow
                 div.k-xhead
                   div.tx
@@ -598,7 +605,7 @@ div
                 div.k-btn.pri
                   img.o-ico [src="oriel:textures/icons/plus.png" style="height:16px;width:16px"]
                   span "加上去"
-              div.k-sub "骑乘关系的修改不能撤销。"
+              div.k-desc.k-sub [title="骑乘关系的修改不能撤销。"] "骑乘关系的修改不能撤销。"
           div.k-div
 ## footer
 div
@@ -639,7 +646,7 @@ div
         img.o-ico [src="oriel:textures/icons/down.png" style="height:8px;width:8px"]
       span "预览"
       div.grow
-      div.ed-view.k-seg [title="2D 显示图标 / 3D 显示生物（会记住你的选择）"]
+      div.ed-view.k-seg [title="2D 图标 / 3D 生物"]
         div.k-segi.on "2D"
         div.k-segi "3D"
     div.ed-stage
@@ -703,14 +710,25 @@ div
                     img.o-ico [src="oriel:textures/icons/layers.png" style="height:16px;width:16px"]
                   div.k-btn.kc-tool [title="复制"]
                     img.o-ico [src="oriel:textures/icons/copy.png" style="height:16px;width:16px"]
-                div.kc-fonts [title="仅调整 SNBT 字号，不改变全局界面比例或内容"]
-                  div.k-btn.sm [title="缩小 SNBT 字号"]
+                  div.k-btn.kc-tool [title="折叠"]
+                    img.o-ico [src="oriel:textures/icons/layers_cards.png" style="height:16px;width:16px"]
+                  div.k-btn.kc-tool [title="查找与替换（Ctrl+F / Ctrl+H，跳转 Ctrl+G）"]
+                    img.o-ico [src="oriel:textures/icons/search.png" style="height:16px;width:16px"]
+                  div.k-btn.kc-tool [title="补全：输入时自动弹出（Ctrl+Space 立即显示）"]
+                    img.o-ico [src="oriel:textures/icons/sparkle.png" style="height:16px;width:16px"]
+                  div.k-btn.kc-tool [title="编辑光标处的字符串（Ctrl+O）"]
+                    img.o-ico [src="oriel:textures/icons/external.png" style="height:16px;width:16px"]
+                div.kc-fonts [title="仅调整 SNBT 字号，不改变全局界面比例或内容；也可按住 Ctrl 滚动滚轮"]
+                  div.k-btn.sm [title="缩小 SNBT 字号（Ctrl+滚轮向下）"]
                     span "A−"
                   span.kc-font-label "12"
-                  div.k-btn.sm [title="放大 SNBT 字号"]
+                  div.k-btn.sm [title="放大 SNBT 字号（Ctrl+滚轮向上）"]
                     span "A+"
               div.kc-surface
-                textarea.ed-snbt.kc-ta [value="{\n  id: \"minecraft:cat\"\n}" style="fontSize:12px;height:360px;lineHeight:14px;minHeight:80px"]
+                div.kc-gut [style="height:360px;width:10px"]
+                  div.kc-gut-in [style="top:4px"]
+                    div.kc-fm [style="height:14px;lineHeight:14px;top:0px"] "−"
+                textarea.ed-snbt.kc-ta [value="{\n  id: \"minecraft:cat\"\n}" style="fontSize:12px;height:360px;lineHeight:14px;minHeight:80px;paddingLeft:13px"]
                 div.k-sub.kc-st "✓ SNBT 有效 · 3 行"
               div.kc-diagnostic [style="display:none"]
             div.k-btn

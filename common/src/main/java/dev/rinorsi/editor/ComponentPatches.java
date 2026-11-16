@@ -10,6 +10,7 @@ import net.minecraft.core.component.DataComponentType;
 /** split() is public in all targets; 26.3 removed entrySet(). Removed components stay explicit. */
 public final class ComponentPatches {
     private ComponentPatches() {}
+
     public static List<Map.Entry<DataComponentType<?>, Optional<?>>> entries(DataComponentPatch patch) {
         var result = new ArrayList<Map.Entry<DataComponentType<?>, Optional<?>>>();
         var split = patch.split();

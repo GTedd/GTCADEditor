@@ -19,7 +19,7 @@ div
       span [style="color:#FFFFFF;font-weight:normal;font-style:italic;"] "测试"
     div.ed-tags
       span.k-tag "近战武器"
-      span.dim.k-tag "普通"
+      span.dim.k-tag "常见"
     div.ed-stagehead
       span.fold-arrow
         img.o-ico [src="oriel:textures/icons/down.png" style="height:8px;width:8px"]
@@ -123,7 +123,7 @@ div
             span.lt "目标选择器"
           input.k-input [placeholder="@s / @p / 玩家名" type="text" value="@s"]
         div.ed-hint "命令方块、函数、控制台没有执行者，不能写 @s；命令方块用 @p，控制台和函数填你的玩家名。"
-        textarea.ed-out [value="/item replace entity @s weapon.mainhand with minecraft:diamond_sword[custom_name=\"测试\"]"]
+        pre.ed-command "/item replace entity @s weapon.mainhand with minecraft:diamond_sword[custom_name="测试"]"
         div.ed-sbar
           span.k-sub "86 字符"
           div.grow
@@ -135,6 +135,11 @@ div
             span "应用到游戏"
 ## footer
 div
+  span.it
+    i.dot
+    "没有未应用的改动"
+  div.grow
+  span.it "历史 0/0"
 ## overlays
 div
 
@@ -159,7 +164,7 @@ div
       span [style="color:#FFFFFF;font-weight:normal;font-style:italic;"] "测试"
     div.ed-tags
       span.k-tag "近战武器"
-      span.dim.k-tag "普通"
+      span.dim.k-tag "常见"
     div.ed-stagehead
       span.fold-arrow
         img.o-ico [src="oriel:textures/icons/down.png" style="height:8px;width:8px"]
@@ -251,26 +256,46 @@ div
             div.k-chev [title="折叠 / 展开"]
               img.o-ico [src="oriel:textures/icons/down.png" style="height:8px;width:8px"]
           div.k-cbody.x-sliding [style="height:300px;opacity:1"]
-            div.k-rich.open
-              div.k-mctext.k-rprev
+            div.k-rd.open.single
+              div.k-mctext.k-rdprev.k-rprev
                 span [style="color:#FFFFFF;font-weight:normal;font-style:italic;"] "测试"
-              div.k-redit [style="display:flex"]
-                div.k-rruns
-                  div.k-rrun.k-srow
-                    div.k-rcolb [title="文字颜色：点开选色，或输入 #RRGGBB"]
-                      i.none.sw
-                      span "颜色"
-                    input.k-input [placeholder="输入新名称；留空 = 使用「钻石剑」" type="text" value="测试"]
-                    div.k-rsty
-                      div.bold.k-rs [title="粗体"] "B"
-                      div.italic.k-rs [title="斜体（再点一次=强制非斜体）"] "I"
-                      div.k-rs.underlined [title="下划线"] "U"
-                      div.k-rs.strikethrough [title="删除线"] "S"
-                    div.k-mini.m-ripple [title="分色：把文字分成几段，每段单独设置颜色"]
-                      img.o-ico [src="oriel:textures/icons/plus.png" style="height:16px;width:16px"]
-                    div.k-mini.m-ripple [title="渐变色、§ 代码、清除格式"]
-                      img.o-ico [src="oriel:textures/icons/menu.png" style="height:16px;width:16px"]
-                div.k-row.k-rtools [style="display:none"]
+              div.k-rdedit [style="display:flex"]
+                div.k-rdbar
+                  div.color.k-rdb [title="文字颜色：默认"]
+                    i.def.k-rdsw [style="background:#FFFFFF"]
+                  div.k-rdb.shadow [title="文字阴影：默认"]
+                    i.def.k-rdsh.k-rdsw
+                  div.bold.flag.k-rdb [title="粗体（Ctrl+B）"]
+                    span "B"
+                  div.flag.italic.k-rdb.on [title="斜体（Ctrl+I）"]
+                    span "I"
+                  div.flag.k-rdb.underlined [title="下划线（Ctrl+U）"]
+                    span "U"
+                  div.flag.k-rdb.strikethrough [title="删除线"]
+                    span "S"
+                  div.flag.k-rdb.obfuscated [title="乱码字（游戏里不停变化）"]
+                    span "?"
+                  div.font.k-rdb [title="字体：minecraft:default"]
+                    span "Aa"
+                  i.k-rdsep
+                  div.k-rdb.sprite [title="在光标处插入精灵图"]
+                    img.o-ico [src="oriel:textures/icons/image.png" style="height:16px;width:16px"]
+                  div.head.k-rdb [title="插入玩家头像"]
+                    img.o-ico [src="oriel:textures/icons/user.png" style="height:16px;width:16px"]
+                  div.k-rdb.translate [title="插入翻译键"]
+                    img.o-ico [src="oriel:textures/icons/globe.png" style="height:16px;width:16px"]
+                  div.event.k-rdb [title="点击与悬停事件"]
+                    img.o-ico [src="oriel:textures/icons/link.png" style="height:16px;width:16px"]
+                  div.grad.k-rdb [title="渐变色（选中文字；没选就是整页）"]
+                    img.o-ico [src="oriel:textures/icons/palette.png" style="height:16px;width:16px"]
+                  div.k-rdb.more [title="§ 代码、清除格式"]
+                    img.o-ico [src="oriel:textures/icons/menu.png" style="height:16px;width:16px"]
+                  span.k-rdcount
+                div.k-rdtaw
+                  textarea.k-input.k-rdta [placeholder="输入新名称；留空 = 使用「钻石剑」" value="测试" style="color:#FFFFFF"]
+                  div.k-rdspr
+                    div.k-rdsprin
+                      div.k-rdmirror
           div.k-div
         div.k-card.wide [data-card="lore"]
           div.k-chead.m-spot
@@ -294,6 +319,9 @@ div
             div.k-add
               img.o-ico [src="oriel:textures/icons/plus.png" style="height:16px;width:16px"]
               "添加一行"
+            div.ia-entry.k-btn.m-ripple [title="把 PNG / JPG 图片转成 Lore 像素画"]
+              img.o-ico [src="oriel:textures/icons/image.png" style="height:16px;width:16px"]
+              span "图片转 Lore"
           div.k-div
       div.k-sech "稀有度与显示"
       div.k-list
@@ -314,7 +342,7 @@ div
               img.o-ico [src="oriel:textures/icons/down.png" style="height:8px;width:8px"]
             div.card-head-select
               div.k-btn.k-sel.m-ripple
-                span "普通"
+                span "常见"
                 img.o-ico [src="oriel:textures/icons/down.png" style="height:8px;width:8px"]
           div.k-cbody
           div.k-div
@@ -374,7 +402,7 @@ div
                 div.k-chip.m-ripple [title="minecraft:jukebox_playable"] "唱片信息"
                 div.k-chip.m-ripple "＋ 其他组件"
           div.k-div
-        div.flat.k-card [data-card="model"]
+        div.bare.flat.head-select-card.k-card [data-card="model"]
           div.k-chead.m-spot
             div.k-cico
               img.o-ico [src="oriel:textures/icons/image.png" style="height:16px;width:16px"]
@@ -384,20 +412,25 @@ div
                 span.k-badge [title="这一项和物品原版默认值不同"] "自定义"
               div.k-cdesc "让它看起来像另一个物品（只改外观，功能不变）"
             div.k-csum
-            div.hd-pick.k-row
-              div.k-btn.m-ripple
-                item.k-ico [style="height:16px;width:16px"]
-                span.hd-model [title="钻石剑\nminecraft:diamond_sword"] "钻石剑"
-                img.o-ico [src="oriel:textures/icons/down.png" style="height:8px;width:8px"]
             div.k-cval
             div.k-reset [title="放弃这里的修改，使用物品原本的值"] "恢复默认"
             span.k-swph
             div.k-chev [title="折叠 / 展开"]
               img.o-ico [src="oriel:textures/icons/down.png" style="height:8px;width:8px"]
+            div.card-head-select.k-row
+              div.k-btn.m-ripple
+                item.k-ico [style="height:16px;width:16px"]
+                span.hd-model [title="钻石剑\nminecraft:diamond_sword"] "钻石剑"
+                img.o-ico [src="oriel:textures/icons/down.png" style="height:8px;width:8px"]
           div.k-cbody
           div.k-div
 ## footer
 div
+  span.it
+    i.dot
+    "没有未应用的改动"
+  div.grow
+  span.it "历史 0/0"
 ## overlays
 div
 
@@ -422,7 +455,7 @@ div
       span [style="color:#FFFFFF;font-weight:normal;font-style:italic;"] "测试"
     div.ed-tags
       span.k-tag "近战武器"
-      span.dim.k-tag "普通"
+      span.dim.k-tag "常见"
     div.ed-stagehead
       span.fold-arrow
         img.o-ico [src="oriel:textures/icons/down.png" style="height:8px;width:8px"]
@@ -517,9 +550,9 @@ div
             div.k-num
               div.k-numrow
                 div.k-stepper
-                  div.k-step [title="减少（按住 Shift 一次 ×10）"] "−"
-                  input.big.k-input.k-numin [type="text" value="7"]
-                  div.k-step [title="增加（按住 Shift 一次 ×10）"] "+"
+                  div.k-step [title="减少（Shift 加速）"] "−"
+                  input.big.k-input.k-numin [placeholder="未设置" type="text" value="7"]
+                  div.k-step [title="增加（Shift 加速）"] "+"
                   span.u "点"
                   span.k-big [style="display:none"]
                 div.k-slider
@@ -564,9 +597,9 @@ div
             div.k-num
               div.k-numrow
                 div.k-stepper
-                  div.k-step [title="减少（按住 Shift 一次 ×10）"] "−"
-                  input.big.k-input.k-numin [type="text" value="1.6"]
-                  div.k-step [title="增加（按住 Shift 一次 ×10）"] "+"
+                  div.k-step [title="减少（Shift 加速）"] "−"
+                  input.big.k-input.k-numin [placeholder="未设置" type="text" value="1.6"]
+                  div.k-step [title="增加（Shift 加速）"] "+"
                   span.u "次/秒"
                   span.k-big [style="display:none"]
                 div.k-slider
@@ -609,9 +642,9 @@ div
               div.k-num
                 div.k-numrow
                   div.k-stepper
-                    div.k-step [title="减少（按住 Shift 一次 ×10）"] "−"
-                    input.k-input.k-numin [type="text" value="1"]
-                    div.k-step [title="增加（按住 Shift 一次 ×10）"] "+"
+                    div.k-step [title="减少（Shift 加速）"] "−"
+                    input.k-input.k-numin [placeholder="未设置" type="text" value="1"]
+                    div.k-step [title="增加（Shift 加速）"] "+"
                     span.k-big [style="display:none"]
                   div.k-slider
                     div.tr
@@ -630,9 +663,9 @@ div
               div.k-num
                 div.k-numrow
                   div.k-stepper
-                    div.k-step [title="减少（按住 Shift 一次 ×10）"] "−"
-                    input.k-input.k-numin [type="text" value="0"]
-                    div.k-step [title="增加（按住 Shift 一次 ×10）"] "+"
+                    div.k-step [title="减少（Shift 加速）"] "−"
+                    input.k-input.k-numin [placeholder="未设置" type="text" value="0"]
+                    div.k-step [title="增加（Shift 加速）"] "+"
                     span.u "秒"
                     span.k-big [style="display:none"]
                   div.k-slider
@@ -669,9 +702,9 @@ div
               div.k-num
                 div.k-numrow
                   div.k-stepper
-                    div.k-step [title="减少（按住 Shift 一次 ×10）"] "−"
-                    input.k-input.k-numin [type="text" value="3"]
-                    div.k-step [title="增加（按住 Shift 一次 ×10）"] "+"
+                    div.k-step [title="减少（Shift 加速）"] "−"
+                    input.k-input.k-numin [placeholder="未设置" type="text" value="3"]
+                    div.k-step [title="增加（Shift 加速）"] "+"
                     span.u "格"
                     span.k-big [style="display:none"]
                   div.k-slider
@@ -693,9 +726,9 @@ div
               div.k-num
                 div.k-numrow
                   div.k-stepper
-                    div.k-step [title="减少（按住 Shift 一次 ×10）"] "−"
-                    input.k-input.k-numin [type="text" value="0"]
-                    div.k-step [title="增加（按住 Shift 一次 ×10）"] "+"
+                    div.k-step [title="减少（Shift 加速）"] "−"
+                    input.k-input.k-numin [placeholder="未设置" type="text" value="0"]
+                    div.k-step [title="增加（Shift 加速）"] "+"
                     span.u "格"
                     span.k-big [style="display:none"]
                   div.k-slider
@@ -714,9 +747,9 @@ div
               div.k-num
                 div.k-numrow
                   div.k-stepper
-                    div.k-step [title="减少（按住 Shift 一次 ×10）"] "−"
-                    input.k-input.k-numin [type="text" value="0.3"]
-                    div.k-step [title="增加（按住 Shift 一次 ×10）"] "+"
+                    div.k-step [title="减少（Shift 加速）"] "−"
+                    input.k-input.k-numin [placeholder="未设置" type="text" value="0.3"]
+                    div.k-step [title="增加（Shift 加速）"] "+"
                     span.u "格"
                     span.k-big [style="display:none"]
                   div.k-slider
@@ -725,7 +758,7 @@ div
                     div.th [style="left:30%"]
                 div.k-numerr [style="display:none"]
                 div.k-numwarn [style="display:none"]
-            div.k-sub "这个物品没有自带的攻击距离，改动任何一项即启用。"
+            div.k-desc.k-sub [title="这个物品没有自带的攻击距离，改动任何一项即启用。"] "这个物品没有自带的攻击距离，改动任何一项即启用。"
           div.k-div
         div.k-card [data-card="swing"]
           div.k-chead.m-spot
@@ -760,9 +793,9 @@ div
               div.k-num
                 div.k-numrow
                   div.k-stepper
-                    div.k-step [title="减少（按住 Shift 一次 ×10）"] "−"
-                    input.k-input.k-numin [type="text" value="6"]
-                    div.k-step [title="增加（按住 Shift 一次 ×10）"] "+"
+                    div.k-step [title="减少（Shift 加速）"] "−"
+                    input.k-input.k-numin [placeholder="未设置" type="text" value="6"]
+                    div.k-step [title="增加（Shift 加速）"] "+"
                     span.u "刻"
                     span.k-big [style="display:none"]
                   div.k-slider
@@ -802,11 +835,11 @@ div
               img.o-ico [src="oriel:textures/icons/sliders.png" style="height:16px;width:16px"]
             div.k-ctx
               div.k-ctitle
-                "其它属性加成"
+                "属性加成"
                 span.k-badge [title="这一项和物品原版默认值不同"] "自定义"
-              div.k-cdesc "最大生命、移动速度、击退抗性、攻击距离…… 装备/拿在手里时给你的加成"
+              div.k-cdesc "装备或持有时的属性加成"
             div.k-csum
-            div.k-cval
+            div.k-cval "2 项"
             div.k-reset [title="放弃这里的修改，使用物品原本的值"] "恢复默认"
             span.k-swph
             div.det.k-chev [title="在独立窗口中编辑"]
@@ -814,13 +847,61 @@ div
           div.k-cbody
             div.k-scrollbox.tall
               div.k-sortlist
-                div.k-empty "还没有额外的属性加成"
+                div.k-srow.k-xrow
+                  div.k-xhead
+                    div.k-grip [title="按住拖动排序"]
+                      img.o-ico [src="oriel:textures/icons/drag.png" style="height:16px;width:16px"]
+                    div.ic
+                      img.k-ico [src="minecraft:textures/mob_effect/strength.png" style="height:16px;width:16px"]
+                    div.tx [title="生物的近战攻击伤害"]
+                      div.z "攻击伤害"
+                      div.s "主手"
+                    div.k-num.k-xnum
+                      div.k-numrow
+                        div.k-stepper
+                          div.k-step [title="减少（Shift 加速）"] "−"
+                          input.k-input.k-numin [placeholder="未设置" type="text" value="6"]
+                          div.k-step [title="增加（Shift 加速）"] "+"
+                          span.k-big [style="display:none"]
+                      div.k-numerr [style="display:none"]
+                      div.k-numwarn [style="display:none"]
+                    div.del.k-mini.m-ripple [title="删除" role="button"]
+                      img.o-ico [src="oriel:textures/icons/trash.png" style="height:16px;width:16px"]
+                    span.closed.fold-arrow
+                      img.o-ico [src="oriel:textures/icons/down.png" style="height:8px;width:8px"]
+                div.k-srow.k-xrow
+                  div.k-xhead
+                    div.k-grip [title="按住拖动排序"]
+                      img.o-ico [src="oriel:textures/icons/drag.png" style="height:16px;width:16px"]
+                    div.ic
+                      img.k-ico [src="minecraft:textures/mob_effect/haste.png" style="height:16px;width:16px"]
+                    div.tx [title="玩家的攻击速度"]
+                      div.z "攻击速度"
+                      div.s "主手"
+                    div.k-num.k-xnum
+                      div.k-numrow
+                        div.k-stepper
+                          div.k-step [title="减少（Shift 加速）"] "−"
+                          input.k-input.k-numin [placeholder="未设置" type="text" value="-2.4"]
+                          div.k-step [title="增加（Shift 加速）"] "+"
+                          span.k-big [style="display:none"]
+                      div.k-numerr [style="display:none"]
+                      div.k-numwarn [style="display:none"]
+                    div.del.k-mini.m-ripple [title="删除" role="button"]
+                      img.o-ico [src="oriel:textures/icons/trash.png" style="height:16px;width:16px"]
+                    span.closed.fold-arrow
+                      img.o-ico [src="oriel:textures/icons/down.png" style="height:8px;width:8px"]
             div.k-add
               img.o-ico [src="oriel:textures/icons/plus.png" style="height:16px;width:16px"]
               "添加属性加成"
           div.k-div
 ## footer
 div
+  span.it
+    i.dot
+    "没有未应用的改动"
+  div.grow
+  span.it "历史 0/0"
 ## overlays
 div
 
@@ -845,7 +926,7 @@ div
       span [style="color:#FFFFFF;font-weight:normal;font-style:italic;"] "测试"
     div.ed-tags
       span.k-tag "近战武器"
-      span.dim.k-tag "普通"
+      span.dim.k-tag "常见"
     div.ed-stagehead
       span.fold-arrow
         img.o-ico [src="oriel:textures/icons/down.png" style="height:8px;width:8px"]
@@ -941,9 +1022,9 @@ div
             div.k-num
               div.k-numrow
                 div.k-stepper
-                  div.k-step [title="减少（按住 Shift 一次 ×10）"] "−"
-                  input.big.k-input.k-numin [type="text" value="1561"]
-                  div.k-step [title="增加（按住 Shift 一次 ×10）"] "+"
+                  div.k-step [title="减少（Shift 加速）"] "−"
+                  input.big.k-input.k-numin [placeholder="未设置" type="text" value="1561"]
+                  div.k-step [title="增加（Shift 加速）"] "+"
                   span.k-big [style="display:none"]
                 div.k-slider
                   div.tr
@@ -980,9 +1061,9 @@ div
             div.k-num
               div.k-numrow
                 div.k-stepper
-                  div.k-step [title="减少（按住 Shift 一次 ×10）"] "−"
-                  input.big.k-input.k-numin [type="text" value="1561"]
-                  div.k-step [title="增加（按住 Shift 一次 ×10）"] "+"
+                  div.k-step [title="减少（Shift 加速）"] "−"
+                  input.big.k-input.k-numin [placeholder="未设置" type="text" value="1561"]
+                  div.k-step [title="增加（Shift 加速）"] "+"
                   span.k-big [style="display:none"]
                 div.k-slider
                   div.tr
@@ -1041,9 +1122,9 @@ div
               div.k-num
                 div.k-numrow
                   div.k-stepper
-                    div.k-step [title="减少（按住 Shift 一次 ×10）"] "−"
-                    input.k-input.k-numin [type="text" value="0"]
-                    div.k-step [title="增加（按住 Shift 一次 ×10）"] "+"
+                    div.k-step [title="减少（Shift 加速）"] "−"
+                    input.k-input.k-numin [placeholder="未设置" type="text" value="0"]
+                    div.k-step [title="增加（Shift 加速）"] "+"
                     span.k-big [style="display:none"]
                   div.k-slider
                     div.tr
@@ -1131,9 +1212,9 @@ div
             div.k-num
               div.k-numrow
                 div.k-stepper
-                  div.k-step [title="减少（按住 Shift 一次 ×10）"] "−"
-                  input.big.k-input.k-numin [type="text" value="1"]
-                  div.k-step [title="增加（按住 Shift 一次 ×10）"] "+"
+                  div.k-step [title="减少（Shift 加速）"] "−"
+                  input.big.k-input.k-numin [placeholder="未设置" type="text" value="1"]
+                  div.k-step [title="增加（Shift 加速）"] "+"
                   span.k-big [style="display:none"]
                 div.k-slider
                   div.tr
@@ -1145,6 +1226,11 @@ div
           div.k-div
 ## footer
 div
+  span.it
+    i.dot
+    "没有未应用的改动"
+  div.grow
+  span.it "历史 0/0"
 ## overlays
 div
 
@@ -1169,7 +1255,7 @@ div
       span [style="color:#FFFFFF;font-weight:normal;font-style:italic;"] "测试"
     div.ed-tags
       span.k-tag "近战武器"
-      span.dim.k-tag "普通"
+      span.dim.k-tag "常见"
     div.ed-stagehead
       span.fold-arrow
         img.o-ico [src="oriel:textures/icons/down.png" style="height:8px;width:8px"]
@@ -1300,9 +1386,9 @@ div
             div.k-num
               div.k-numrow
                 div.k-stepper
-                  div.k-step [title="减少（按住 Shift 一次 ×10）"] "−"
-                  input.big.k-input.k-numin [type="text" value="10"]
-                  div.k-step [title="增加（按住 Shift 一次 ×10）"] "+"
+                  div.k-step [title="减少（Shift 加速）"] "−"
+                  input.big.k-input.k-numin [placeholder="未设置" type="text" value="10"]
+                  div.k-step [title="增加（Shift 加速）"] "+"
                   span.k-big [style="display:none"]
                 div.k-slider
                   div.tr
@@ -1327,5 +1413,10 @@ div
           div.k-div
 ## footer
 div
+  span.it
+    i.dot
+    "没有未应用的改动"
+  div.grow
+  span.it "历史 0/0"
 ## overlays
 div

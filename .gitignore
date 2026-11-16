@@ -1,89 +1,21 @@
-# 构建与 IDE
 .gradle/
-**/build/
+build/
+run/
 .idea/
 *.iml
-__pycache__/
-*.py[cod]
-*.class
-
-# 本地运行、日志与一次性产物（可随时删除）
-/run/
+# Repository-relative outputs of the editor's regression programs.
 /logs/
-/daily/
-/dist/
-/reports/
-/.backend-b/
-/.world-edit/
-/.world-entity/
-/.world-player/
-/.permission/
-/.toast/
-/.world-merge/
-/.world-merge2/
-/.world-permission/
-/.search-tooltip-api.tmp
-/.search/
-fabric/versions/*/logs/
-fabric/versions/*/run/
-
-# 依赖的 Oriel 发布包：不提交二进制，放到 libs/ 即可（见 README）
-/libs/*.jar
-/libs/oriel-maven/
-
-# 由 tools/extract-mc-icons.mjs 从本机 Minecraft 资源抽取（Mojang 资源，只在本机预览用）
-/dev/browser/mc/
-
-# 脚本生成的状态报告（长期副本在工作区 planning/）
-/docs/STATUS*.md
-/docs/audit-registry.md
-# 历史计划、排查报告与采集回执：仅在本机保留，不提交
-/docs/archive/
-/.block-edit/
-
-# AI 助手（Cindy 等）的项目指令与 Skill：只在本机使用，不提交
-/.cindy/
+# Oriel builds, when copied here instead of using orielRepository.
+/libs/
+# Local test lab only: test-server definition and state, the plugdev probe runner, the end-to-end test client mod.
+/.dev/
+/tools/run-probes.sh
+/tools/e2e-client/
+# Project documents and research notes are kept locally, not in git.
+/docs/
+# Assistant instructions and local tooling.
 /.claude/
-/.codex/
-/AGENTS.md
 /CLAUDE.md
-
-# 开发过程笔记、审计与验收回执（由脚本生成或仅作本机记录）
-/docs/DEV-NOTES-*.md
-/docs/NBT-ROUNDTRIP-AUDIT-*.md
-/docs/COVERAGE-signoff.md
-/docs/acceptance/
-/tools/client-only/*PREPARATION.md
-
-# 本地宣传片工程、生成报告与一次性排查工具
-/promo/
-/release/
-/docs/locale-inventory.json
-/tools/.missing-icons.txt
-/tools/coverage-sync.cjs
-/tools/nbt-audit/aggregate-*.cjs
-/tools/nbt-audit/audit-final-*
-/tools/nbt-audit/final-terminal-*
-/tools/nbt-audit/finalize.py
-/tools/entity-feedback/audit-*
-/tools/entity-feedback/report-*
-/tools/entity-feedback/discard-captured.mjs
-/tools/entity-feedback/resume-owned.ps1
-/tools/entity-feedback/verify-restarted.mjs
-
-# 本地依赖与环境配置
+/AGENTS.md
 node_modules/
-.env
-.env.*
-!.env.example
 *.log
-
-# 图标重绘的本地中间产物（生成脚本与源图），只留在本机
-/tools/pixelize-branding.py
-/tools/branding/
-
-# 本地交接与交付验收记录，保留在本机
-/docs/HANDOFF.md
-/docs/releases/0.99.8-ui-readonly.md
-/docs/releases/0.99.9.md
-/docs/releases/0.99.9-attributes.md

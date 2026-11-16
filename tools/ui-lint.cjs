@@ -6,59 +6,89 @@
 // 用法：node tools/ui-lint.cjs        有「错误」时退出码 1，警告不影响退出码
 const fs = require('node:fs');
 const path = require('node:path');
-const dir = process.env.UI_DIR || path.resolve(__dirname, '../common/src/main/resources/assets/cadeditor/ui');   // UI_DIR：对别的版本的 ui 目录做检查
-const html = fs.readFileSync(path.join(dir, 'index.html'), 'utf8'), order = [];
-html.replace(/<script src="(js\/[^"]+)"/g, (m, f) => { order.push(f); return m; });
-const src = {}; order.forEach(f => { src[f] = fs.readFileSync(path.join(dir, f), 'utf8').split(/\r?\n/); });
+const dir = process.env.UI_DIR || path.resolve(__dirname, '../client/src/main/resources/assets/cadeditor/ui'); // UI_DIR：对别的版本的 ui 目录做检查
+const order = require('./lib/ui-scripts.cjs').scriptOrder(dir); // js/boot.js's list, the page's load order
+const src = {};
+order.forEach((f) => {
+  src[f] = fs.readFileSync(path.join(dir, f), 'utf8').split(/\r?\n/);
+});
 
-const errors = [], warns = [];
+const errors = [],
+  warns = [];
 const where = (f, i) => f + ':' + (i + 1);
 
 // 1 + 2：全局函数
-const defs = {}, assigns = [];
-for (const f of order) src[f].forEach((line, i) => {
-  let m = line.match(/^function\s+([A-Za-z_$][\w$]*)\s*\(/);
-  if (m) (defs[m[1]] = defs[m[1]] || []).push(where(f, i));
-  m = line.match(/^([A-Za-z_$][\w$]*)\s*=\s*function\b/);
-  if (m) assigns.push({ name: m[1], at: where(f, i) });
+const defs = {},
+  assigns = [];
+for (const f of order)
+  src[f].forEach((line, i) => {
+    let m = line.match(/^function\s+([A-Za-z_$][\w$]*)\s*\(/);
+    if (m) (defs[m[1]] = defs[m[1]] || []).push(where(f, i));
+    m = line.match(/^([A-Za-z_$][\w$]*)\s*=\s*function\b/);
+    if (m) assigns.push({ name: m[1], at: where(f, i) });
+  });
+Object.keys(defs).forEach((n) => {
+  if (defs[n].length > 1) errors.push('全局函数重复定义 ' + n + '：' + defs[n].join('、'));
 });
-Object.keys(defs).forEach(n => { if (defs[n].length > 1) errors.push('全局函数重复定义 ' + n + '：' + defs[n].join('、')); });
-assigns.forEach(a => { if (defs[a.name]) errors.push('用赋值覆盖了别处声明的函数 ' + a.name + '：' + a.at + '（原定义 ' + defs[a.name].join('、') + '）'); else warns.push('给未声明的全局赋值 ' + a.name + '：' + a.at); });
+assigns.forEach((a) => {
+  if (defs[a.name])
+    errors.push('用赋值覆盖了别处声明的函数 ' + a.name + '：' + a.at + '（原定义 ' + defs[a.name].join('、') + '）');
+  else warns.push('给未声明的全局赋值 ' + a.name + '：' + a.at);
+});
 
 // 2b：函数体就是「return 自己(同样的参数)」——无限递归（批量替换时容易把函数自己的定义也换掉）
-for (const f of order) src[f].forEach((line, i) => {
-  const m = line.match(/^function\s+([A-Za-z_$][\w$]*)\s*\(([^)]*)\)\s*\{\s*return\s+([A-Za-z_$][\w$]*)\s*\(([^)]*)\)\s*;?\s*\}/);
-  if (m && m[1] === m[3] && m[2].trim() === m[4].trim()) errors.push('函数直接调用自己（无限递归）' + m[1] + '：' + where(f, i));
-});
+for (const f of order)
+  src[f].forEach((line, i) => {
+    const m = line.match(
+      /^function\s+([A-Za-z_$][\w$]*)\s*\(([^)]*)\)\s*\{\s*return\s+([A-Za-z_$][\w$]*)\s*\(([^)]*)\)\s*;?\s*\}/
+    );
+    if (m && m[1] === m[3] && m[2].trim() === m[4].trim())
+      errors.push('函数直接调用自己（无限递归）' + m[1] + '：' + where(f, i));
+  });
 
 // 2c：不要直接写原生 title：Oriel 会把它画成原版提示框，和 tip.js 的自绘提示同时出现。用 h() 的 title 参数或 setTip()
-for (const f of order) { if (f === 'forms.js') continue; src[f].forEach((line, i) => {
-  if (/setAttribute\(\s*['"]title['"]/.test(line) || /\b(el|btn|cell|row|chev|mx|b|node|e)\.title\s*=[^=]/.test(line)) errors.push('直接写了原生 title（请用 h() 的 title 参数或 setTip）：' + where(f, i));
-}); }
+for (const f of order) {
+  if (f === 'forms.js') continue;
+  src[f].forEach((line, i) => {
+    if (/setAttribute\(\s*['"]title['"]/.test(line) || /\b(el|btn|cell|row|chev|mx|b|node|e)\.title\s*=[^=]/.test(line))
+      errors.push('直接写了原生 title（请用 h() 的 title 参数或 setTip）：' + where(f, i));
+  });
+}
 
 // 3：AUTO_BODY 键
 const bodies = {};
-for (const f of order) src[f].forEach((line, i) => {
-  const m = line.match(/^AUTO_BODY\.([A-Za-z_$][\w$]*)\s*=/) || line.match(/^AUTO_BODY\[['"]([\w$]+)['"]\]\s*=/);
-  if (m) (bodies[m[1]] = bodies[m[1]] || []).push(where(f, i));
+for (const f of order)
+  src[f].forEach((line, i) => {
+    const m = line.match(/^AUTO_BODY\.([A-Za-z_$][\w$]*)\s*=/) || line.match(/^AUTO_BODY\[['"]([\w$]+)['"]\]\s*=/);
+    if (m) (bodies[m[1]] = bodies[m[1]] || []).push(where(f, i));
+  });
+Object.keys(bodies).forEach((k) => {
+  if (bodies[k].length > 1) errors.push('AUTO_BODY.' + k + ' 重复定义：' + bodies[k].join('、'));
 });
-Object.keys(bodies).forEach(k => { if (bodies[k].length > 1) errors.push('AUTO_BODY.' + k + ' 重复定义：' + bodies[k].join('、')); });
 
 // 4：被 display:none 隐藏、JS 里仍在生成的类
 const css = fs.readFileSync(path.join(dir, 'editor.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
-const lastDisplay = {}, shown = {};   // 类名 → 它在样式表里最后一次被单独设置的 display（后写的盖掉先写的）
+const lastDisplay = {},
+  shown = {}; // 类名 → 它在样式表里最后一次被单独设置的 display（后写的盖掉先写的）
 css.replace(/([^{}]+)\{([^{}]*)\}/g, (m, sels, body) => {
-  const d = body.match(/(?:^|;)\s*display\s*:\s*([^;!]+)/); if (!d) return m;
+  const d = body.match(/(?:^|;)\s*display\s*:\s*([^;!]+)/);
+  if (!d) return m;
   const val = d[1].trim();
-  sels.split(',').forEach(s => {
+  sels.split(',').forEach((s) => {
     s = s.trim();
     if (/^\.[\w-]+$/.test(s)) lastDisplay[s.slice(1)] = val;
-    if (val !== 'none') (s.match(/\.[\w-]+/g) || []).forEach(c => { shown[c.slice(1)] = 1; });   // 别的选择器（如 .k-card.mod .k-badge）在某种状态下把它显示出来
+    if (val !== 'none')
+      (s.match(/\.[\w-]+/g) || []).forEach((c) => {
+        shown[c.slice(1)] = 1;
+      }); // 别的选择器（如 .k-card.mod .k-badge）在某种状态下把它显示出来
   });
   return m;
 });
-const hidden = {}; Object.keys(lastDisplay).forEach(k => { if (lastDisplay[k] === 'none' && !shown[k]) hidden[k] = 1; });
-const jsAll = order.map(f => src[f].join('\n')).join('\n');
+const hidden = {};
+Object.keys(lastDisplay).forEach((k) => {
+  if (lastDisplay[k] === 'none' && !shown[k]) hidden[k] = 1;
+});
+const jsAll = order.map((f) => src[f].join('\n')).join('\n');
 // 有意保留的「CSS 隐藏、JS 生成」：要么由 JS 用 style.display 切换，要么是自初始导入起就没有可见样式的旧版 forms.js 控件。新增项必须写原因。
 const ALLOW = {
   'k-numwarn': 'JS 用 style.display 切换（kit.js 数字框的警告行）',
@@ -66,15 +96,32 @@ const ALLOW = {
   'ed-tcpanel': 'JS 用 style.display 切换（forms.js 的文本组件折叠面板）',
   'ed-enrow': '旧版 forms.js 附魔行，样式表自初始导入就是 display:none；第 5 步淘汰旧控件时一并处理'
 };
-Object.keys(hidden).forEach(cls => {
+Object.keys(hidden).forEach((cls) => {
   if (ALLOW[cls]) return;
-  const re = new RegExp(String.raw`class\s*:\s*['"][^'"]*?(?<![\w-])` + cls.replace(/-/g, '\\-') + String.raw`(?![\w-])`);
+  const re = new RegExp(
+    String.raw`class\s*:\s*['"][^'"]*?(?<![\w-])` + cls.replace(/-/g, '\\-') + String.raw`(?![\w-])`
+  );
   const hit = [];
-  for (const f of order) src[f].forEach((line, i) => { if (re.test(line)) hit.push(where(f, i)); });
-  if (hit.length) warns.push('CSS 把 .' + cls + ' 整个隐藏，但 JS 仍在生成它（' + hit.length + ' 处）：' + hit.slice(0, 6).join('、') + (hit.length > 6 ? ' …' : ''));
+  for (const f of order)
+    src[f].forEach((line, i) => {
+      if (re.test(line)) hit.push(where(f, i));
+    });
+  if (hit.length)
+    warns.push(
+      'CSS 把 .' +
+        cls +
+        ' 整个隐藏，但 JS 仍在生成它（' +
+        hit.length +
+        ' 处）：' +
+        hit.slice(0, 6).join('、') +
+        (hit.length > 6 ? ' …' : '')
+    );
 });
 
-errors.forEach(e => console.log('错误  ' + e));
-warns.forEach(w => console.log('警告  ' + w));
-if (errors.length) { console.log('FAIL ui-lint：' + errors.length + ' 个错误，' + warns.length + ' 个警告'); process.exit(1); }
+errors.forEach((e) => console.log('错误  ' + e));
+warns.forEach((w) => console.log('警告  ' + w));
+if (errors.length) {
+  console.log('FAIL ui-lint：' + errors.length + ' 个错误，' + warns.length + ' 个警告');
+  process.exit(1);
+}
 console.log('PASS ui-lint：没有错误；' + warns.length + ' 个警告。');

@@ -27,17 +27,27 @@ div
             div.k-btn.k-sbtn [title="搜索（也可以按回车）"]
               img.o-ico [src="oriel:textures/icons/search.png" style="height:16px;width:16px"]
               span "搜索"
-          div.k-seg
-            div.k-segi.on
-              "最近"
-            div.k-segi
-              "名称"
-            div.k-segi
-              "类型"
+          div.k-btn.vt-qhelp [title="直接输入：名称、备注、标签、ID（支持拼音）\nitem:diamond*  name:  lore:  tag:  note:\ncount:>=16  size:>1k（还有 <、<=、A-B）\nsaved:<7d（7 天内）  updated:>30d（30 天前）\npage:  kind:entity\n空格 = 同时满足，- 开头 = 排除，含空格用引号，Tab 补全"]
+            img.o-ico [src="oriel:textures/icons/help.png" style="height:16px;width:16px"]
+          div.k-btn.k-sel
+            span "最近更新"
+            img.o-ico [src="oriel:textures/icons/down.png" style="height:8px;width:8px"]
+          div.k-btn [title="反向排序"]
+            img.o-ico [src="oriel:textures/icons/sort.png" style="height:16px;width:16px"]
+          div.k-seg.vt-view
+            div.k-segi.on [title="列表"]
+              img.o-ico [src="oriel:textures/icons/list.png" style="height:16px;width:16px"]
+            div.k-segi [title="网格"]
+              img.o-ico [src="oriel:textures/icons/grid.png" style="height:16px;width:16px"]
+          div.k-btn [title="新建、改名、排序、删除页"]
+            img.o-ico [src="oriel:textures/icons/folder.png" style="height:16px;width:16px"]
+            span "分页"
           div.k-btn [title="按标签筛选" style="display:none"]
             img.o-ico [src="oriel:textures/icons/tag.png" style="height:16px;width:16px"]
             span "标签"
           span.k-sub.vt-stat
+        div.k-chips.vt-qhint [style="display:none"]
+        div.k-chips.vt-pages [style="display:none"]
         div.k-chips.vt-tags [style="display:none"]
         div.vt-warn
         div.vt-list
@@ -56,6 +66,8 @@ div
                   div.x-rt
                   span.closed.fold-arrow
                     img.o-ico [src="oriel:textures/icons/down.png" style="height:8px;width:8px"]
+            div.k-row.wrap
+          div.vt-grid [style="display:none"]
           div
         div.k-btn [style="display:none"]
           img.o-ico [src="oriel:textures/icons/down.png" style="height:16px;width:16px"]
@@ -64,12 +76,21 @@ div
         div.k-btn.pri [style="display:none"]
           img.o-ico [src="oriel:textures/icons/plus.png" style="height:16px;width:16px"]
           span "存入当前物品"
+        div.k-btn [title="选一个物品，从它的默认栈开始编辑"]
+          img.o-ico [src="oriel:textures/icons/plus.png" style="height:16px;width:16px"]
+          span "新建物品"
         div.k-btn
           img.o-ico [src="oriel:textures/icons/upload.png" style="height:16px;width:16px"]
           span "导入…"
         div.k-btn
           img.o-ico [src="oriel:textures/icons/download.png" style="height:16px;width:16px"]
           span "导出全部"
+        div.k-btn [title="按日期的备份：查看、立即备份、恢复"]
+          img.o-ico [src="oriel:textures/icons/save.png" style="height:16px;width:16px"]
+          span "备份"
+        div.k-btn [title="服务端记录的编辑器操作"]
+          img.o-ico [src="oriel:textures/icons/clock.png" style="height:16px;width:16px"]
+          span "编辑历史"
         div
         div.grow
         div.k-btn.pri

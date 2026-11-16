@@ -12,6 +12,7 @@ import net.minecraft.world.item.ItemStack;
 /** Persisted item equality, independent of Java object identity. */
 public final class StackComparison {
     private StackComparison() {}
+
     public static boolean matches(ItemStack actual, ItemStack expected, RegistryAccess access) {
         if (actual.isEmpty() || expected.isEmpty()) return actual.isEmpty() && expected.isEmpty();
         return EditorSessions.fingerprint(actual, access).equals(EditorSessions.fingerprint(expected, access));
@@ -36,8 +37,12 @@ public final class StackComparison {
         }
         return out;
     }
+
     private static <T> Tag encoded(DataComponentType<T> type, Object value, RegistryAccess access) {
-        @SuppressWarnings("unchecked") T typed = (T) value;
-        return type.codec().encodeStart(access.createSerializationContext(NbtOps.INSTANCE), typed).getOrThrow();
+        @SuppressWarnings("unchecked")
+        T typed = (T) value;
+        return type.codec()
+                .encodeStart(access.createSerializationContext(NbtOps.INSTANCE), typed)
+                .getOrThrow();
     }
 }

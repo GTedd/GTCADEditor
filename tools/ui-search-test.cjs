@@ -3,11 +3,20 @@ const fs = require('node:fs');
 const vm = require('node:vm');
 const path = require('node:path');
 const assert = require('node:assert/strict');
-const dir = path.resolve(__dirname, '../common/src/main/resources/assets/cadeditor/ui/js');
+const dir = path.resolve(__dirname, '../client/src/main/resources/assets/cadeditor/ui/js');
 const timers = [];
-const ctx = vm.createContext({ console, Date, setTimeout(fn) { timers.push(fn); return timers.length; }, document: { addEventListener() {} } });
-for (const f of ['data.js', 'pinyin-data.js', 'search.js']) vm.runInContext(fs.readFileSync(path.join(dir, f), 'utf8'), ctx);
-const run = s => vm.runInContext(s, ctx);
+const ctx = vm.createContext({
+  console,
+  Date,
+  setTimeout(fn) {
+    timers.push(fn);
+    return timers.length;
+  },
+  document: { addEventListener() {} }
+});
+for (const f of ['data.js', 'pinyin-data.js', 'search.js'])
+  vm.runInContext(fs.readFileSync(path.join(dir, f), 'utf8'), ctx);
+const run = (s) => vm.runInContext(s, ctx);
 
 // 1) 命中：全拼、首字母、混写、汉字夹拼音、多音字（石 = shi / dan）
 for (const q of ['zuanshijian', 'zsj', 'zuanshij', 'zuansj', '钻shi剑', '钻石剑', 'shi', 'dan', 'zuandanjian'])
@@ -26,12 +35,22 @@ assert.equal(run('kMatch("中国人民", "zhonggrx")'), false);
 const names = run('EDATA.items.map(function (i) { return (EDATA.iname[i] || i) + " minecraft:" + i; })');
 assert.ok(names.length > 1000);
 for (const q of ['shi', 'zsj', 'tou', 'zhong']) {
-  const direct = run(`(function(){ kSearchBegin(true); var r = ${JSON.stringify(names)}.filter(function (t) { return kMatch(t, ${JSON.stringify(q)}); }); kSearchBegin(false); return r; })()`);
+  const direct = run(
+    `(function(){ kSearchBegin(true); var r = ${JSON.stringify(names)}.filter(function (t) { return kMatch(t, ${JSON.stringify(q)}); }); kSearchBegin(false); return r; })()`
+  );
   timers.length = 0;
-  let got = null, calls = 0;
-  ctx.__names = names; ctx.__q = q; ctx.__done = r => { got = r; };
-  run('var __cancel = kFilterSliced(__names, function (t) { return kMatch(t, __q); }, __done, -1);');   // 预算为负：每 8 条就让出一次
-  while (timers.length) { calls++; timers.shift()(); }
+  let got = null,
+    calls = 0;
+  ctx.__names = names;
+  ctx.__q = q;
+  ctx.__done = (r) => {
+    got = r;
+  };
+  run('var __cancel = kFilterSliced(__names, function (t) { return kMatch(t, __q); }, __done, -1);'); // 预算为负：每 8 条就让出一次
+  while (timers.length) {
+    calls++;
+    timers.shift()();
+  }
   assert.deepEqual(Array.from(got), Array.from(direct), q + '：分批结果必须与一次性过滤一致');
   assert.ok(calls > 10, q + '：应当分成很多批，实际 ' + calls);
 }
@@ -39,7 +58,9 @@ for (const q of ['shi', 'zsj', 'tou', 'zhong']) {
 // 4) 取消：取消后不再回调
 timers.length = 0;
 let doneCalled = false;
-ctx.__d2 = () => { doneCalled = true; };
+ctx.__d2 = () => {
+  doneCalled = true;
+};
 run('var __c2 = kFilterSliced(__names, function (t) { return kMatch(t, "shi"); }, __d2, -1);');
 timers.shift()();
 run('__c2()');
@@ -48,7 +69,9 @@ assert.equal(doneCalled, false, '取消后不应回调');
 
 // 5) 小列表同步完成
 let small = null;
-ctx.__small = r => { small = r; };
+ctx.__small = (r) => {
+  small = r;
+};
 run('kFilterSliced(["钻石剑","铁剑"], function (t) { return kMatch(t, "zsj"); }, __small);');
 assert.deepEqual(Array.from(small), ['钻石剑']);
 

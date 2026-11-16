@@ -1,9 +1,8 @@
 package dev.rinorsi.editor.world;
 
-import dev.rinorsi.editor.EditorI18n;
-
 import com.google.gson.*;
 import dev.rinorsi.editor.*;
+import dev.rinorsi.editor.EditorI18n;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.*;
@@ -16,197 +15,751 @@ import net.minecraft.server.level.*;
 import net.minecraft.stats.*;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.storage.LevelData;
-import org.slf4j.LoggerFactory;
 
 /** Separate, bounded player views. Never feeds connected players through Entity.load. */
 public final class PlayerExtendedEditor {
     private PlayerExtendedEditor() {}
-    private static final org.slf4j.Logger LOG=LoggerFactory.getLogger("PlayerExtendedEditor");
+
     private record Key(UUID target, boolean offline, String view) {}
+
     private record State(String revision, String fingerprint, JsonElement snapshot) {}
-    private static final Map<UUID,LinkedHashMap<Key,State>> SESSIONS=new HashMap<>();
-    private static final Map<UUID,Long> LAST=new HashMap<>();
-    public static void remove(UUID id){SESSIONS.remove(id);LAST.remove(id);}
-    public static void clear(){SESSIONS.clear();LAST.clear();}
-    public static boolean route(ServerPlayer actor,JsonObject request,Supplier<EditorPolicy> policy,Consumer<JsonObject> sink){
-        if(!request.has("op")||!request.get("op").isJsonPrimitive()||!"player_extended".equals(request.get("op").getAsString()))return false;
-        String id="",view="",action="";UUID uuid=null;boolean writing=false,committed=false;
+
+    private static final Map<UUID, LinkedHashMap<Key, State>> SESSIONS = new HashMap<>();
+    private static final Map<UUID, Long> LAST = new HashMap<>();
+
+    public static void remove(UUID id) {
+        SESSIONS.remove(id);
+        LAST.remove(id);
+    }
+
+    public static void clear() {
+        SESSIONS.clear();
+        LAST.clear();
+    }
+
+    public static boolean route(
+            ServerPlayer actor, JsonObject request, Supplier<EditorPolicy> policy, Consumer<JsonObject> sink) {
+        if (!request.has("op")
+                || !request.get("op").isJsonPrimitive()
+                || !"player_extended".equals(request.get("op").getAsString())) return false;
+        String id = "", view = "", action = "";
+        UUID uuid = null;
+        boolean writing = false, committed = false;
         try {
-            var server=actor.level().getServer();
-            if(!server.isSameThread())fail("invalid_request",EditorI18n.tr("cadeditor.message.playerextendededitor.2f1ac905d9"));
-            id=StackCodec.string(request,"requestId");if(id.length()>80)fail("invalid_request",EditorI18n.tr("cadeditor.message.playerextendededitor.7a2ee1fdbd"));
-            policy.get().requirePlayerEdit(actor);
-            keys(request,Set.of("op","requestId","action","target","view","offset","limit","query","displayed","revision","patch","sections"));
-            action=StackCodec.string(request,"action");view=request.has("view")?StackCodec.string(request,"view"):"";
-            long now=System.nanoTime();Long last=LAST.get(actor.getUUID());if(last!=null&&now-last<500_000_000L)fail("rate_limited",EditorI18n.tr("cadeditor.message.playerextendededitor.7e5ab4a158"));LAST.put(actor.getUUID(),now);
-            if(view.equals("players")) {
-                keys(request,Set.of("op","requestId","action","target","view","offset","limit","query"));
-                if(!action.equals("read"))fail("invalid_request",EditorI18n.tr("cadeditor.message.playerextendededitor.801cd287f3"));
-                var schema=new JsonObject();schema.addProperty("source","PlayerList / playerdata / singleplayer owner / local profile cache");schema.addProperty("readOnly",true);schema.addProperty("manualId",true);
-                var data=envelope(actor.getUUID(),false,view,PlayerProfiles.players(actor),schema,request,null);data.add("target",new JsonObject());
-                var result=result("opened",id);result.add("playerExtended",data);WorldWire.encode(result);sink.accept(result);return true;
+            var server = actor.level().getServer();
+            if (!server.isSameThread())
+                fail(
+                        "invalid_request",
+                        EditorI18n.tr("cadeditor.message.playerextendededitor.player_editor_must_execute_server"));
+            id = StackCodec.string(request, "requestId");
+            if (id.length() > 80)
+                fail("invalid_request", EditorI18n.tr("cadeditor.message.playerextendededitor.requestid_too_long"));
+            policy.get()
+                    .requireAny(
+                            actor,
+                            "player_forbidden",
+                            dev.rinorsi.editor.EditorPermission.PLAYER_EDIT,
+                            dev.rinorsi.editor.EditorPermission.PLAYER_OFFLINE);
+            keys(
+                    request,
+                    Set.of(
+                            "op",
+                            "requestId",
+                            "action",
+                            "target",
+                            "view",
+                            "offset",
+                            "limit",
+                            "query",
+                            "displayed",
+                            "revision",
+                            "patch",
+                            "sections"));
+            action = StackCodec.string(request, "action");
+            view = request.has("view") ? StackCodec.string(request, "view") : "";
+            long now = System.nanoTime();
+            Long last = LAST.get(actor.getUUID());
+            if (last != null && now - last < 500_000_000L)
+                fail(
+                        "rate_limited",
+                        EditorI18n.tr("cadeditor.message.playerextendededitor.too_many_operations_try_again"));
+            LAST.put(actor.getUUID(), now);
+            if (view.equals("players")) {
+                // The list includes offline players' names and UUIDs.
+                policy.get().require(actor, dev.rinorsi.editor.EditorPermission.PLAYER_OFFLINE, "player_forbidden");
+                dev.rinorsi.editor.history.HistoryContext.target("players");
+                keys(request, Set.of("op", "requestId", "action", "target", "view", "offset", "limit", "query"));
+                if (!action.equals("read"))
+                    fail(
+                            "invalid_request",
+                            EditorI18n.tr("cadeditor.message.playerextendededitor.saved_data_player_list_only"));
+                var schema = new JsonObject();
+                schema.addProperty("source", "PlayerList / playerdata / singleplayer owner / local profile cache");
+                schema.addProperty("readOnly", true);
+                schema.addProperty("manualId", true);
+                var data = envelope(actor.getUUID(), false, view, PlayerProfiles.players(actor), schema, request, null);
+                data.add("target", new JsonObject());
+                var result = result("opened", id);
+                result.add("playerExtended", data);
+                WorldWire.encode(result);
+                sink.accept(result);
+                return true;
             }
-            var target=request.has("target")?StackCodec.object(request,"target"):new JsonObject();keys(target,Set.of("uuid","offline"));
-            boolean offline=target.has("offline")&&bool(target,"offline");
-            uuid=target.has("uuid")?UUID.fromString(StackCodec.string(target,"uuid")):actor.getUUID();
-            if(action.equals("export_preset")) {
-                keys(request,Set.of("op","requestId","action","target","sections"));
-                if(offline&&!target.has("uuid"))fail("invalid_request",EditorI18n.tr("cadeditor.message.playerextendededitor.891b83cf06"));
-                var selected=request.get("sections");String name=PlayerProfiles.name(server,uuid);
+            var target = request.has("target") ? StackCodec.object(request, "target") : new JsonObject();
+            keys(target, Set.of("uuid", "offline"));
+            boolean offline = target.has("offline") && bool(target, "offline");
+            uuid = target.has("uuid") ? UUID.fromString(StackCodec.string(target, "uuid")) : actor.getUUID();
+            policy.get()
+                    .require(
+                            actor,
+                            offline
+                                    ? dev.rinorsi.editor.EditorPermission.PLAYER_OFFLINE
+                                    : dev.rinorsi.editor.EditorPermission.PLAYER_EDIT,
+                            "player_forbidden");
+            dev.rinorsi.editor.history.HistoryContext.target("player " + PlayerProfiles.name(server, uuid) + " " + uuid
+                    + (offline ? " (offline)" : "") + (view.isEmpty() ? "" : " view=" + view));
+            if (action.equals("export_preset")) {
+                keys(request, Set.of("op", "requestId", "action", "target", "sections"));
+                if (offline && !target.has("uuid"))
+                    fail(
+                            "invalid_request",
+                            EditorI18n.tr("cadeditor.message.playerextendededitor.offline_player_must_specify_uuid"));
+                var selected = request.get("sections");
+                String name = PlayerProfiles.name(server, uuid);
                 JsonObject exported;
-                if(offline)exported=PlayerProfiles.offline(server,uuid,p->PlayerProfiles.export(p,selected,name));
-                else {var p=server.getPlayerList().getPlayer(uuid);if(p==null)fail("player_offline",EditorI18n.tr("cadeditor.message.playerextendededitor.a7770b40c6"));exported=PlayerProfiles.export(p,selected,name);}
-                exported.addProperty("status","exported");exported.addProperty("requestId",id);WorldWire.encode(exported);sink.accept(exported);return true;
+                if (offline)
+                    exported = PlayerProfiles.offline(server, uuid, p -> PlayerProfiles.export(p, selected, name));
+                else {
+                    var p = server.getPlayerList().getPlayer(uuid);
+                    if (p == null)
+                        fail(
+                                "player_offline",
+                                EditorI18n.tr(
+                                        "cadeditor.message.playerextendededitor.target_player_online_non_existent"));
+                    exported = PlayerProfiles.export(p, selected, name);
+                }
+                exported.addProperty("status", "exported");
+                exported.addProperty("requestId", id);
+                WorldWire.encode(exported);
+                sink.accept(exported);
+                return true;
             }
-            if(request.has("sections"))fail("invalid_request",EditorI18n.tr("cadeditor.message.playerextendededitor.b0def68cc0"));
-            if(!Set.of("position","respawn","recipes","advancements","stats","offline").contains(view)||offline!=view.equals("offline"))fail("invalid_request",EditorI18n.tr("cadeditor.message.playerextendededitor.9139811462"));
-            if(request.has("displayed")){bool(request,"displayed");if(!view.equals("advancements"))fail("invalid_request",EditorI18n.tr("cadeditor.message.playerextendededitor.192ace370b"));}
-            if(offline&&!target.has("uuid"))fail("invalid_request",EditorI18n.tr("cadeditor.message.playerextendededitor.891b83cf06"));
-            if(view.equals("advancements")&&!uuid.equals(actor.getUUID()))fail("advancement_self_only",EditorI18n.tr("cadeditor.message.playerextendededitor.f0297ba131"));
-            if(!action.equals("read")&&!action.equals("apply"))fail("invalid_request",EditorI18n.tr("cadeditor.message.playerextendededitor.7efa095c53"));
-            var p=offline?null:server.getPlayerList().getPlayer(uuid);
-            if(!offline&&p==null)fail("player_offline",EditorI18n.tr("cadeditor.message.playerextendededitor.a7770b40c6"));
-            var file=offline?OfflinePlayerEdit.read(server,uuid):null;
-            JsonElement value=offline?file.value():value(p,view);
-            String before=offline?file.fingerprint():hash(value.toString());
-            var key=new Key(uuid,offline,view);var states=SESSIONS.computeIfAbsent(actor.getUUID(),x->new LinkedHashMap<>());
-            if(action.equals("apply")){
-                var state=states.get(key);
-                if(state==null)fail("session_lost",EditorI18n.tr("cadeditor.message.playerextendededitor.eaca9afc25"));
-                if(!state.revision.equals(StackCodec.string(request,"revision")))fail("target_changed",EditorI18n.tr("cadeditor.message.playerextendededitor.16cf3ae493"));
-                if(!request.has("patch"))fail("invalid_request",EditorI18n.tr("cadeditor.message.playerextendededitor.11141f045d"));
-                JsonElement patch=request.get("patch");
-                if(Set.of("recipes","advancements","stats").contains(view))patch=mergeEntries(view,state.snapshot,value,patch);
-                else if(!state.fingerprint.equals(before))fail("target_changed",EditorI18n.tr("cadeditor.message.playerextendededitor.c784b754f6"));
-                envelope(uuid,offline,view,value,schema(server,view,file),request,"preview");
-                Runnable write=offline?OfflinePlayerEdit.prepare(server,uuid,file,patch):prepare(p,view,patch);
-                policy.get().requirePlayerEdit(actor);
-                if(!offline && (server.getPlayerList().getPlayer(uuid)!=p || !before.equals(hash(value(p,view).toString()))))
-                    fail("target_changed",EditorI18n.tr("cadeditor.message.playerextendededitor.045a3589c4"));
-                writing=true;write.run();committed=true;
-                file=offline?OfflinePlayerEdit.read(server,uuid):null;
-                value=offline?file.value():value(p,view);
+            if (request.has("sections"))
+                fail(
+                        "invalid_request",
+                        EditorI18n.tr("cadeditor.message.playerextendededitor.sections_only_applies_export_preset"));
+            if (!Set.of("position", "respawn", "recipes", "advancements", "stats", "offline")
+                            .contains(view)
+                    || offline != view.equals("offline"))
+                fail(
+                        "invalid_request",
+                        EditorI18n.tr("cadeditor.message.playerextendededitor.player_view_match_online_status"));
+            if (request.has("displayed")) {
+                bool(request, "displayed");
+                if (!view.equals("advancements"))
+                    fail(
+                            "invalid_request",
+                            EditorI18n.tr(
+                                    "cadeditor.message.playerextendededitor.displayed_only_applies_advancement_view"));
             }
-            String fingerprint=offline?file.fingerprint():hash(value.toString());
-            String revision=UUID.randomUUID().toString();
-            var data=envelope(uuid,offline,view,value,schema(server,view,file),request,revision);
-            var result=result(action.equals("apply")?"saved":"opened",id);result.add("playerExtended",data);WorldWire.encode(result);
-            states.remove(key);states.put(key,new State(revision,fingerprint,value));while(states.size()>24)states.remove(states.keySet().iterator().next());
-            if(action.equals("apply"))LOG.info("[CAD-Editor-Player] actor={} target={} offline={} view={} before={} after={}",actor.getUUID(),uuid,offline,view,before,fingerprint);
+            if (offline && !target.has("uuid"))
+                fail(
+                        "invalid_request",
+                        EditorI18n.tr("cadeditor.message.playerextendededitor.offline_player_must_specify_uuid"));
+            if (view.equals("advancements") && !uuid.equals(actor.getUUID()))
+                fail(
+                        "advancement_self_only",
+                        EditorI18n.tr("cadeditor.message.playerextendededitor.advancement_only_read_modify_own"));
+            if (!action.equals("read") && !action.equals("apply"))
+                fail(
+                        "invalid_request",
+                        EditorI18n.tr("cadeditor.message.playerextendededitor.unknown_player_extensions"));
+            var p = offline ? null : server.getPlayerList().getPlayer(uuid);
+            if (!offline && p == null)
+                fail(
+                        "player_offline",
+                        EditorI18n.tr("cadeditor.message.playerextendededitor.target_player_online_non_existent"));
+            var file = offline ? OfflinePlayerEdit.read(server, uuid) : null;
+            JsonElement value = offline ? file.value() : value(p, view);
+            String before = offline ? file.fingerprint() : hash(value.toString());
+            var key = new Key(uuid, offline, view);
+            var states = SESSIONS.computeIfAbsent(actor.getUUID(), x -> new LinkedHashMap<>());
+            if (action.equals("apply")) {
+                var state = states.get(key);
+                if (state == null)
+                    fail(
+                            "session_lost",
+                            EditorI18n.tr("cadeditor.message.playerextendededitor.player_edit_session_exacted_reread"));
+                if (!state.revision.equals(StackCodec.string(request, "revision")))
+                    fail(
+                            "target_changed",
+                            EditorI18n.tr("cadeditor.message.playerextendededitor.page_version_changed_reread_check"));
+                if (!request.has("patch"))
+                    fail("invalid_request", EditorI18n.tr("cadeditor.message.playerextendededitor.patch_missing"));
+                JsonElement patch = request.get("patch");
+                if (Set.of("recipes", "advancements", "stats").contains(view))
+                    patch = mergeEntries(view, state.snapshot, value, patch);
+                else if (!state.fingerprint.equals(before))
+                    fail(
+                            "target_changed",
+                            EditorI18n.tr("cadeditor.message.playerextendededitor.data_changed_reread_check_draft"));
+                envelope(uuid, offline, view, value, schema(server, view, file), request, "preview");
+                Runnable write =
+                        offline ? OfflinePlayerEdit.prepare(server, uuid, file, patch) : prepare(p, view, patch);
+                policy.get()
+                        .require(
+                                actor,
+                                offline
+                                        ? dev.rinorsi.editor.EditorPermission.PLAYER_OFFLINE
+                                        : dev.rinorsi.editor.EditorPermission.PLAYER_EDIT,
+                                "player_forbidden");
+                if (!offline
+                        && (server.getPlayerList().getPlayer(uuid) != p
+                                || !before.equals(hash(value(p, view).toString()))))
+                    fail(
+                            "target_changed",
+                            EditorI18n.tr("cadeditor.message.playerextendededitor.player_data_changed_during_loading"));
+                writing = true;
+                write.run();
+                committed = true;
+                file = offline ? OfflinePlayerEdit.read(server, uuid) : null;
+                value = offline ? file.value() : value(p, view);
+            }
+            String fingerprint = offline ? file.fingerprint() : hash(value.toString());
+            String revision = UUID.randomUUID().toString();
+            var data = envelope(uuid, offline, view, value, schema(server, view, file), request, revision);
+            var result = result(action.equals("apply") ? "saved" : "opened", id);
+            result.add("playerExtended", data);
+            WorldWire.encode(result);
+            states.remove(key);
+            states.put(key, new State(revision, fingerprint, value));
+            while (states.size() > 24) states.remove(states.keySet().iterator().next());
+            if (action.equals("apply")) {
+                dev.rinorsi.editor.history.HistoryContext.detail("before", before);
+                dev.rinorsi.editor.history.HistoryContext.detail("after", fingerprint);
+            }
             sink.accept(result);
-        }catch(RuntimeException e){
-            if (!(e instanceof IllegalArgumentException)) dev.rinorsi.editor.EditorDiagnostics.failure("player.request", "action="+action+" view="+view+" request="+id, e);
-            String code=committed || (writing && !(e instanceof EditorSessions.Failure))?"write_uncertain":e instanceof EditorSessions.Failure f?f.code:"invalid_request";
-            String reason=e.getMessage()==null?EditorI18n.tr("cadeditor.message.playerextendededitor.e4f7412ef4"):(e instanceof EditorSessions.Failure?e.getMessage():EditorI18n.tr("cadeditor.message.playerextendededitor.d6f5ff7b54", (e.getMessage())));
-            if(code.equals("write_uncertain"))reason=EditorI18n.tr("cadeditor.message.playerextendededitor.35e965dc43", (reason));
-            LOG.warn("[CAD-Editor-Player] denied actor={} target={} action={} view={} request={} code={} reason={}",actor.getUUID(),uuid,action,view,id,code,reason);
-            var result=result("rejected",id);result.addProperty("code",code);result.addProperty("reason",reason.substring(0,Math.min(reason.length(),1200)));sink.accept(result);
+        } catch (RuntimeException e) {
+            if (!(e instanceof IllegalArgumentException))
+                dev.rinorsi.editor.EditorDiagnostics.failure(
+                        "player.request", "action=" + action + " view=" + view + " request=" + id, e);
+            String code = committed || (writing && !(e instanceof EditorSessions.Failure))
+                    ? "write_uncertain"
+                    : e instanceof EditorSessions.Failure f ? f.code : "invalid_request";
+            String reason = e.getMessage() == null
+                    ? EditorI18n.tr("cadeditor.message.playerextendededitor.player_editing_failed_reread_check")
+                    : (e instanceof EditorSessions.Failure
+                            ? e.getMessage()
+                            : EditorI18n.tr(
+                                    "cadeditor.message.playerextendededitor.request_format_player_data_invalid",
+                                    (e.getMessage())));
+            if (code.equals("write_uncertain"))
+                reason = EditorI18n.tr(
+                        "cadeditor.message.playerextendededitor.vanilla_minecraft_writes_response", (reason));
+            dev.rinorsi.editor.EditorWriteLog.warning(
+                    "server.player.rejected",
+                    id,
+                    "actor=" + actor.getUUID() + " target=" + uuid + " action=" + action + " view=" + view + " code="
+                            + code + " reason=" + reason);
+            var result = result("rejected", id);
+            result.addProperty("code", code);
+            result.addProperty("reason", reason.substring(0, Math.min(reason.length(), 1200)));
+            sink.accept(result);
         }
         return true;
     }
-    private static JsonObject result(String status,String id){var r=new JsonObject();r.addProperty("status",status);r.addProperty("requestId",id);return r;}
-    static void fail(String code,String reason){throw new EditorSessions.Failure(code,reason);}
-    static void keys(JsonObject o,Set<String> allowed){for(String k:o.keySet())if(!allowed.contains(k))fail("protected_field",EditorI18n.tr("cadeditor.message.playerextendededitor.b2a47ee655", (k)));}
-    static boolean bool(JsonObject o,String k){var v=o.get(k);if(v==null||!v.isJsonPrimitive()||!v.getAsJsonPrimitive().isBoolean())fail("invalid_request",EditorI18n.tr("cadeditor.message.vaultstore.3551d97e21", (k)));return v.getAsBoolean();}
-    static String hash(String s){return hash(s.getBytes(StandardCharsets.UTF_8));}
-    static String hash(byte[] b){try{return HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(b));}catch(Exception e){throw new IllegalStateException(e);}}
-    private static JsonObject schema(MinecraftServer server,String view,OfflinePlayerEdit.Snapshot file){
-        var s=new JsonObject();s.addProperty("manualId",true);
-        switch(view){
-            case "position","respawn" -> {s.addProperty("source","MinecraftServer.getAllLevels");var dims=new JsonArray();server.getAllLevels().forEach(l->dims.add(l.dimension().identifier().toString()));s.add("dimensions",dims);}
-            case "recipes" -> s.addProperty("source","RecipeManager / ServerRecipeBook");
-            case "advancements" -> {s.addProperty("source","ServerAdvancementManager / PlayerAdvancements");s.addProperty("selfOnly",true);}
-            case "stats" -> {s.addProperty("source","BuiltInRegistries.STAT_TYPE / StatType.getRegistry");s.addProperty("min",0);s.addProperty("max",Integer.MAX_VALUE);}
-            case "offline" -> {s.addProperty("source","vanilla player load/save");s.addProperty("backupRetention",OfflinePlayerEdit.RETENTION);var ks=new JsonArray();new TreeSet<>(file.editable().keySet()).forEach(ks::add);s.add("editableKeys",ks);}
-        }return s;
+
+    private static JsonObject result(String status, String id) {
+        var r = new JsonObject();
+        r.addProperty("status", status);
+        r.addProperty("requestId", id);
+        return r;
     }
-    private static JsonObject envelope(UUID id,boolean offline,String view,JsonElement value,JsonObject schema,JsonObject req,String revision){
-        int offset=req.has("offset")?StackCodec.integer(req,"offset",0,Integer.MAX_VALUE):0;int limit=req.has("limit")?StackCodec.integer(req,"limit",1,64):32;
-        String query=req.has("query")?StackCodec.string(req,"query").toLowerCase(Locale.ROOT):"";if(query.length()>200)fail("invalid_request",EditorI18n.tr("cadeditor.message.playerextendededitor.ed568c1766"));
-        var data=new JsonObject();var target=new JsonObject();target.addProperty("uuid",id.toString());target.addProperty("offline",offline);data.add("target",target);data.addProperty("view",view);data.addProperty("revision",revision);data.add("schema",schema);
-        data.addProperty("offset",offset);data.addProperty("total",1);data.add("nextOffset",JsonNull.INSTANCE);
-        if(value.isJsonObject()&&value.getAsJsonObject().has("entries")){
-            boolean displayed=view.equals("advancements")&&req.has("displayed")&&bool(req,"displayed");
-            var matches=new ArrayList<JsonElement>();for(var raw:value.getAsJsonObject().getAsJsonArray("entries")){var row=raw.getAsJsonObject();if(displayed&&!row.get("has_display").getAsBoolean())continue;String identity=row.get(view.equals("players")?"uuid":"id").getAsString();if(query.isEmpty()||identity.toLowerCase(Locale.ROOT).contains(query)||(row.has("type")&&row.get("type").getAsString().contains(query))||(view.equals("players")&&!row.get("name").isJsonNull()&&row.get("name").getAsString().toLowerCase(Locale.ROOT).contains(query)))matches.add(raw);}
-            var entries=new JsonArray();int end=Math.min(offset,matches.size());int chars=0;
-            while(end<matches.size()&&entries.size()<limit){var row=matches.get(end);int size=row.toString().length();if(chars+size>18000&&entries.size()>0)break;if(size>18000)fail("payload_too_large",EditorI18n.tr("cadeditor.message.playerextendededitor.71ef12bf09"));entries.add(row);chars+=size;end++;}
-            var page=new JsonObject();page.add("entries",entries);data.add("value",page);data.addProperty("total",matches.size());if(end<matches.size())data.addProperty("nextOffset",end);
-        }else data.add("value",value);
-        WorldWire.encode(data);return data;
+
+    static void fail(String code, String reason) {
+        throw new EditorSessions.Failure(code, reason);
     }
-    public static JsonElement value(ServerPlayer p,String view){
-        var server=p.level().getServer();var out=new JsonObject();
-        if(view.equals("position")){out.addProperty("dimension",p.level().dimension().identifier().toString());out.addProperty("x",p.getX());out.addProperty("y",p.getY());out.addProperty("z",p.getZ());out.addProperty("yaw",p.getYRot());out.addProperty("pitch",p.getXRot());return out;}
-        if(view.equals("respawn")){var config=p.getRespawnConfig();if(config==null)return JsonNull.INSTANCE;var r=config.respawnData();out.addProperty("dimension",r.dimension().identifier().toString());out.addProperty("x",r.pos().getX());out.addProperty("y",r.pos().getY());out.addProperty("z",r.pos().getZ());out.addProperty("yaw",r.yaw());out.addProperty("forced",config.forced());return out;}
-        var entries=new JsonArray();out.add("entries",entries);
-        switch(view){
-            case "recipes" -> {var packed=p.getRecipeBook().pack();var known=new HashSet<>(packed.known());var highlighted=new HashSet<>(packed.highlight());for(var recipe:server.getRecipeManager().getRecipes().stream().sorted(Comparator.comparing(r->r.id().identifier().toString())).toList()){var row=new JsonObject();row.addProperty("id",recipe.id().identifier().toString());row.addProperty("unlocked",known.contains(recipe.id()));row.addProperty("highlighted",highlighted.contains(recipe.id()));entries.add(row);}}
-            case "advancements" -> {for(var a:server.getAdvancements().getAllAdvancements().stream().sorted(Comparator.comparing(a->a.id().toString())).toList()){var progress=p.getAdvancements().getOrStartProgress(a);var row=new JsonObject();row.addProperty("id",a.id().toString());row.addProperty("done",progress.isDone());advancementDisplay(row,a.value());var criteria=new JsonArray();for(String name:new TreeSet<>(a.value().criteria().keySet())){var c=new JsonObject();c.addProperty("name",name);c.addProperty("done",progress.getCriterion(name)!=null&&progress.getCriterion(name).isDone());criteria.add(c);}row.add("criteria",criteria);entries.add(row);}}
-            case "stats" -> {for(var type:BuiltInRegistries.STAT_TYPE.stream().sorted(Comparator.comparing(t->BuiltInRegistries.STAT_TYPE.getKey(t).toString())).toList())statRows(p,type,entries);}
-            default -> fail("invalid_request",EditorI18n.tr("cadeditor.message.playerextendededitor.6917cde1da"));
-        }return out;
+
+    static void keys(JsonObject o, Set<String> allowed) {
+        for (String k : o.keySet())
+            if (!allowed.contains(k))
+                fail(
+                        "protected_field",
+                        EditorI18n.tr("cadeditor.message.playerextendededitor.unsupported_player_field", (k)));
+    }
+
+    static boolean bool(JsonObject o, String k) {
+        var v = o.get(k);
+        if (v == null || !v.isJsonPrimitive() || !v.getAsJsonPrimitive().isBoolean())
+            fail("invalid_request", EditorI18n.tr("cadeditor.message.vaultstore.must_boolean", (k)));
+        return v.getAsBoolean();
+    }
+
+    static String hash(String s) {
+        return hash(s.getBytes(StandardCharsets.UTF_8));
+    }
+
+    static String hash(byte[] b) {
+        try {
+            return HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(b));
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    private static JsonObject schema(MinecraftServer server, String view, OfflinePlayerEdit.Snapshot file) {
+        var s = new JsonObject();
+        s.addProperty("manualId", true);
+        switch (view) {
+            case "position", "respawn" -> {
+                s.addProperty("source", "MinecraftServer.getAllLevels");
+                var dims = new JsonArray();
+                server.getAllLevels()
+                        .forEach(l -> dims.add(l.dimension().identifier().toString()));
+                s.add("dimensions", dims);
+            }
+            case "recipes" -> s.addProperty("source", "RecipeManager / ServerRecipeBook");
+            case "advancements" -> {
+                s.addProperty("source", "ServerAdvancementManager / PlayerAdvancements");
+                s.addProperty("selfOnly", true);
+            }
+            case "stats" -> {
+                s.addProperty("source", "BuiltInRegistries.STAT_TYPE / StatType.getRegistry");
+                s.addProperty("min", 0);
+                s.addProperty("max", Integer.MAX_VALUE);
+            }
+            case "offline" -> {
+                s.addProperty("source", "vanilla player load/save");
+                s.addProperty("backupRetention", OfflinePlayerEdit.RETENTION);
+                var ks = new JsonArray();
+                new TreeSet<>(file.editable().keySet()).forEach(ks::add);
+                s.add("editableKeys", ks);
+            }
+        }
+        return s;
+    }
+
+    private static JsonObject envelope(
+            UUID id,
+            boolean offline,
+            String view,
+            JsonElement value,
+            JsonObject schema,
+            JsonObject req,
+            String revision) {
+        int offset = req.has("offset") ? StackCodec.integer(req, "offset", 0, Integer.MAX_VALUE) : 0;
+        int limit = req.has("limit") ? StackCodec.integer(req, "limit", 1, 64) : 32;
+        String query = req.has("query") ? StackCodec.string(req, "query").toLowerCase(Locale.ROOT) : "";
+        if (query.length() > 200)
+            fail("invalid_request", EditorI18n.tr("cadeditor.message.playerextendededitor.search_word_too_long"));
+        var data = new JsonObject();
+        var target = new JsonObject();
+        target.addProperty("uuid", id.toString());
+        target.addProperty("offline", offline);
+        data.add("target", target);
+        data.addProperty("view", view);
+        data.addProperty("revision", revision);
+        data.add("schema", schema);
+        data.addProperty("offset", offset);
+        data.addProperty("total", 1);
+        data.add("nextOffset", JsonNull.INSTANCE);
+        if (value.isJsonObject() && value.getAsJsonObject().has("entries")) {
+            boolean displayed = view.equals("advancements") && req.has("displayed") && bool(req, "displayed");
+            var matches = new ArrayList<JsonElement>();
+            for (var raw : value.getAsJsonObject().getAsJsonArray("entries")) {
+                var row = raw.getAsJsonObject();
+                if (displayed && !row.get("has_display").getAsBoolean()) continue;
+                String identity =
+                        row.get(view.equals("players") ? "uuid" : "id").getAsString();
+                if (query.isEmpty()
+                        || identity.toLowerCase(Locale.ROOT).contains(query)
+                        || (row.has("type") && row.get("type").getAsString().contains(query))
+                        || (view.equals("players")
+                                && !row.get("name").isJsonNull()
+                                && row.get("name")
+                                        .getAsString()
+                                        .toLowerCase(Locale.ROOT)
+                                        .contains(query))) matches.add(raw);
+            }
+            var entries = new JsonArray();
+            int end = Math.min(offset, matches.size());
+            int chars = 0;
+            while (end < matches.size() && entries.size() < limit) {
+                var row = matches.get(end);
+                int size = row.toString().length();
+                if (chars + size > 18000 && entries.size() > 0) break;
+                if (size > 18000)
+                    fail(
+                            "payload_too_large",
+                            EditorI18n.tr("cadeditor.message.playerextendededitor.single_player_entries_exceed_page"));
+                entries.add(row);
+                chars += size;
+                end++;
+            }
+            var page = new JsonObject();
+            page.add("entries", entries);
+            data.add("value", page);
+            data.addProperty("total", matches.size());
+            if (end < matches.size()) data.addProperty("nextOffset", end);
+        } else data.add("value", value);
+        WorldWire.encode(data);
+        return data;
+    }
+
+    public static JsonElement value(ServerPlayer p, String view) {
+        var server = p.level().getServer();
+        var out = new JsonObject();
+        if (view.equals("position")) {
+            out.addProperty("dimension", p.level().dimension().identifier().toString());
+            out.addProperty("x", p.getX());
+            out.addProperty("y", p.getY());
+            out.addProperty("z", p.getZ());
+            out.addProperty("yaw", p.getYRot());
+            out.addProperty("pitch", p.getXRot());
+            return out;
+        }
+        if (view.equals("respawn")) {
+            var config = p.getRespawnConfig();
+            if (config == null) return JsonNull.INSTANCE;
+            var r = config.respawnData();
+            out.addProperty("dimension", r.dimension().identifier().toString());
+            out.addProperty("x", r.pos().getX());
+            out.addProperty("y", r.pos().getY());
+            out.addProperty("z", r.pos().getZ());
+            out.addProperty("yaw", r.yaw());
+            out.addProperty("forced", config.forced());
+            return out;
+        }
+        var entries = new JsonArray();
+        out.add("entries", entries);
+        switch (view) {
+            case "recipes" -> {
+                var packed = p.getRecipeBook().pack();
+                var known = new HashSet<>(packed.known());
+                var highlighted = new HashSet<>(packed.highlight());
+                for (var recipe : server.getRecipeManager().getRecipes().stream()
+                        .sorted(Comparator.comparing(r -> r.id().identifier().toString()))
+                        .toList()) {
+                    var row = new JsonObject();
+                    row.addProperty("id", recipe.id().identifier().toString());
+                    row.addProperty("unlocked", known.contains(recipe.id()));
+                    row.addProperty("highlighted", highlighted.contains(recipe.id()));
+                    entries.add(row);
+                }
+            }
+            case "advancements" -> {
+                for (var a : server.getAdvancements().getAllAdvancements().stream()
+                        .sorted(Comparator.comparing(a -> a.id().toString()))
+                        .toList()) {
+                    var progress = p.getAdvancements().getOrStartProgress(a);
+                    var row = new JsonObject();
+                    row.addProperty("id", a.id().toString());
+                    row.addProperty("done", progress.isDone());
+                    advancementDisplay(row, a.value());
+                    var criteria = new JsonArray();
+                    for (String name : new TreeSet<>(a.value().criteria().keySet())) {
+                        var c = new JsonObject();
+                        c.addProperty("name", name);
+                        c.addProperty(
+                                "done",
+                                progress.getCriterion(name) != null
+                                        && progress.getCriterion(name).isDone());
+                        criteria.add(c);
+                    }
+                    row.add("criteria", criteria);
+                    entries.add(row);
+                }
+            }
+            case "stats" -> {
+                for (var type : BuiltInRegistries.STAT_TYPE.stream()
+                        .sorted(Comparator.comparing(
+                                t -> BuiltInRegistries.STAT_TYPE.getKey(t).toString()))
+                        .toList()) statRows(p, type, entries);
+            }
+            default ->
+                fail("invalid_request", EditorI18n.tr("cadeditor.message.playerextendededitor.unknown_player_view"));
+        }
+        return out;
     }
     /** Display metadata stays untranslated on the server; the client resolves language keys. */
-    public static void advancementDisplay(JsonObject row, net.minecraft.advancements.Advancement advancement){
-        var display=advancement.display();row.addProperty("has_display",display.isPresent());
+    public static void advancementDisplay(JsonObject row, net.minecraft.advancements.Advancement advancement) {
+        var display = advancement.display();
+        row.addProperty("has_display", display.isPresent());
         // 26.3 makes DisplayInfo a record and renames its component accessors.
-        //? if >=26.3 {
-        display.ifPresent(info->{displayText(row,"title",info.title());displayText(row,"description",info.description());});
-        //?} else {
-        /*display.ifPresent(info->{displayText(row,"title",info.getTitle());displayText(row,"description",info.getDescription());});
-        *///?}
+        display.ifPresent(info -> {
+            displayText(row, "title", info.title());
+            displayText(row, "description", info.description());
+        });
     }
-    private static void displayText(JsonObject row,String field,net.minecraft.network.chat.Component component){
-        if(component==null)return;
-        if(component.getContents() instanceof net.minecraft.network.chat.contents.TranslatableContents translated)row.addProperty(field+"_key",translated.getKey());
-        else row.addProperty(field,component.getString());
+
+    private static void displayText(JsonObject row, String field, net.minecraft.network.chat.Component component) {
+        if (component == null) return;
+        if (component.getContents() instanceof net.minecraft.network.chat.contents.TranslatableContents translated)
+            row.addProperty(field + "_key", translated.getKey());
+        else row.addProperty(field, component.getString());
     }
-    private static <T> void statRows(ServerPlayer p,StatType<T> type,JsonArray rows){for(var id:new TreeSet<>(type.getRegistry().keySet())){var row=new JsonObject();row.addProperty("type",BuiltInRegistries.STAT_TYPE.getKey(type).toString());row.addProperty("id",id.toString());row.addProperty("value",p.getStats().getValue(type.get(type.getRegistry().getValue(id))));rows.add(row);}}
-    private static ServerLevel level(ServerPlayer p,JsonObject patch){var key=ResourceKey.create(Registries.DIMENSION,Identifier.parse(StackCodec.string(patch,"dimension")));var level=p.level().getServer().getLevel(key);if(level==null)fail("unknown_dimension",EditorI18n.tr("cadeditor.message.playerextendededitor.166e0f9f93", (key.identifier())));return level;}
-    private static BlockPos position(ServerLevel level,JsonObject n,boolean integer){double x=number(n,"x",-30000000,30000000),y=number(n,"y",level.getMinY(),level.getMaxY()),z=number(n,"z",-30000000,30000000);if(integer&&(x!=Math.rint(x)||y!=Math.rint(y)||z!=Math.rint(z)))fail("invalid_request",EditorI18n.tr("cadeditor.message.playerextendededitor.4e8904d60f"));var pos=BlockPos.containing(x,y,z);if(level.isOutsideBuildHeight(pos)||!level.getWorldBorder().isWithinBounds(pos))fail("protected_area",EditorI18n.tr("cadeditor.message.playerextendededitor.418c0af4c1"));return pos;}
-    private static double number(JsonObject n,String k,double min,double max){return PlayerWorldEdit.number(n,k,min,max);}
-    private static JsonArray edits(JsonElement patch){var o=patch.getAsJsonObject();keys(o,Set.of("entries"));var entries=o.getAsJsonArray("entries");if(entries==null||entries.isEmpty()||entries.size()>64)fail("invalid_request",EditorI18n.tr("cadeditor.message.playerextendededitor.36bbdf0cb9"));return entries;}
+
+    private static <T> void statRows(ServerPlayer p, StatType<T> type, JsonArray rows) {
+        for (var id : new TreeSet<>(type.getRegistry().keySet())) {
+            var row = new JsonObject();
+            row.addProperty("type", BuiltInRegistries.STAT_TYPE.getKey(type).toString());
+            row.addProperty("id", id.toString());
+            row.addProperty(
+                    "value", p.getStats().getValue(type.get(type.getRegistry().getValue(id))));
+            rows.add(row);
+        }
+    }
+
+    private static ServerLevel level(ServerPlayer p, JsonObject patch) {
+        var key = ResourceKey.create(Registries.DIMENSION, Identifier.parse(StackCodec.string(patch, "dimension")));
+        var level = p.level().getServer().getLevel(key);
+        if (level == null)
+            fail(
+                    "unknown_dimension",
+                    EditorI18n.tr(
+                            "cadeditor.message.playerextendededitor.dimension_currently_server", (key.identifier())));
+        return level;
+    }
+
+    private static BlockPos position(ServerLevel level, JsonObject n, boolean integer) {
+        double x = number(n, "x", -30000000, 30000000),
+                y = number(n, "y", level.getMinY(), level.getMaxY()),
+                z = number(n, "z", -30000000, 30000000);
+        if (integer && (x != Math.rint(x) || y != Math.rint(y) || z != Math.rint(z)))
+            fail("invalid_request", EditorI18n.tr("cadeditor.message.playerextendededitor.coordinate_must_integer"));
+        var pos = BlockPos.containing(x, y, z);
+        if (level.isOutsideBuildHeight(pos) || !level.getWorldBorder().isWithinBounds(pos))
+            fail(
+                    "protected_area",
+                    EditorI18n.tr("cadeditor.message.playerextendededitor.target_beyond_world_borders_construction"));
+        return pos;
+    }
+
+    private static double number(JsonObject n, String k, double min, double max) {
+        return PlayerWorldEdit.number(n, k, min, max);
+    }
+
+    private static JsonArray edits(JsonElement patch) {
+        var o = patch.getAsJsonObject();
+        keys(o, Set.of("entries"));
+        var entries = o.getAsJsonArray("entries");
+        if (entries == null || entries.isEmpty() || entries.size() > 64)
+            fail(
+                    "invalid_request",
+                    EditorI18n.tr("cadeditor.message.playerextendededitor.n1_64_entries_per_submission"));
+        return entries;
+    }
     /** Validation produces a plan; no write occurs while parsing a batch. */
-    public static Runnable prepare(ServerPlayer p,String view,JsonElement patch){
-        var server=p.level().getServer();
-        if(view.equals("position")){var n=patch.getAsJsonObject();keys(n,Set.of("dimension","x","y","z","yaw","pitch"));var level=level(p,n);var pos=position(level,n,false);double x=n.get("x").getAsDouble(),y=n.get("y").getAsDouble(),z=n.get("z").getAsDouble();float yaw=(float)number(n,"yaw",-360000,360000),pitch=(float)number(n,"pitch",-90,90);try{if(level.getChunk(pos.getX()>>4,pos.getZ()>>4)==null)fail("chunk_unavailable",EditorI18n.tr("cadeditor.message.playerextendededitor.304523b50f"));}catch(RuntimeException e){fail("chunk_unavailable",EditorI18n.tr("cadeditor.message.playerextendededitor.fdb2de78d2", (e.getMessage())));}return ()->{position(level,n,false);if(!p.teleportTo(level,x,y,z,Set.of(),yaw,pitch,true))fail("teleport_failed",EditorI18n.tr("cadeditor.message.playerextendededitor.6a19631c89"));};}
-        if(view.equals("respawn")){if(patch.isJsonNull())return ()->p.setRespawnPosition(null,false);var n=patch.getAsJsonObject();keys(n,Set.of("dimension","x","y","z","yaw","forced"));var level=level(p,n);var pos=position(level,n,true);float yaw=(float)number(n,"yaw",-360000,360000);boolean forced=bool(n,"forced");var config=new ServerPlayer.RespawnConfig(LevelData.RespawnData.of(level.dimension(),pos,yaw,0),forced);return ()->p.setRespawnPosition(config,false);}
-        var entries=edits(patch);var seen=new HashSet<String>();var actions=new ArrayList<Runnable>();
-        // Original native IDs are trusted; only requested IDs are registry-validated, preserving unrelated entries after reload.
-        if(view.equals("recipes")){var packed=p.getRecipeBook().pack();var known=new LinkedHashSet<>(packed.known());var highlighted=new LinkedHashSet<>(packed.highlight());for(var raw:entries){var n=raw.getAsJsonObject();keys(n,Set.of("id","unlocked","highlighted"));String id=Identifier.parse(StackCodec.string(n,"id")).toString();unique(seen,id);var key=ResourceKey.create(Registries.RECIPE,Identifier.parse(id));if(server.getRecipeManager().byKey(key).isEmpty())fail("unknown_recipe",EditorI18n.tr("cadeditor.message.playerextendededitor.0220641cbe", (id)));boolean unlocked=bool(n,"unlocked"),highlight=bool(n,"highlighted");if(highlight&&!unlocked)fail("invalid_request",EditorI18n.tr("cadeditor.message.playerextendededitor.83b9264d5c"));if(unlocked)known.add(key);else known.remove(key);if(highlight)highlighted.add(key);else highlighted.remove(key);}var next=new ServerRecipeBook.Packed(packed.settings(),new ArrayList<>(known),new ArrayList<>(highlighted));return ()->{var book=new ServerRecipeBook(server.getRecipeManager()::listDisplaysForRecipe);book.loadUntrusted(next,k->true);p.getRecipeBook().copyOverData(book);p.getRecipeBook().sendInitialRecipeBook(p);};}
-        for(var raw:entries){var n=raw.getAsJsonObject();String id=Identifier.parse(StackCodec.string(n,"id")).toString();
-            if(view.equals("advancements")){keys(n,Set.of("id","criteria"));unique(seen,id);var holder=server.getAdvancements().get(Identifier.parse(id));if(holder==null)fail("unknown_advancement",EditorI18n.tr("cadeditor.message.playerextendededitor.5c74811df1", (id)));var criteria=n.getAsJsonArray("criteria");if(criteria==null||criteria.isEmpty())fail("invalid_request",EditorI18n.tr("cadeditor.message.playerextendededitor.5b4ec37bba"));var names=new HashSet<String>();for(var c:criteria){var row=c.getAsJsonObject();keys(row,Set.of("name","done"));String name=StackCodec.string(row,"name");unique(names,name);if(!holder.value().criteria().containsKey(name))fail("unknown_advancement",EditorI18n.tr("cadeditor.message.playerextendededitor.1dc3d31016", (name)));boolean done=bool(row,"done");actions.add(()->{if(done)p.getAdvancements().award(holder,name);else p.getAdvancements().revoke(holder,name);});}}
-            else if(view.equals("stats")){keys(n,Set.of("type","id","value"));String typeId=Identifier.parse(StackCodec.string(n,"type")).toString();unique(seen,typeId+"/"+id);var type=BuiltInRegistries.STAT_TYPE.getValue(Identifier.parse(typeId));if(type==null)fail("unknown_stat",EditorI18n.tr("cadeditor.message.playerextendededitor.fba45f889a", (typeId)));var stat=stat(type,Identifier.parse(id));int value=StackCodec.integer(n,"value",0,Integer.MAX_VALUE);actions.add(()->p.getStats().setValue(p,stat,value));}
-            else fail("invalid_request",EditorI18n.tr("cadeditor.message.playerextendededitor.6917cde1da"));
-        }return ()->{actions.forEach(Runnable::run);if(view.equals("stats"))p.getStats().sendStats(p);else p.getAdvancements().flushDirty(p,false);};
-    }
-    private static void unique(Set<String> seen,String id){if(!seen.add(id))fail("invalid_request",EditorI18n.tr("cadeditor.message.playerextendededitor.ca2618a396", (id)));}
-    /** Counters such as play time tick continuously; only edited paths may conflict. */
-    private static JsonElement mergeEntries(String view,JsonElement baseline,JsonElement current,JsonElement patch){
-        var merged=patch.deepCopy();var rows=edits(merged);
-        var old=index(baseline.getAsJsonObject().getAsJsonArray("entries"),view);
-        var live=index(current.getAsJsonObject().getAsJsonArray("entries"),view);
-        for(var raw:rows){
-            var row=raw.getAsJsonObject();String key=entryKey(row,view);var b=old.get(key);var c=live.get(key);
-            if(b==null&&c!=null)fail("target_changed",EditorI18n.tr("cadeditor.message.playerextendededitor.62d790c557"));
-            if(b==null||c==null)continue; // Native validation reports an unknown ID.
-            if(view.equals("stats"))mergeField(row,b,c,"value");
-            else if(view.equals("recipes")){mergeField(row,b,c,"unlocked");mergeField(row,b,c,"highlighted");}
-            else if(row.has("criteria")){
-                var oldCriteria=new HashMap<String,JsonObject>();var liveCriteria=new HashMap<String,JsonObject>();
-                for(var criterion:b.getAsJsonArray("criteria"))oldCriteria.put(criterion.getAsJsonObject().get("name").getAsString(),criterion.getAsJsonObject());
-                for(var criterion:c.getAsJsonArray("criteria"))liveCriteria.put(criterion.getAsJsonObject().get("name").getAsString(),criterion.getAsJsonObject());
-                for(var criterion:row.getAsJsonArray("criteria")){var r=criterion.getAsJsonObject();String name=StackCodec.string(r,"name");if(oldCriteria.containsKey(name)&&liveCriteria.containsKey(name))mergeField(r,oldCriteria.get(name),liveCriteria.get(name),"done");}
+    public static Runnable prepare(ServerPlayer p, String view, JsonElement patch) {
+        var server = p.level().getServer();
+        if (view.equals("position")) {
+            var n = patch.getAsJsonObject();
+            keys(n, Set.of("dimension", "x", "y", "z", "yaw", "pitch"));
+            var level = level(p, n);
+            var pos = position(level, n, false);
+            double x = n.get("x").getAsDouble(),
+                    y = n.get("y").getAsDouble(),
+                    z = n.get("z").getAsDouble();
+            float yaw = (float) number(n, "yaw", -360000, 360000), pitch = (float) number(n, "pitch", -90, 90);
+            try {
+                if (level.getChunk(pos.getX() >> 4, pos.getZ() >> 4) == null)
+                    fail(
+                            "chunk_unavailable",
+                            EditorI18n.tr("cadeditor.message.playerextendededitor.unable_load_teleport_target_block"));
+            } catch (RuntimeException e) {
+                fail(
+                        "chunk_unavailable",
+                        EditorI18n.tr(
+                                "cadeditor.message.playerextendededitor.unable_load_teleport_target_block_2",
+                                (e.getMessage())));
             }
-        }return merged;
+            return () -> {
+                position(level, n, false);
+                if (!p.teleportTo(level, x, y, z, Set.of(), yaw, pitch, true))
+                    fail(
+                            "teleport_failed",
+                            EditorI18n.tr(
+                                    "cadeditor.message.playerextendededitor.vanilla_minecraft_deny_time_teleport"));
+            };
+        }
+        if (view.equals("respawn")) {
+            if (patch.isJsonNull()) return () -> p.setRespawnPosition(null, false);
+            var n = patch.getAsJsonObject();
+            keys(n, Set.of("dimension", "x", "y", "z", "yaw", "forced"));
+            var level = level(p, n);
+            var pos = position(level, n, true);
+            float yaw = (float) number(n, "yaw", -360000, 360000);
+            boolean forced = bool(n, "forced");
+            var config =
+                    new ServerPlayer.RespawnConfig(LevelData.RespawnData.of(level.dimension(), pos, yaw, 0), forced);
+            return () -> p.setRespawnPosition(config, false);
+        }
+        var entries = edits(patch);
+        var seen = new HashSet<String>();
+        var actions = new ArrayList<Runnable>();
+        // Original native IDs are trusted; only requested IDs are registry-validated, preserving unrelated entries
+        // after reload.
+        if (view.equals("recipes")) {
+            var packed = p.getRecipeBook().pack();
+            var known = new LinkedHashSet<>(packed.known());
+            var highlighted = new LinkedHashSet<>(packed.highlight());
+            for (var raw : entries) {
+                var n = raw.getAsJsonObject();
+                keys(n, Set.of("id", "unlocked", "highlighted"));
+                String id = Identifier.parse(StackCodec.string(n, "id")).toString();
+                unique(seen, id);
+                var key = ResourceKey.create(Registries.RECIPE, Identifier.parse(id));
+                if (server.getRecipeManager().byKey(key).isEmpty())
+                    fail(
+                            "unknown_recipe",
+                            EditorI18n.tr("cadeditor.message.playerextendededitor.unknown_recipe", (id)));
+                boolean unlocked = bool(n, "unlocked"), highlight = bool(n, "highlighted");
+                if (highlight && !unlocked)
+                    fail(
+                            "invalid_request",
+                            EditorI18n.tr("cadeditor.message.playerextendededitor.highlight_recipe_must_unlocked"));
+                if (unlocked) known.add(key);
+                else known.remove(key);
+                if (highlight) highlighted.add(key);
+                else highlighted.remove(key);
+            }
+            var next = new ServerRecipeBook.Packed(
+                    packed.settings(), new ArrayList<>(known), new ArrayList<>(highlighted));
+            return () -> {
+                var book = new ServerRecipeBook(server.getRecipeManager()::listDisplaysForRecipe);
+                book.loadUntrusted(next, k -> true);
+                p.getRecipeBook().copyOverData(book);
+                p.getRecipeBook().sendInitialRecipeBook(p);
+            };
+        }
+        for (var raw : entries) {
+            var n = raw.getAsJsonObject();
+            String id = Identifier.parse(StackCodec.string(n, "id")).toString();
+            if (view.equals("advancements")) {
+                keys(n, Set.of("id", "criteria"));
+                unique(seen, id);
+                var holder = server.getAdvancements().get(Identifier.parse(id));
+                if (holder == null)
+                    fail(
+                            "unknown_advancement",
+                            EditorI18n.tr("cadeditor.message.playerextendededitor.unknown_advancement", (id)));
+                var criteria = n.getAsJsonArray("criteria");
+                if (criteria == null || criteria.isEmpty())
+                    fail(
+                            "invalid_request",
+                            EditorI18n.tr("cadeditor.message.playerextendededitor.advancement_condition_cannot_empty"));
+                var names = new HashSet<String>();
+                for (var c : criteria) {
+                    var row = c.getAsJsonObject();
+                    keys(row, Set.of("name", "done"));
+                    String name = StackCodec.string(row, "name");
+                    unique(names, name);
+                    if (!holder.value().criteria().containsKey(name))
+                        fail(
+                                "unknown_advancement",
+                                EditorI18n.tr(
+                                        "cadeditor.message.playerextendededitor.unknown_advancement_condition",
+                                        (name)));
+                    boolean done = bool(row, "done");
+                    actions.add(() -> {
+                        if (done) p.getAdvancements().award(holder, name);
+                        else p.getAdvancements().revoke(holder, name);
+                    });
+                }
+            } else if (view.equals("stats")) {
+                keys(n, Set.of("type", "id", "value"));
+                String typeId = Identifier.parse(StackCodec.string(n, "type")).toString();
+                unique(seen, typeId + "/" + id);
+                var type = BuiltInRegistries.STAT_TYPE.getValue(Identifier.parse(typeId));
+                if (type == null)
+                    fail(
+                            "unknown_stat",
+                            EditorI18n.tr("cadeditor.message.playerextendededitor.unknown_statistics_type", (typeId)));
+                var stat = stat(type, Identifier.parse(id));
+                int value = StackCodec.integer(n, "value", 0, Integer.MAX_VALUE);
+                actions.add(() -> p.getStats().setValue(p, stat, value));
+            } else fail("invalid_request", EditorI18n.tr("cadeditor.message.playerextendededitor.unknown_player_view"));
+        }
+        return () -> {
+            actions.forEach(Runnable::run);
+            if (view.equals("stats")) p.getStats().sendStats(p);
+            else p.getAdvancements().flushDirty(p, false);
+        };
     }
-    private static Map<String,JsonObject> index(JsonArray rows,String view){var map=new HashMap<String,JsonObject>();for(var r:rows){var row=r.getAsJsonObject();map.put(entryKey(row,view),row);}return map;}
-    private static String entryKey(JsonObject row,String view){String id=Identifier.parse(StackCodec.string(row,"id")).toString();return view.equals("stats")?Identifier.parse(StackCodec.string(row,"type"))+"/"+id:id;}
-    private static void mergeField(JsonObject desired,JsonObject baseline,JsonObject current,String field){
-        var d=desired.get(field);if(d==null)return;
-        var b=baseline.get(field);var c=current.get(field);
-        if(Objects.equals(d,b))desired.add(field,c.deepCopy());
-        else if(!Objects.equals(c,b)&&!Objects.equals(c,d))fail("target_changed",EditorI18n.tr("cadeditor.message.playerextendededitor.ae5c378199", (field)));
+
+    private static void unique(Set<String> seen, String id) {
+        if (!seen.add(id))
+            fail("invalid_request", EditorI18n.tr("cadeditor.message.playerextendededitor.repeat_entry", (id)));
     }
-    private static <T> Stat<T> stat(StatType<T> type,Identifier id){var v=type.getRegistry().getValue(id);if(v==null||!type.getRegistry().containsKey(id))fail("unknown_stat",EditorI18n.tr("cadeditor.message.playerextendededitor.2b5ac1ad9d", (id)));return type.get(v);}
+    /** Counters such as play time tick continuously; only edited paths may conflict. */
+    private static JsonElement mergeEntries(String view, JsonElement baseline, JsonElement current, JsonElement patch) {
+        var merged = patch.deepCopy();
+        var rows = edits(merged);
+        var old = index(baseline.getAsJsonObject().getAsJsonArray("entries"), view);
+        var live = index(current.getAsJsonObject().getAsJsonArray("entries"), view);
+        for (var raw : rows) {
+            var row = raw.getAsJsonObject();
+            String key = entryKey(row, view);
+            var b = old.get(key);
+            var c = live.get(key);
+            if (b == null && c != null)
+                fail(
+                        "target_changed",
+                        EditorI18n.tr("cadeditor.message.playerextendededitor.server_candidate_data_changed_reread"));
+            if (b == null || c == null) continue; // Native validation reports an unknown ID.
+            if (view.equals("stats")) mergeField(row, b, c, "value");
+            else if (view.equals("recipes")) {
+                mergeField(row, b, c, "unlocked");
+                mergeField(row, b, c, "highlighted");
+            } else if (row.has("criteria")) {
+                var oldCriteria = new HashMap<String, JsonObject>();
+                var liveCriteria = new HashMap<String, JsonObject>();
+                for (var criterion : b.getAsJsonArray("criteria"))
+                    oldCriteria.put(criterion.getAsJsonObject().get("name").getAsString(), criterion.getAsJsonObject());
+                for (var criterion : c.getAsJsonArray("criteria"))
+                    liveCriteria.put(
+                            criterion.getAsJsonObject().get("name").getAsString(), criterion.getAsJsonObject());
+                for (var criterion : row.getAsJsonArray("criteria")) {
+                    var r = criterion.getAsJsonObject();
+                    String name = StackCodec.string(r, "name");
+                    if (oldCriteria.containsKey(name) && liveCriteria.containsKey(name))
+                        mergeField(r, oldCriteria.get(name), liveCriteria.get(name), "done");
+                }
+            }
+        }
+        return merged;
+    }
+
+    private static Map<String, JsonObject> index(JsonArray rows, String view) {
+        var map = new HashMap<String, JsonObject>();
+        for (var r : rows) {
+            var row = r.getAsJsonObject();
+            map.put(entryKey(row, view), row);
+        }
+        return map;
+    }
+
+    private static String entryKey(JsonObject row, String view) {
+        String id = Identifier.parse(StackCodec.string(row, "id")).toString();
+        return view.equals("stats") ? Identifier.parse(StackCodec.string(row, "type")) + "/" + id : id;
+    }
+
+    private static void mergeField(JsonObject desired, JsonObject baseline, JsonObject current, String field) {
+        var d = desired.get(field);
+        if (d == null) return;
+        var b = baseline.get(field);
+        var c = current.get(field);
+        if (Objects.equals(d, b)) desired.add(field, c.deepCopy());
+        else if (!Objects.equals(c, b) && !Objects.equals(c, d))
+            fail(
+                    "target_changed",
+                    EditorI18n.tr("cadeditor.message.playerextendededitor.edited_field_changed_reread_check", (field)));
+    }
+
+    private static <T> Stat<T> stat(StatType<T> type, Identifier id) {
+        var v = type.getRegistry().getValue(id);
+        if (v == null || !type.getRegistry().containsKey(id))
+            fail("unknown_stat", EditorI18n.tr("cadeditor.message.playerextendededitor.unknown_statistics", (id)));
+        return type.get(v);
+    }
 }

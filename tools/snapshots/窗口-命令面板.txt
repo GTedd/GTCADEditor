@@ -61,6 +61,10 @@ div.k-modal.k-pal
       span.sb "粘贴 /give 或 /item 命令"
       span.k-kbd "Ctrl+I"
     div.k-pr
+      img.o-ico [src="oriel:textures/icons/plus.png" style="height:16px;width:16px"]
+      span "新建物品…"
+      span.sb "从任意物品的默认栈开始编辑"
+    div.k-pr
       img.o-ico [src="oriel:textures/icons/tag.png" style="height:16px;width:16px"]
       span "卡片：名称"
       span.sb "当前页"
@@ -84,10 +88,6 @@ div.k-modal.k-pal
       img.o-ico [src="oriel:textures/icons/tag.png" style="height:16px;width:16px"]
       span "卡片：外观借用"
       span.sb "当前页"
-    div.k-pr
-      img.o-ico [src="oriel:textures/icons/sun.png" style="height:16px;width:16px"]
-      span "切换亮 / 暗主题"
-      span.sb
     div.k-pr
       img.o-ico [src="oriel:textures/icons/palette.png" style="height:16px;width:16px"]
       span "切换界面风格"

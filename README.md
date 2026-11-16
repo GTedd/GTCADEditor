@@ -1,137 +1,88 @@
-<p align="center">
-  <img src="docs/branding/icon-plate-256.png" width="128" alt="CAD Editor Recast">
-</p>
+# CAD Editor（GT 版）
 
-# CAD Editor · Recast
+[CAD Editor Recast](https://github.com/Rinorsi/CAD-Editor-Recast) 的 GT 版：在上游 0.99.9 的源码基础上，只构建 **Minecraft 26.3 的 Fabric 模组**和 **Paper 26.3 插件**，并补充了服务端的**编辑历史**（可增删改查）和**按节点的权限控制**（防止权限外泄和客户端冒充管理员）。
 
-Minecraft 物品数据组件编辑器：游戏里按 **I**（或 `/cade`）打开可视化界面：悬停 / 手持物品改物品，对着方块、实体、玩家改它们，什么都不指就改自己。
+| 产物 | 给谁用 | 位置 |
+|---|---|---|
+| `cadeditor-fabric-26.3-<版本>.jar` | 玩家客户端；也能装在 Fabric 专用服务器上 | `client/build/libs/` |
+| `cadeditor-paper-26.3-<版本>.jar` | Paper 服务器（插件名 `CADEditor`） | `paper/build/libs/` |
 
-CAD Editor（Component And Data Editor）的换代重写，界面基于 [Oriel UI](https://github.com/Rinorsi/Oriel-UI)。
-**预发布 0.99.x**：功能补全之前不进入 1.0，清单见 [`docs/COVERAGE.md`](docs/COVERAGE.md)。
+版本号 `0.99.9+gt.1` 表示“上游 0.99.9 的 GT 版第 1 次修订”。编辑器的网络协议没有版本号，**服务器和客户端要用同一次构建**。
 
-## 界面预览
+## 目录结构
 
-改名称、说明和外观时，左侧同步预览物品与提示框。
+参照 GTOrielUI：一个共享源码树加两个模块。
 
-![物品外观编辑：名称、说明、稀有度与提示框预览](docs/screenshots/item-editor.png)
+```
+common/src/main/java       共享源码：协议、服务端编辑逻辑、编辑历史、权限判定（dev.rinorsi.editor.*）
+common/src/main/resources  语言文件：简体中文、English、繁體中文（服务端回复按客户端语言给出）
+client/                    Fabric 模组：编译 common + 自己的源码（编辑器界面、Oriel 页面、Fabric 接入、mixin）
+  src/test/java            回归程序（main 方法）与 JUnit 测试
+  verification.gradle      回归程序的 JavaExec 任务
+paper/                     Paper 插件：编译同一份 common + 自己的源码（Bukkit 传输、PaperPlatform）
+  src/probe/java           编辑器的服务端探针（只进 -probe jar，测试服用）
+tools/                     界面 node 测试、i18n 同步、探针与端到端测试脚本
+docs/                      本项目文档；docs/editor/ 是上游的设计文档与字段快照
+```
 
-<details>
-<summary>药水效果：调整效果、等级与持续时间</summary>
+`common` 不是 Gradle 项目，只是源码目录：`client` 和 `paper` 各自把它编进去。`common` 里禁止出现客户端、Fabric、Oriel、Bukkit、Paper 的类型，`./gradlew check` 里的 `checkCommonBoundary` 会检查。两个平台的差异全部走 `Platform` 接口（`common/.../platform/Platform.java`），实现分别是 `client/.../fabric/FabricPlatform.java` 和 `paper/.../PaperPlatform.java`。
 
-![药水效果编辑](docs/screenshots/potion-effects.png)
+## 构建
 
-</details>
+前提：JDK 25、Node.js（i18n 与界面检查）、Git，以及 Oriel 0.15.0。
 
-<details>
-<summary>SNBT 编辑：语法高亮、行号与格式化</summary>
+Oriel（编辑器的页面引擎）来自同目录的 GTOrielUI。第一次构建前，在 GTOrielUI 里发布一次精简版：
 
-![物品 SNBT 编辑与提示框预览](docs/screenshots/snbt-editor.png)
+```bash
+cd ../GTOrielUI
+./gradlew :client:publishAllPublicationsToTemplateLocalRepository -Poriel_slim
+```
 
-</details>
+`gradle.properties` 的 `orielRepository` 默认指向 `../GTOrielUI/build/template-maven`，也可以改成任何有 `dev.oriel:oriel-fabric-26.3:0.15.0` 的 Maven 目录（MavenLocal 同样可用）。
 
-以上为 0.99.8 源码页面的离线预览，使用演示数据。[截图说明](docs/screenshots/README.md)
+```bash
+./gradlew build        # 模组 + 插件 + 全部检查
+./gradlew check        # 只跑检查
+./gradlew :paper:probeJar   # 带服务端探针的插件，只用于测试服
+./gradlew spotlessApply     # 统一代码格式（Java：palantir-java-format；界面脚本：Prettier），check 会检查格式
+```
 
-## 能改什么
-
-- **物品**：运行版本的全部持久数据组件（26.1.2 / 26.2 / 26.3 分别为 107 / 108 / 119 个原版组件，另支持模组注册的组件）；刷怪蛋 / 刷怪笼（生物外观、体型、属性、状态效果、装备）；提示框预览用游戏自己生成的内容。数值范围来自游戏的真实 Codec，不是手写表。
-- **世界里已放置的东西**（对准它按 **I**，或 `/cadeditor block|entity|player`）：方块实体（容器、告示牌、旗帜、蜂箱、讲台、唱片机、陶罐、命令方块、头颅、熔炉 / 酿造台 / 营火的进度……）、方块状态；实体（姿态、装备、属性、展示框 / 画、展示实体、村民交易、乘客）。
-- **保险库**（按 **O**，主菜单 / 暂停菜单也有按钮）：把改好的物品存在本机，之后取出放进任意物品槽或字段。
-
-按键都在“控制”设置里的“CAD Editor”分类，可以改：编辑 = I，保险库 = O。按住 Shift 再按 I：只改手里的物品，空手就改自己。
-
-当前版本：<!-- editor-version -->0.99.9<!-- /editor-version --> · [更新日志](CHANGELOG.md) · [发版清单](docs/RELEASE.md)
-
-高级多行编辑、特殊浮点数、背包格完整编辑及窗口偏好见[操作说明](docs/EDITOR-INTERACTION.md)。页面背景默认 60% 不透明，可用 30%–100% 滑条或点击数字调整；半透明子窗口带磨砂，窗口化顶栏可拖动并记住位置。目前仅开放暗色模式，关于页跟随游戏语言。出错定位见[写回日志](docs/INVENTORY-WRITE-DIAGNOSTICS.md)。
-
-## 下载
-
-从本仓库 GitHub **Releases** 获取附件；尚未公开的版本以维护者本地分发为准。每版提供六个 jar 与 `SHA256SUMS.txt`，只安装一个匹配目标的 jar。Modrinth / CurseForge 项目待维护者填写 ID 后启用。
-
-## 支持的版本
-
-| Minecraft | Fabric | NeoForge | Java / 前置 |
-|---|---|---|---|
-| 26.1.2 | `cadeditor-fabric-26.1.2-<版本>.jar` | `cadeditor-neoforge-26.1.2-<版本>.jar` | Java 25 / 已内嵌 Oriel UI 0.15.0 |
-| 26.2 | `cadeditor-fabric-26.2-<版本>.jar` | `cadeditor-neoforge-26.2-<版本>.jar` | 同上 |
-| 26.3 | `cadeditor-fabric-26.3-<版本>.jar` | `cadeditor-neoforge-26.3-<版本>.jar` | 同上 |
-
-## 要求
-
-Minecraft 26.1.2 / 26.2 / 26.3 · Fabric 或 NeoForge · Java 25 · **对应版本的 Oriel UI 0.15.0（正式包已内嵌）**。Fabric 需 Loader ≥ 0.19.5 与匹配游戏版本的 Fabric API。
+- Gradle 用阿里云镜像（9.7.1），守护进程固定在 JDK 25（`gradle/gradle-daemon-jvm.properties`，paperweight 要求）。
+- Loom 和 paperweight 分别只在 `client`、`paper` 里加载，互不干扰。
+- 模组默认把 Oriel 打进 jar（jar-in-jar），玩家只装一个文件；`-PorielEmbedded=false` 则需另装 Oriel。
 
 ## 安装
 
-**客户端必装，服务端选装。** 房主未安装时仍可连接；完整服务端编辑能力需要房主安装并授权。
+**客户端**：`cadeditor-fabric-26.3-*.jar` + Fabric API，放进 `mods/`。
 
-服务端未安装 CAD Editor 时，也能打开交互距离内方块／实体的只读页面。顶部常驻“只读 · 服务端未安装 CAD Editor，无法编辑数据”，只显示打开时客户端已同步的信息及方块状态，无法修改、应用、撤销或恢复草稿。完整服务端 NBT 与世界写入仍需服务端模组。
+**Paper 服务器**：`cadeditor-paper-26.3-*.jar` 放进 `plugins/`，不需要其他前置插件。配置在 `plugins/CADEditor/cadeditor.json`，历史在 `plugins/CADEditor/history/`。
 
-`mods/` 里放 与加载器及游戏版本匹配的 CAD Editor；正式包内嵌 Oriel 0.15.0，无需另装 Oriel，Fabric 还需 Fabric API。创造模式保留原版写回。服务端未装本模组时，获得原版 execute/item 命令权限的生存玩家也可修改自己的普通背包 0..35（第1～36格）；主手绑定打开时的槽位，装备、副手、容器及世界/其他玩家仍需服务端模组；有原版命令权限也可从本地保险库取出到自己的空槽。命令写回只在收到服务器同步后确认成功，部分匹配保护不等于完整 CAS；少量原版反馈可能通知本人、其他 OP 并记录控制台，不向普通非 OP 玩家广播，插件额外转发未知。详见[能力与限制](docs/client-only-hotbar.md)。
+**Fabric 服务器 / 单人**：装同一个模组 jar 即可，配置在 `config/cadeditor.json`，历史在各自存档的 `cadeditor-history/` 里。
 
-| 安装位置 | 必需文件 |
-|---|---|
-| 客户端 `mods/` | 一个匹配目标的 CAD Editor jar（内含 Oriel）；Fabric 另放 Fabric API |
-| 需要完整编辑能力的服务器 `mods/`（选装） | 相同游戏版本与加载器的 CAD Editor（内含 Oriel）和对应依赖；管理员授予写入权限 |
+## 权限与编辑历史
 
-房主选择安装完整后端时，还需考虑 Oriel 的客户端前置要求：Fabric 26.1.2 / Oriel 0.11 实测中，未安装 Oriel 的旁观客户端会因缺少 `oriel` 注册表项被拒绝连接。此时其他玩家也应安装匹配的 Oriel；这与“房主完全不装 Editor/Oriel、操作者仅在客户端安装”的场景不同，后者已完成真实 LAN 库存/Vault 验证。其他版本和加载器的这一连接组合尚未实测。
+完整说明见 [docs/编辑历史与权限.md](docs/编辑历史与权限.md)。要点：
 
-只在客户端安装时，本机保险库的保存、整理、导入导出可正常使用，不要求 OP。服务器授予原版权威查询及对应命令权限后，可逐项修改自己的游戏模式、经验等级、本等级整数点数、同维度位置/旋转，以及一个可同步属性的基础值；每笔只发送一条修改命令，服务器回读确认后才算保存。本级点数不设置累计经验；位置不跨维度；属性必须存在服务器原始 base，修饰符不随之覆盖。生命、饥饿、独立能力、完整重生配置等仍提示需要服务端 Editor，不能混入命令提交。完整自身/其他玩家、容器及世界编辑需要服务端安装并授权。详见[自身命令合同](docs/self-player-command-contract.md)和[扩展字段合同与验收范围](docs/self-player-next-contract.md)。
+- 每项服务端能力一个节点（`cadeditor.item.edit`、`cadeditor.world.read`、`cadeditor.world.edit`、`cadeditor.player.edit`、`cadeditor.player.offline`、`cadeditor.vault.give`、`cadeditor.history.*` 等）。Paper 上 LuckPerms 等权限插件的明确设置优先；Fabric 上支持 fabric-permissions-api；都没有设置时按 OP 等级和 `cadeditor.json` 判断。
+- 判定只用服务端自己知道的事实，每个请求重新判定，世界编辑先查节点再找目标。请求里声明身份或权限的字段会被拒绝并记为 `forged`。
+- **与上游不同**：没有权限的创造模式玩家默认只能编辑自己的物品，不能再读写方块和实体（`creativeWorldEdit` 可恢复上游行为）。
+- 每个编辑器请求都会在服务端留下一条记录：谁、何时、对什么、结果、拒绝原因和涉及的节点。编辑器里有“编辑历史”窗口（保险库窗口底部按钮，或 `/cade history`），服务器有 `/cadeditor history list|search|view|add|note|tag|delete|purge`。只能改备注和标签，删除和清除本身也会被记录。
+- `/cadeditor permissions [玩家]` 查看节点的实际判定。
+- 物品规则（`itemRules`）：没有 `cadeditor.item.bypass` 的玩家不能放入违禁物品、不能伪造或剥离插件数据等受限组件、不能写入会执行命令的点击事件。
+- 客户端进服后先和服务端握手，确认装了插件才发送编辑请求；打开自己的物品不再请求服务端，应用修改时才由服务端严格校验。
+- 服务器**没装**插件或模组时只用原版手段：创造模式用原版创造槽位包写回自己的背包；非创造模式只有 OP（有指令权限）才能用原版命令写回物品、保险库“给我”和自身玩家页（命令不超过 256 字符，不会因此被踢），其他玩家可以编辑草稿，但应用会在本地被拒绝。每次应用都按当时的游戏模式和权限重新判断。
+- 控制台默认不打印逐请求日志（`debugLog` 可打开），操作都在编辑历史里。
 
-没有原版命令权限的生存玩家可编辑本地草稿和管理保险库，游戏数据不会因此改变；界面会持续提示权限或服务端要求。只有收到服务器确认才显示保存成功；超时显示结果未知、保留草稿且不自动重发，应关闭后重新读取核对。
+## 验证
 
-“保留草稿”指仍存在的编辑会话，不保证断线重连后自动恢复旧草稿。真实重连测试中新页面重新读取服务器已生效的值，旧连接的迟到回包不会在新页面报保存成功或触发重发；断线后的修改状态请重新读取核对。
+见 [docs/验证记录.md](docs/验证记录.md)：本地检查、Paper 上的编辑器服务端探针、客户端连服的端到端测试（用本项目自己构建的模组）。
 
-## 从源码构建
+## 与上游的关系
 
-**1. 仓库放在哪**
-
-构建输出、运行目录、日志、截图都不在仓库里，而在同级的 `Oriel-UI-Workspace/daily/` 下，所以请这样摆：
-
-```
-Mods/
-├── CAD-Editor-Recast/      ← 本仓库
-├── Oriel-UI/               ← Oriel 源码仓库（只有跑预览 / 截图工具时才需要）
-└── Oriel-UI-Workspace/     ← 工作区（不是仓库）
-```
-
-**2. 准备**
-
-- JDK 25、Git Bash、Node.js 18+
-- 获取 Oriel 0.15.0 六目标瘦包的 Maven 工件，使用 `-PorielRepository=<本地Maven目录>`，或放入 `libs/oriel-maven/`，也可在 Oriel 工程运行 `publishToMavenLocal -Poriel_slim`。不要把完整版作为嵌入依赖。
-
-| 目标 | 命令 |
-|---|---|
-| 单目标与检查 | `./gradlew :fabric:26.1:build :fabric:26.1:check -PmcTest=false` |
-| 六目标与检查 | `./gradlew build -PmcTest=false` |
-| 本地发行目录（六 jar + SHA256） | `pwsh -File tools/build-all.ps1` |
-| 版本同步预览 | `pwsh -File tools/bump-version.ps1 -Version <新版本> -DryRun` |
-
-**3. 常用命令**（Git Bash，仓库根目录）
-
-```bash
-bash tools/gw.sh :fabric:26.1:build --no-problems-report   # 构建
-bash tools/gw.sh build -PmcTest=false                       # 六目标构建与 JVM 检查
-# PowerShell: pwsh -File tools/build-all.ps1                  # 六 jar + SHA256SUMS
-node tools/ui-contract-test.cjs                              # 界面测试（另有 ui-world-test / ui-compact-test）
-```
-
-正式发行默认 `-PorielEmbedded=true`；外部依赖版用 `-PorielEmbedded=false`，该版需玩家另装 Oriel 0.15.x（低于 0.16）。两种模式均保留模组内部的 Oriel 必需依赖范围。嵌入版仍依赖 Oriel 的代码，只是玩家不需要另找一个文件；不修改 Oriel mod id 或做私有重定位。
-
-调试游戏：双击 `启动物品工坊预览.bat`，保存 CSS / JS 即可热更新。
-
-## 文档
-
-世界编辑：[协议](docs/world-edit-contract.md) · [方块](docs/world-block-edit.md) · [实体](docs/world-entity-contract.md)。组件结构：[component-schema](docs/component-schema-contract.md)；保险库：[vault](docs/vault-contract.md)；验收：[测试说明](docs/TESTING.md)（回执仅本地保留）。
-
-0.99.9 新增界面偏好、磨砂与客户端只读，并修复属性加成编辑；改动见[更新日志](CHANGELOG.md)，验证入口与边界见[测试说明](docs/TESTING.md)。
-
-宿主搜索：[源码调研与性能](docs/search-architecture.md) · [search消息契约](docs/search-contract.md)。搜索架构参考 [JEI](https://github.com/mezz/JustEnoughItems)、[REI](https://github.com/shedaniel/RoughlyEnoughItems)、[EMI](https://github.com/emilyploszaj/emi) 的索引、缓存与可见网格思路，采用自主实现，未复制其代码；版本与文件许可见调研报告。
-
-[`DEVELOPMENT`](docs/DEVELOPMENT.md) 开发说明 · [`README-host`](README-host.md) 宿主与写回合同 · [`registry-contract`](docs/registry-contract.md) 数据通道 · [`TESTING`](docs/TESTING.md) 测试 · [`COVERAGE`](docs/COVERAGE.md) 覆盖与 1.0 门槛
-
-## 致谢
-
-[Vellum](https://modrinth.com/mod/vellum-gui)（Max Leiter，MIT）：Oriel UI 基于它，界面引擎的思路也来自它。
+- 源码取自 CAD-Editor-Recast `50723fb`（0.99.9），已并入本仓库，不再是 submodule。Stonecutter 的多版本条件代码已按 26.3 展开，NeoForge、26.1、26.2、发布与宣传工具已删除。
+- 原先插件用的 4 个 Paper 补丁改成了 `Platform` 钩子（末影箱容量、静默设置游戏模式、离线玩家的统计与进度、`Spigot.ticksLived` 列入易变字段），不再需要打补丁。
+- 同步上游：不做整体对比，逐个分析上游在 `gradle.properties` 的 `upstream_commit` 之后的提交，判断是否需要、对应本仓库哪些文件，再手工移植，完成后更新 `upstream_commit`，跑 `./gradlew check`、探针和实机测试。本仓库统一了代码格式（`./gradlew spotlessApply`）并把文案键改成了有含义的名字，上游补丁不能直接套用；上游新增的服务端类如果引用了客户端代码，`paper` 编译或 `checkCommonBoundary` 会报出来。
 
 ## 许可
 
-本项目原创代码采用 [MIT 许可证](LICENSE)。第三方组件仍遵循各自许可证，声明见 [`NOTICE`](NOTICE)。
+编辑器代码为 MIT（© Rinorsi，见 `LICENSE`、`NOTICE`），随模组和插件 jar 一起分发。本仓库新增部分的许可证尚未指定。

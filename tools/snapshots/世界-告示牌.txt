@@ -27,7 +27,7 @@ div
         img.o-ico [src="oriel:textures/icons/down.png" style="height:8px;width:8px"]
       span "预览"
       div.grow
-      div.ed-view.k-seg [title="方块预览：2D 图标 / 3D 模型（会记住你的选择）"]
+      div.ed-view.k-seg [title="2D 图标 / 3D 模型"]
         div.k-segi.on "2D"
         div.k-segi "3D"
     div.ed-stage
@@ -96,32 +96,55 @@ div
             div.k-chev [title="折叠 / 展开"]
               img.o-ico [src="oriel:textures/icons/down.png" style="height:8px;width:8px"]
           div.k-cbody
-            div.x2r
-              span.x2l
-                span "1"
-              input.k-input.we-line [placeholder="第 1 行" type="text" value="a"]
-            div.x2r
-              span.x2l
-                span "2"
-              input.k-input.we-line [placeholder="第 2 行" type="text"]
-            div.x2r
-              span.x2l
-                span "3"
-              input.k-input.we-line [placeholder="第 3 行" type="text"]
-            div.x2r
-              span.x2l
-                span "4"
-              input.k-input.we-line [placeholder="第 4 行" type="text"]
+            div.we-signdoc
+              div.k-rd.multi.open
+                div.k-rdedit [style="display:flex"]
+                  div.k-rdbar
+                    div.color.k-rdb [title="文字颜色：默认"]
+                      i.def.k-rdsw
+                    div.k-rdb.shadow [title="文字阴影：默认"]
+                      i.def.k-rdsh.k-rdsw
+                    div.bold.flag.k-rdb [title="粗体（Ctrl+B）"]
+                      span "B"
+                    div.flag.italic.k-rdb [title="斜体（Ctrl+I）"]
+                      span "I"
+                    div.flag.k-rdb.underlined [title="下划线（Ctrl+U）"]
+                      span "U"
+                    div.flag.k-rdb.strikethrough [title="删除线"]
+                      span "S"
+                    div.flag.k-rdb.obfuscated [title="乱码字（游戏里不停变化）"]
+                      span "?"
+                    div.font.k-rdb [title="字体：minecraft:default"]
+                      span "Aa"
+                    i.k-rdsep
+                    div.k-rdb.sprite [title="在光标处插入精灵图"]
+                      img.o-ico [src="oriel:textures/icons/image.png" style="height:16px;width:16px"]
+                    div.head.k-rdb [title="插入玩家头像"]
+                      img.o-ico [src="oriel:textures/icons/user.png" style="height:16px;width:16px"]
+                    div.k-rdb.translate [title="插入翻译键"]
+                      img.o-ico [src="oriel:textures/icons/globe.png" style="height:16px;width:16px"]
+                    div.event.k-rdb [title="点击与悬停事件"]
+                      img.o-ico [src="oriel:textures/icons/link.png" style="height:16px;width:16px"]
+                    div.grad.k-rdb [title="渐变色（选中文字；没选就是整页）"]
+                      img.o-ico [src="oriel:textures/icons/palette.png" style="height:16px;width:16px"]
+                    div.k-rdb.more [title="§ 代码、清除格式"]
+                      img.o-ico [src="oriel:textures/icons/menu.png" style="height:16px;width:16px"]
+                    span.k-rdcount
+                  div.k-rdtaw
+                    textarea.k-input.k-rdta [placeholder="最多 4 行，每行约 15 个字宽" value="a\n\n\n" style="height:76px"]
+                    div.k-rdspr
+                      div.k-rdsprin
+                        div.k-rdmirror
             div.k-srow.k-xrow
               div.k-xhead
-                div.tx
+                div.tx [title="color"]
                   div.z "文字颜色"
                 div.k-btn
                   i.dye-chip [style="background:#1d1d21"]
                   span "黑色"
             div.k-srow.k-xrow
               div.k-xhead
-                div.tx
+                div.tx [title="has_glowing_text"]
                   div.z "发光文字"
                   div.s "用荧光墨囊涂过的效果"
                 div.k-toggle [role="switch"]
@@ -150,7 +173,6 @@ div
                   div.s "涂过蜡的告示牌不能再改字"
                 div.k-toggle.on [role="switch"]
                   i
-            div.k-sub "一行里想要样式（颜色、粗体）时，直接写文本组件，比如 {"text":"你好","color":"red"}。"
           div.k-div
 ## footer
 div
@@ -191,7 +213,7 @@ div
         img.o-ico [src="oriel:textures/icons/down.png" style="height:8px;width:8px"]
       span "预览"
       div.grow
-      div.ed-view.k-seg [title="方块预览：2D 图标 / 3D 模型（会记住你的选择）"]
+      div.ed-view.k-seg [title="2D 图标 / 3D 模型"]
         div.k-segi.on "2D"
         div.k-segi "3D"
     div.ed-stage
@@ -321,7 +343,7 @@ div
         img.o-ico [src="oriel:textures/icons/down.png" style="height:8px;width:8px"]
       span "预览"
       div.grow
-      div.ed-view.k-seg [title="方块预览：2D 图标 / 3D 模型（会记住你的选择）"]
+      div.ed-view.k-seg [title="2D 图标 / 3D 模型"]
         div.k-segi.on "2D"
         div.k-segi "3D"
     div.ed-stage
@@ -394,14 +416,25 @@ div
                     img.o-ico [src="oriel:textures/icons/layers.png" style="height:16px;width:16px"]
                   div.k-btn.kc-tool [title="复制"]
                     img.o-ico [src="oriel:textures/icons/copy.png" style="height:16px;width:16px"]
-                div.kc-fonts [title="仅调整 SNBT 字号，不改变全局界面比例或内容"]
-                  div.k-btn.sm [title="缩小 SNBT 字号"]
+                  div.k-btn.kc-tool [title="折叠"]
+                    img.o-ico [src="oriel:textures/icons/layers_cards.png" style="height:16px;width:16px"]
+                  div.k-btn.kc-tool [title="查找与替换（Ctrl+F / Ctrl+H，跳转 Ctrl+G）"]
+                    img.o-ico [src="oriel:textures/icons/search.png" style="height:16px;width:16px"]
+                  div.k-btn.kc-tool [title="补全：输入时自动弹出（Ctrl+Space 立即显示）"]
+                    img.o-ico [src="oriel:textures/icons/sparkle.png" style="height:16px;width:16px"]
+                  div.k-btn.kc-tool [title="编辑光标处的字符串（Ctrl+O）"]
+                    img.o-ico [src="oriel:textures/icons/external.png" style="height:16px;width:16px"]
+                div.kc-fonts [title="仅调整 SNBT 字号，不改变全局界面比例或内容；也可按住 Ctrl 滚动滚轮"]
+                  div.k-btn.sm [title="缩小 SNBT 字号（Ctrl+滚轮向下）"]
                     span "A−"
                   span.kc-font-label "12"
-                  div.k-btn.sm [title="放大 SNBT 字号"]
+                  div.k-btn.sm [title="放大 SNBT 字号（Ctrl+滚轮向上）"]
                     span "A+"
               div.kc-surface
-                textarea.ed-snbt.kc-ta [value="{\n  id: \"minecraft:sign\",\n  x: 1,\n  y: 2,\n  z: 3\n}" style="fontSize:12px;height:360px;lineHeight:14px;minHeight:80px"]
+                div.kc-gut [style="height:360px;width:10px"]
+                  div.kc-gut-in [style="top:4px"]
+                    div.kc-fm [style="height:14px;lineHeight:14px;top:0px"] "−"
+                textarea.ed-snbt.kc-ta [value="{\n  id: \"minecraft:sign\",\n  x: 1,\n  y: 2,\n  z: 3\n}" style="fontSize:12px;height:360px;lineHeight:14px;minHeight:80px;paddingLeft:13px"]
                 div.k-sub.kc-st "✓ SNBT 有效 · 6 行"
               div.kc-diagnostic [style="display:none"]
             div.k-btn

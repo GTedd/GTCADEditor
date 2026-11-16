@@ -1,0 +1,65 @@
+// The root project: shared checks only. :client is the Fabric 26.3 mod, :paper the Paper 26.3 plugin; both compile the
+// shared editor sources in common/src.
+plugins {
+    id 'com.diffplug.spotless'
+}
+
+repositories { mavenCentral() }
+
+tasks.named('check') { description = 'Every check of the mod and the plugin.' }
+
+// One code style for every source file: ./gradlew spotlessApply formats, check fails on unformatted code.
+spotless {
+    java {
+        target 'common/src/**/*.java', 'client/src/**/*.java', 'paper/src/**/*.java', 'tools/e2e-client/src/**/*.java'
+        palantirJavaFormat('2.103.0')
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+    javascript {
+        target 'client/src/main/resources/assets/cadeditor/ui/js/*.js', 'tools/**/*.cjs', 'tools/**/*.js'
+        // Generated catalogs (tools/i18n-sync.cjs) and the editor's component data table stay as written.
+        targetExclude 'client/src/main/resources/assets/cadeditor/ui/js/i18n-catalogs.js', 'client/src/main/resources/assets/cadeditor/ui/js/data.js'
+        prettier('3.10.1').config([printWidth: 120, tabWidth: 2, singleQuote: true, trailingComma: 'none', quoteProps: 'preserve', endOfLine: 'lf'])
+    }
+}
+
+// The UI and Java sources may only use keys that exist in both language catalogs (and the catalogs must agree).
+tasks.register('checkEditorI18n', Exec) {
+    group = 'verification'
+    workingDir = rootProject.projectDir
+    commandLine('node', file('tools/i18n-sync.cjs').absolutePath, '--check')
+    inputs.files(fileTree('common/src/main/resources/assets/cadeditor/lang'), fileTree('client/src/main/resources/assets/cadeditor/ui/js'),
+            fileTree('common/src/main/java'), fileTree('client/src/main/java'), fileTree('paper/src/main/java'),
+            file('tools/i18n-sync.cjs'), file('tools/i18n-vanilla-en.json'), file('tools/i18n-data-fields.json'))
+    outputs.upToDateWhen { true }
+}
+
+// common/src is compiled by both the Fabric mod and the Paper plugin: no client, loader, Oriel or Bukkit types there.
+def checkCommonBoundary = tasks.register('checkCommonBoundary') {
+    group = 'verification'
+    description = 'Fails when common/src uses a client, Fabric, Oriel, Paper or Bukkit type.'
+    def sources = fileTree('common/src/main/java') { include('**/*.java') }
+    inputs.files(sources)
+    def forbidden = ~/\b(net\.minecraft\.client|com\.mojang\.blaze3d|dev\.oriel|net\.fabricmc|net\.neoforged|org\.bukkit|io\.papermc|org\.spigotmc|com\.destroystokyo|org\.spongepowered)\b/
+    doLast {
+        def bad = []
+        sources.each { file ->
+            file.readLines('UTF-8').eachWithIndex { line, i -> if (line =~ forbidden) bad << "${file}:${i + 1}: ${line.trim()}" }
+        }
+        if (!bad.isEmpty()) throw new GradleException('common/src must stay loader- and side-neutral:\n' + bad.join('\n'))
+    }
+}
+// The editor UI's node tests (tools/ui-check-all.cjs).
+def checkUi = tasks.register('checkUi', Exec) {
+    group = 'verification'
+    description = 'Every UI test under tools/ and a syntax check of the UI scripts (node).'
+    // ui-registry-fragments-test reads the entity schema report this program writes.
+    dependsOn(':client:entitySchemaTransportTest')
+    workingDir = rootProject.projectDir
+    commandLine('node', file('tools/ui-check-all.cjs').absolutePath)
+    inputs.files(fileTree('client/src/main/resources/assets/cadeditor/ui'), fileTree('common/src/main/resources/assets/cadeditor/lang'),
+            fileTree('tools') { include('**/*.cjs', '**/*.js', 'snapshots/**', 'fixtures/**') })
+    outputs.upToDateWhen { true }
+}
+tasks.named('check') { dependsOn('spotlessCheck', checkCommonBoundary, checkUi, ':client:check', ':paper:check') }

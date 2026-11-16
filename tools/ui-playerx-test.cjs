@@ -1,45 +1,113 @@
-// 玩家扩展（位置 / 重生点 / 配方 / 成就 / 统计 / 离线玩家）的界面测试：读 → 渲染 → 写草稿 → 应用 → 回执；
+// 玩家扩展（位置 / 重生点 / 配方 / 成就 / 统计 / 离线玩家）的界面测试：读 → 渲染 → 写草稿 → 应用 → 回复；
 // 被拒绝或超时保留草稿，saved 才清；成就只给自己；离线玩家要完整 UUID 才发请求。
 const assert = require('node:assert/strict');
 const H = require('./lib/ui-harness.cjs');
-const t = H.create(), c = t.c, sent = t.sent;
-c.snd = () => {}; c.Reg.meta = {};
-let toasts = []; c.toast = (m, k) => toasts.push(m + (k ? '|' + k : ''));
-c.weActive = () => true; let redraws = 0; c.weRedrawBody = () => { redraws++; };
-const qa = (el, sel) => el.querySelectorAll(sel), json = x => JSON.stringify(x);
+const t = H.create(),
+  c = t.c,
+  sent = t.sent;
+c.snd = () => {};
+c.Reg.meta = {};
+let toasts = [];
+c.toast = (m, k) => toasts.push(m + (k ? '|' + k : ''));
+c.weActive = () => true;
+let redraws = 0;
+c.weRedrawBody = () => {
+  redraws++;
+};
+const qa = (el, sel) => el.querySelectorAll(sel),
+  json = (x) => JSON.stringify(x);
 const body = () => c.h('div');
-const px = () => sent.filter(s => s[0] === 'player_extended').map(s => s[1]);
+const px = () => sent.filter((s) => s[0] === 'player_extended').map((s) => s[1]);
 const last = () => px()[px().length - 1];
-const tbtn = (label) => (c.WE.toolsExtra || []).filter(n => n.classList.contains('k-btn') && n.textContent.indexOf(label) >= 0)[0];
-const btn = (el, label) => qa(el, '.k-btn').filter(x => x.textContent.indexOf(label) >= 0)[0];
+const tbtn = (label) =>
+  (c.WE.toolsExtra || []).filter((n) => n.classList.contains('k-btn') && n.textContent.indexOf(label) >= 0)[0];
+const btn = (el, label) => qa(el, '.k-btn').filter((x) => x.textContent.indexOf(label) >= 0)[0];
 function open(self) {
-  c.WE.w = { kind: 'entity', type: 'minecraft:player', slot: { kind: 'entity', uuid: self ? 'self-uuid' : '11111111-2222-3333-4444-555555555555' }, player: { self } };
-  c.pxReset(); sent.length = 0; toasts = [];
+  c.WE.w = {
+    kind: 'entity',
+    type: 'minecraft:player',
+    slot: { kind: 'entity', uuid: self ? 'self-uuid' : '11111111-2222-3333-4444-555555555555' },
+    player: { self }
+  };
+  c.pxReset();
+  sent.length = 0;
+  toasts = [];
 }
 function opened(req, view, value, schema, extra) {
-  c.pxResult(Object.assign({ status: 'opened', requestId: req.requestId, playerExtended: Object.assign({ target: {}, view, revision: 'r-' + view, value, schema: schema || {}, total: ((value && value.entries) || []).length, nextOffset: null }, extra || {}) }));
+  c.pxResult(
+    Object.assign({
+      status: 'opened',
+      requestId: req.requestId,
+      playerExtended: Object.assign(
+        {
+          target: {},
+          view,
+          revision: 'r-' + view,
+          value,
+          schema: schema || {},
+          total: ((value && value.entries) || []).length,
+          nextOffset: null
+        },
+        extra || {}
+      )
+    })
+  );
 }
 
 // ---- 位置：先读，到了才画表单；传送带上最近一次 revision；拒绝保留草稿，saved 才清
 {
   open(true);
-  let b = body(); c.pxPosition(b);
-  assert.equal(px().length, 1); assert.equal(last().action, 'read'); assert.equal(last().view, 'position'); assert.equal(json(last().target), '{}', '自己不带 uuid');
+  let b = body();
+  c.pxPosition(b);
+  assert.equal(px().length, 1);
+  assert.equal(last().action, 'read');
+  assert.equal(last().view, 'position');
+  assert.equal(json(last().target), '{}', '自己不带 uuid');
   assert.ok(/正在读取/.test(b.textContent), '读取中显示占位');
-  opened(last(), 'position', { dimension: 'minecraft:overworld', x: 1.5, y: 64, z: 2.5, yaw: 90, pitch: 0 }, { dimensions: ['minecraft:overworld', 'minecraft:the_nether'], manualId: true });
-  b = body(); c.pxPosition(b);
-  assert.ok(px().some(r => r.view === 'respawn' && r.action === 'read'), '位置到了之后才去读重生点');
-  assert.equal(btn(b, '传送'), undefined, '位置页没有自己的应用按钮，走顶栏「应用修改」'); assert.equal(c.pxDirtyCount(), 0, '没改就没有草稿');
-  c.pxState('position').draft.x = 1.5 + 10; assert.deepEqual(Array.from(c.pxDirtyViews()), ['position'], '改了坐标就算有未应用的修改');
+  opened(
+    last(),
+    'position',
+    { dimension: 'minecraft:overworld', x: 1.5, y: 64, z: 2.5, yaw: 90, pitch: 0 },
+    { dimensions: ['minecraft:overworld', 'minecraft:the_nether'], manualId: true }
+  );
+  b = body();
+  c.pxPosition(b);
+  assert.ok(
+    px().some((r) => r.view === 'respawn' && r.action === 'read'),
+    '位置到了之后才去读重生点'
+  );
+  assert.equal(btn(b, '传送'), undefined, '位置页没有自己的应用按钮，走顶栏「应用修改」');
+  assert.equal(c.pxDirtyCount(), 0, '没改就没有草稿');
+  c.pxState('position').draft.x = 1.5 + 10;
+  assert.deepEqual(Array.from(c.pxDirtyViews()), ['position'], '改了坐标就算有未应用的修改');
   c.pxApplyAll();
-  assert.equal(last().action, 'apply'); assert.equal(last().view, 'position'); assert.equal(last().revision, 'r-position', '带最近一次读到的 revision');
-  assert.equal(last().patch.x, 11.5); assert.equal(last().patch.dimension, 'minecraft:overworld');
+  assert.equal(last().action, 'apply');
+  assert.equal(last().view, 'position');
+  assert.equal(last().revision, 'r-position', '带最近一次读到的 revision');
+  assert.equal(last().patch.x, 11.5);
+  assert.equal(last().patch.dimension, 'minecraft:overworld');
   c.pxResult({ status: 'rejected', requestId: last().requestId, code: 'chunk_unavailable' });
-  assert.ok(toasts.some(x => /无法加载传送目标/.test(x)), '被拒绝给出中文原因');
+  assert.ok(
+    toasts.some((x) => /无法加载传送目标/.test(x)),
+    '被拒绝给出中文原因'
+  );
   assert.ok(c.pxState('position').draft, '被拒绝保留草稿');
   opened(last(), 'position', { dimension: 'minecraft:the_nether', x: 8, y: 70, z: 8, yaw: 0, pitch: 0 }, {}, {});
   c.pxState('position').draft = { x: 99 };
-  c.pxResult({ status: 'saved', requestId: (() => { b = body(); c.pxPosition(b); c.pxApplyAll(); return last().requestId; })(), playerExtended: { revision: 'r2', value: { dimension: 'minecraft:the_nether', x: 8, y: 70, z: 8, yaw: 0, pitch: 0 }, schema: {} } });
+  c.pxResult({
+    status: 'saved',
+    requestId: (() => {
+      b = body();
+      c.pxPosition(b);
+      c.pxApplyAll();
+      return last().requestId;
+    })(),
+    playerExtended: {
+      revision: 'r2',
+      value: { dimension: 'minecraft:the_nether', x: 8, y: 70, z: 8, yaw: 0, pitch: 0 },
+      schema: {}
+    }
+  });
   assert.equal(c.pxState('position').draft, null, 'saved 之后清草稿');
   assert.equal(c.pxState('position').revision, 'r2', 'saved 更新 revision');
 }
@@ -47,187 +115,492 @@ function opened(req, view, value, schema, extra) {
 // ---- 重生点：没有时显示空状态；设为当前位置后可保存；清除提交 null
 {
   open(true);
-  c.pxState('position').status = 'ready'; c.pxState('position').loaded = true; c.pxState('position').value = { dimension: 'minecraft:overworld', x: 3.7, y: 10.2, z: -4.1, yaw: 45 };
-  let b = body(); c.pxRespawn(b);
+  c.pxState('position').status = 'ready';
+  c.pxState('position').loaded = true;
+  c.pxState('position').value = { dimension: 'minecraft:overworld', x: 3.7, y: 10.2, z: -4.1, yaw: 45 };
+  let b = body();
+  c.pxRespawn(b);
   opened(last(), 'respawn', null, { dimensions: ['minecraft:overworld'] });
-  b = body(); c.pxRespawn(b);
+  b = body();
+  c.pxRespawn(b);
   assert.ok(/没有自定义重生点/.test(b.textContent));
   btn(b, '设为当前位置').fire('click');
-  assert.equal(json(c.pxState('respawn').draft), json({ dimension: 'minecraft:overworld', x: 3, y: 10, z: -5, yaw: 45, forced: false }), '用当前位置取整');
-  b = body(); c.pxRespawn(b);
+  assert.equal(
+    json(c.pxState('respawn').draft),
+    json({ dimension: 'minecraft:overworld', x: 3, y: 10, z: -5, yaw: 45, forced: false }),
+    '用当前位置取整'
+  );
+  b = body();
+  c.pxRespawn(b);
   btn(b, '清除重生点').fire('click');
-  assert.equal(last().action, 'apply'); assert.equal(last().patch, null, '清除提交 null');
+  assert.equal(last().action, 'apply');
+  assert.equal(last().patch, null, '清除提交 null');
 }
 
 // ---- 配方：只发改过的；高亮必须已解锁；超过 64 项分批
 {
   open(true);
-  let b = body(); c.pxRecipes(b);
-  opened(last(), 'recipes', { entries: [{ id: 'minecraft:stick', unlocked: false, highlighted: false }, { id: 'minecraft:bread', unlocked: true, highlighted: false }] }, { manualId: true });
-  b = body(); c.pxRecipes(b);
-  const toggles = qa(b, '.k-toggle'); assert.equal(toggles.length, 4, '每个配方两个开关');
+  let b = body();
+  c.pxRecipes(b);
+  opened(
+    last(),
+    'recipes',
+    {
+      entries: [
+        { id: 'minecraft:stick', unlocked: false, highlighted: false },
+        { id: 'minecraft:bread', unlocked: true, highlighted: false }
+      ]
+    },
+    { manualId: true }
+  );
+  b = body();
+  c.pxRecipes(b);
+  const toggles = qa(b, '.k-toggle');
+  assert.equal(toggles.length, 4, '每个配方两个开关');
   toggles[1].fire('click'); // stick 的「高亮」：自动带上已解锁
   const d = c.pxState('recipes').dirty['minecraft:stick'];
   assert.equal(json(d), json({ id: 'minecraft:stick', unlocked: true, highlighted: true }), '高亮会同时解锁');
-  b = body(); c.pxRecipes(b);
-  assert.equal(c.pxDirtyCount(), 1, '顶栏的未应用计数包含这一项'); assert.equal(tbtn('应用'), undefined, '工具行里没有自己的应用按钮');
+  b = body();
+  c.pxRecipes(b);
+  assert.equal(c.pxDirtyCount(), 1, '顶栏的未应用计数包含这一项');
+  assert.equal(tbtn('应用'), undefined, '工具行里没有自己的应用按钮');
   c.pxApplyAll();
-  assert.equal(json(last().patch), json({ entries: [{ id: 'minecraft:stick', unlocked: true, highlighted: true }] }), '只发改过的');
+  assert.equal(
+    json(last().patch),
+    json({ entries: [{ id: 'minecraft:stick', unlocked: true, highlighted: true }] }),
+    '只发改过的'
+  );
   const st = c.pxState('recipes');
   for (let i = 0; i < 70; i++) st.dirty['r' + i] = { id: 'r' + i, unlocked: true, highlighted: false };
-  st.busy = false; const n = px().length; c.pxApplyDirty(st, 'recipes');
-  assert.equal(last().patch.entries.length, 64, '一次最多 64 项'); assert.equal(px().length, n + 1);
+  st.busy = false;
+  const n = px().length;
+  c.pxApplyDirty(st, 'recipes');
+  assert.equal(last().patch.entries.length, 64, '一次最多 64 项');
+  assert.equal(px().length, n + 1);
 }
 
 // ---- 成就：只能改自己的；别人的页不读也不发
 {
   open(false);
-  const b = body(); c.pxAdvancements(b);
-  assert.equal(px().length, 0, '别人的成就页不发请求'); assert.ok(/只能修改自己/.test(b.textContent));
+  const b = body();
+  c.pxAdvancements(b);
+  assert.equal(px().length, 0, '别人的成就页不发请求');
+  assert.ok(/只能修改自己/.test(b.textContent));
   open(true);
-  const b2 = body(); c.pxAdvancements(b2);
-  opened(last(), 'advancements', { entries: [{ id: 'minecraft:story/root', done: false, criteria: [{ name: 'crafting_table', done: false }] }] }, { selfOnly: true });
-  const b3 = body(); c.pxAdvancements(b3);
+  const b2 = body();
+  c.pxAdvancements(b2);
+  opened(
+    last(),
+    'advancements',
+    { entries: [{ id: 'minecraft:story/root', done: false, criteria: [{ name: 'crafting_table', done: false }] }] },
+    { selfOnly: true }
+  );
+  const b3 = body();
+  c.pxAdvancements(b3);
   assert.ok(/story\/root|root/.test(b3.textContent), '列出成就');
 }
 
 // ---- 别的在线玩家：target 带 slot.uuid
 {
   open(false);
-  const b = body(); c.pxStats(b);
-  assert.equal(last().view, 'stats'); assert.equal(last().target.uuid, '11111111-2222-3333-4444-555555555555'); assert.ok(!last().target.offline);
+  const b = body();
+  c.pxStats(b);
+  assert.equal(last().view, 'stats');
+  assert.equal(last().target.uuid, '11111111-2222-3333-4444-555555555555');
+  assert.ok(!last().target.offline);
 }
 
 // ---- 统计：没改就应用时提示，不发请求
 {
   open(true);
-  let b = body(); c.pxStats(b);
-  opened(last(), 'stats', { entries: [{ type: 'minecraft:custom', id: 'minecraft:jump', value: 3 }] }, { min: 0, max: 2147483647 });
-  b = body(); c.pxStats(b); const n = px().length;
+  let b = body();
+  c.pxStats(b);
+  opened(
+    last(),
+    'stats',
+    { entries: [{ type: 'minecraft:custom', id: 'minecraft:jump', value: 3 }] },
+    { min: 0, max: 2147483647 }
+  );
+  b = body();
+  c.pxStats(b);
+  const n = px().length;
   c.pxApplyAll();
-  assert.equal(px().length, n, '没有修改不发请求'); assert.equal(c.pxDirtyCount(), 0);
+  assert.equal(px().length, n, '没有修改不发请求');
+  assert.equal(c.pxDirtyCount(), 0);
   // 放弃：清掉所有草稿
-  c.pxState('stats').dirty['x|y'] = { type: 'x', id: 'y', value: 1 }; assert.equal(c.pxDirtyCount(), 1); c.weMarkDirty = () => {}; c.pxDiscard(); assert.equal(c.pxDirtyCount(), 0, '放弃玩家页的修改');
+  c.pxState('stats').dirty['x|y'] = { type: 'x', id: 'y', value: 1 };
+  assert.equal(c.pxDirtyCount(), 1);
+  c.weMarkDirty = () => {};
+  c.pxDiscard();
+  assert.equal(c.pxDirtyCount(), 0, '放弃玩家页的修改');
   // 成就页只对自己出现
-  c.WE.w = { kind: 'entity', type: 'minecraft:player', slot: { kind: 'entity', uuid: 'u2' }, player: { self: false } }; assert.ok(!c.weTabs().some(x => x.id === 'padv'), '别人的玩家页没有成就');
-  c.WE.w.player.self = true; assert.ok(c.weTabs().some(x => x.id === 'padv'), '自己的有成就');
+  c.WE.w = { kind: 'entity', type: 'minecraft:player', slot: { kind: 'entity', uuid: 'u2' }, player: { self: false } };
+  assert.ok(!c.weTabs().some((x) => x.id === 'padv'), '别人的玩家页没有成就');
+  c.WE.w.player.self = true;
+  assert.ok(
+    c.weTabs().some((x) => x.id === 'padv'),
+    '自己的有成就'
+  );
 }
 
 // ---- 存档玩家：名单 → 点开导出摘要和预设 → 复制到保险库 / 套用到我 / 改原始数据
 {
-  open(true); c.Reg.live = () => true;
-  const uploads = [], vcalls = []; c.Vault.upload = (tx, cb) => { uploads.push(JSON.parse(tx)); cb({ ok: true, token: 'tok' }); };
-  c.Vault.call = (op, f, cb) => { vcalls.push([op, f]); cb(op === 'save' ? { ok: true, entry: { id: 'v1', name: f.name, summary: { sections: ['inventory'] } } } : { ok: true }); };
-  let sections = null; c.vwSections = (en) => { sections = en; };
-  let b = body(); c.pxArchive(b);
-  assert.equal(last().view, 'players'); assert.equal(last().action, 'read');
-  const list = [{ uuid: 'aaaaaaaa-0000-0000-0000-000000000001', name: 'Rinorsi', online: true, self: true, owner: true, last_played_ms: null },
-    { uuid: 'bbbbbbbb-0000-0000-0000-000000000002', name: null, online: false, self: false, owner: false, last_played_ms: 1794153600000 }];
+  open(true);
+  c.Reg.live = () => true;
+  const uploads = [],
+    vcalls = [];
+  c.Vault.upload = (tx, cb) => {
+    uploads.push(JSON.parse(tx));
+    cb({ ok: true, token: 'tok' });
+  };
+  c.Vault.call = (op, f, cb) => {
+    vcalls.push([op, f]);
+    cb(
+      op === 'save'
+        ? { ok: true, entry: { id: 'v1', name: f.name, summary: { sections: ['inventory'] } } }
+        : { ok: true }
+    );
+  };
+  let sections = null;
+  c.vwSections = (en) => {
+    sections = en;
+  };
+  let b = body();
+  c.pxArchive(b);
+  assert.equal(last().view, 'players');
+  assert.equal(last().action, 'read');
+  const list = [
+    {
+      uuid: 'aaaaaaaa-0000-0000-0000-000000000001',
+      name: 'Rinorsi',
+      online: true,
+      self: true,
+      owner: true,
+      last_played_ms: null
+    },
+    {
+      uuid: 'bbbbbbbb-0000-0000-0000-000000000002',
+      name: null,
+      online: false,
+      self: false,
+      owner: false,
+      last_played_ms: 1794153600000
+    }
+  ];
   opened(last(), 'players', { entries: list }, { readOnly: true });
-  b = body(); c.pxArchive(b);
-  assert.ok(/Rinorsi/.test(b.textContent) && /未知玩家/.test(b.textContent), '名字缺失显示「未知玩家」'); assert.ok(/你/.test(b.textContent) && /在线/.test(b.textContent) && /房主/.test(b.textContent), '标出你 / 在线 / 房主');
+  b = body();
+  c.pxArchive(b);
+  assert.ok(/Rinorsi/.test(b.textContent) && /未知玩家/.test(b.textContent), '名字缺失显示「未知玩家」');
+  assert.ok(
+    /你/.test(b.textContent) && /在线/.test(b.textContent) && /房主/.test(b.textContent),
+    '标出你 / 在线 / 房主'
+  );
   assert.ok(c.WE.toolsExtra.length === 1, '搜索框在工具行');
   // 点开第二位：发导出请求（离线）
   qa(b, '.k-xhead')[1].fire('click');
-  assert.equal(last().action, 'export_preset'); assert.equal(last().target.uuid, list[1].uuid); assert.equal(last().target.offline, true, '离线玩家按离线导出');
-  c.pxResult({ status: 'exported', requestId: last().requestId, summary: { game_mode: 'survival', health: 18, food: 20, xp_level: 5, dimension: 'minecraft:overworld', x: 1.4, y: 64, z: 2, inventory_count: 7, ender_count: 2, equipment: { head: 'minecraft:iron_helmet', chest: null, legs: null, feet: null, offhand: null } }, template: { sections: { inventory: { slots: [] } } } });
-  b = body(); c.pxArchive(b);
-  assert.ok(/生存/.test(b.textContent) && /背包/.test(b.textContent) && /7 件/.test(b.textContent), '摘要里有模式 / 背包数量');
+  assert.equal(last().action, 'export_preset');
+  assert.equal(last().target.uuid, list[1].uuid);
+  assert.equal(last().target.offline, true, '离线玩家按离线导出');
+  c.pxResult({
+    status: 'exported',
+    requestId: last().requestId,
+    summary: {
+      game_mode: 'survival',
+      health: 18,
+      food: 20,
+      xp_level: 5,
+      dimension: 'minecraft:overworld',
+      x: 1.4,
+      y: 64,
+      z: 2,
+      inventory_count: 7,
+      ender_count: 2,
+      equipment: { head: 'minecraft:iron_helmet', chest: null, legs: null, feet: null, offhand: null }
+    },
+    template: { sections: { inventory: { slots: [] } } }
+  });
+  b = body();
+  c.pxArchive(b);
+  assert.ok(
+    /生存/.test(b.textContent) && /背包/.test(b.textContent) && /7 件/.test(b.textContent),
+    '摘要里有模式 / 背包数量'
+  );
   btn(b, '复制到保险库').fire('click');
-  assert.equal(uploads[0].template.sections.inventory.slots.length, 0, '上传的是导出的模板'); const sv = vcalls.filter(x => x[0] === 'save')[0][1]; assert.equal(sv.kind, 'player_preset'); assert.equal(sv.uploadToken, 'tok'); assert.ok(/的数据/.test(sv.name));
-  btn(b, '套用到我').fire('click'); assert.ok(sections && sections.id === 'v1', '先存进保险库再走选分区 → 预览 → 备份检查 → 确认');
-  sent.length = 0; assert.ok(btn(b, '查看玩家数据'), '离线玩家也有「查看玩家数据」'); btn(b, '查看玩家数据').fire('click'); const off = sent.filter(x => x[0] === 'open_world')[0]; assert.ok(off && off[1].uuid === list[1].uuid && off[1].offline === true, '离线玩家：打开他的完整编辑页（offline）'); assert.ok(btn(b, '复制玩家 UUID'), '有复制 UUID'); c.Prefs.hostClip = true; btn(b, '复制玩家 UUID').fire('click');
-  assert.equal(sent.filter(x => x[0] === 'clipboard').pop()[1].text, list[1].uuid, '复制的是这位玩家的 UUID');
+  assert.equal(uploads[0].template.sections.inventory.slots.length, 0, '上传的是导出的模板');
+  const sv = vcalls.filter((x) => x[0] === 'save')[0][1];
+  assert.equal(sv.kind, 'player_preset');
+  assert.equal(sv.uploadToken, 'tok');
+  assert.ok(/的数据/.test(sv.name));
+  btn(b, '套用到我').fire('click');
+  assert.ok(sections && sections.id === 'v1', '先存进保险库再走选分区 → 预览 → 备份检查 → 确认');
+  sent.length = 0;
+  assert.ok(btn(b, '查看玩家数据'), '离线玩家也有「查看玩家数据」');
+  btn(b, '查看玩家数据').fire('click');
+  const off = sent.filter((x) => x[0] === 'open_world')[0];
+  assert.ok(off && off[1].uuid === list[1].uuid && off[1].offline === true, '离线玩家：打开他的完整编辑页（offline）');
+  assert.ok(btn(b, '复制玩家 UUID'), '有复制 UUID');
+  c.Prefs.hostClip = true;
+  btn(b, '复制玩家 UUID').fire('click');
+  assert.equal(sent.filter((x) => x[0] === 'clipboard').pop()[1].text, list[1].uuid, '复制的是这位玩家的 UUID');
   // 房主在线：不给改原始数据；也没有「套用到我」（那是自己）
-  qa(b, '.k-xhead')[0].fire('click'); assert.equal(last().target.offline, false, '在线玩家按在线导出');
+  qa(b, '.k-xhead')[0].fire('click');
+  assert.equal(last().target.offline, false, '在线玩家按在线导出');
   c.pxResult({ status: 'exported', requestId: last().requestId, summary: {}, template: { sections: {} } });
-  b = body(); c.pxArchive(b); assert.equal(qa(b, '.k-btn').filter(x => /查看玩家数据/.test(x.textContent)).length, 1, '你自己不需要「查看玩家数据」（只有离线那位有）');
+  b = body();
+  c.pxArchive(b);
+  assert.equal(
+    qa(b, '.k-btn').filter((x) => /查看玩家数据/.test(x.textContent)).length,
+    1,
+    '你自己不需要「查看玩家数据」（只有离线那位有）'
+  );
   // 在线的别人：绿色按钮直接打开他的编辑页
   const other = { uuid: 'cccccccc-0000-0000-0000-000000000003', name: 'Alex', online: true, self: false, owner: false };
-  c.pxState('players').entries.push(other); c.PX.arch.open[other.uuid] = true; c.PX.arch.exp[other.uuid] = { status: 'ready', summary: {}, template: { sections: {} } };
-  b = body(); c.pxArchive(b); const see = qa(b, '.k-btn').filter(x => /查看玩家数据/.test(x.textContent) && x.classList.contains('pri')).pop(); assert.ok(see, '在线的别人有绿色「查看玩家数据」');
-  sent.length = 0; see.fire('click'); const ow = sent.filter(x => x[0] === 'open_world')[0]; assert.ok(ow && ow[1].uuid === other.uuid && !ow[1].offline, '在线玩家：直接打开他的编辑页');
+  c.pxState('players').entries.push(other);
+  c.PX.arch.open[other.uuid] = true;
+  c.PX.arch.exp[other.uuid] = { status: 'ready', summary: {}, template: { sections: {} } };
+  b = body();
+  c.pxArchive(b);
+  const see = qa(b, '.k-btn')
+    .filter((x) => /查看玩家数据/.test(x.textContent) && x.classList.contains('pri'))
+    .pop();
+  assert.ok(see, '在线的别人有绿色「查看玩家数据」');
+  sent.length = 0;
+  see.fire('click');
+  const ow = sent.filter((x) => x[0] === 'open_world')[0];
+  assert.ok(ow && ow[1].uuid === other.uuid && !ow[1].offline, '在线玩家：直接打开他的编辑页');
 }
 // ---- 列表页：搜索框和应用按钮在顶部工具行；名字走游戏语言（翻译键）；成就能点开看条件
 {
-  open(true); c.Reg.live = () => true; c.Tr.map['advancements.story.root.title'] = '我的世界'; c.Tr.map['advancements.story.root.description'] = '游戏的核心与目标';
-  c.Tr.map['stat.minecraft.jump'] = '跳跃次数'; c.Tr.map['stat_type.minecraft.custom'] = '通用';
-  let b = body(); c.pxAdvancements(b);
+  open(true);
+  c.Reg.live = () => true;
+  c.Tr.map['advancements.story.root.title'] = '我的世界';
+  c.Tr.map['advancements.story.root.description'] = '游戏的核心与目标';
+  c.Tr.map['stat.minecraft.jump'] = '跳跃次数';
+  c.Tr.map['stat_type.minecraft.custom'] = '通用';
+  let b = body();
+  c.pxAdvancements(b);
   assert.equal(last().displayed, true, '成就默认只要玩家界面里看得见的');
-  opened(last(), 'advancements', { entries: [{ id: 'minecraft:story/root', title_key: 'advancements.story.root.title', description_key: 'advancements.story.root.description', has_display: true, done: false, criteria: [{ name: 'crafting_table', done: false }] }] }, {});
-  c.WE.toolsExtra = null; b = body(); c.pxAdvancements(b);
-  assert.ok(c.WE.toolsExtra && c.WE.toolsExtra.some(n => n.querySelector && n.querySelector('input')), '搜索框在工具行里，不在滚动区里'); assert.equal(qa(b, 'input').length, 0, '滚动区里没有搜索框');
+  opened(
+    last(),
+    'advancements',
+    {
+      entries: [
+        {
+          id: 'minecraft:story/root',
+          title_key: 'advancements.story.root.title',
+          description_key: 'advancements.story.root.description',
+          has_display: true,
+          done: false,
+          criteria: [{ name: 'crafting_table', done: false }]
+        }
+      ]
+    },
+    {}
+  );
+  c.WE.toolsExtra = null;
+  b = body();
+  c.pxAdvancements(b);
+  assert.ok(
+    c.WE.toolsExtra && c.WE.toolsExtra.some((n) => n.querySelector && n.querySelector('input')),
+    '搜索框在工具行里，不在滚动区里'
+  );
+  assert.equal(qa(b, 'input').length, 0, '滚动区里没有搜索框');
   assert.ok(/我的世界/.test(b.textContent) && /游戏的核心与目标/.test(b.textContent), '用翻译后的中文名和说明');
-  assert.ok(/含内部成就/.test(b.textContent), '内部成就开关在段标题上'); assert.equal(c.WE.toolsExtra.length, 1, '工具行里只有搜索框');
+  assert.ok(/含内部成就/.test(b.textContent), '内部成就开关在段标题上');
+  assert.equal(c.WE.toolsExtra.length, 1, '工具行里只有搜索框');
   assert.equal(qa(b, '.k-toggle').length, 0, '没展开时不显示条件');
   qa(b, '.k-xhead')[0].fire('click'); // 点开：记下展开状态并重画
   assert.equal(c.pxState('advancements').open['minecraft:story/root'], true, '点一下就展开');
-  b = body(); c.pxAdvancements(b); assert.equal(qa(b, '.k-toggle').length, 1, '展开后列出条件开关');
+  b = body();
+  c.pxAdvancements(b);
+  assert.equal(qa(b, '.k-toggle').length, 1, '展开后列出条件开关');
   // 统计的名字
-  open(true); b = body(); c.pxStats(b); opened(last(), 'stats', { entries: [{ type: 'minecraft:custom', id: 'minecraft:jump', value: 3 }] }, {});
-  b = body(); c.pxStats(b); assert.ok(/跳跃次数/.test(b.textContent) && /通用/.test(b.textContent), '统计用翻译后的中文名');
+  open(true);
+  b = body();
+  c.pxStats(b);
+  opened(last(), 'stats', { entries: [{ type: 'minecraft:custom', id: 'minecraft:jump', value: 3 }] }, {});
+  b = body();
+  c.pxStats(b);
+  assert.ok(/跳跃次数/.test(b.textContent) && /通用/.test(b.textContent), '统计用翻译后的中文名');
 }
-// ---- 回执只认自己发的请求；陌生 requestId 被忽略
+// ---- 回复只认自己发的请求；陌生 requestId 被忽略
 {
   open(true);
-  const before = redraws; c.pxResult({ status: 'saved', requestId: 'nope', playerExtended: { value: {} } });
-  assert.equal(redraws, before, '陌生回执不重画');
+  const before = redraws;
+  c.pxResult({ status: 'saved', requestId: 'nope', playerExtended: { value: {} } });
+  assert.equal(redraws, before, '陌生回复不重画');
 }
-console.log('PASS player extension: position / respawn / recipes / advancements / stats / offline read, draft, apply, receipt.');
+console.log(
+  'PASS player extension: position / respawn / recipes / advancements / stats / offline read, draft, apply, report.'
+);
 // ---- Tr 接收宿主翻译页：map 和 entries 两种形状，多页累积
 {
-  c.Tr.accept({ map: { 'a.b': '甲' } }); c.Tr.accept({ entries: [{ id: 'c.d', name: '乙' }] });
-  assert.equal(c.Tr.get('a.b'), '甲'); assert.equal(c.Tr.get('c.d'), '乙');
+  c.Tr.accept({ map: { 'a.b': '甲' } });
+  c.Tr.accept({ entries: [{ id: 'c.d', name: '乙' }] });
+  assert.equal(c.Tr.get('a.b'), '甲');
+  assert.equal(c.Tr.get('c.d'), '乙');
 }
 // ---- 分页栏放不下：鼠标滚轮横向滚动，按住拖动也行，没有多余按钮；当前页滚进可视范围
 {
   const bar = c.h('div', { class: 'ed-tabs' }, [c.h('div', { class: 'ed-tab' }), c.h('div', { class: 'ed-tab on' })]);
   assert.equal(c.edTabsScroll(bar), bar, '不再包一层，也没有箭头按钮');
   Object.assign(bar, { scrollWidth: 500, clientWidth: 200, scrollLeft: 0 });
-  bar.fire('wheel', { deltaY: 1 }); assert.equal(bar.scrollLeft, 80, '滚轮向下 = 向右滚');
-  bar.fire('wheel', { deltaY: -1 }); assert.equal(bar.scrollLeft, 0, '滚轮向上 = 向左滚'); bar.fire('wheel', { deltaY: -1 }); assert.equal(bar.scrollLeft, 0, '不滚过头');
-  bar.fire('mousedown', { clientX: 300 }); bar.fire('mousemove', { clientX: 240 }); assert.equal(bar.scrollLeft, 60, '按住向左拖 = 内容向右滚');
-  bar.fire('mouseup'); bar.fire('mousemove', { clientX: 100 }); assert.equal(bar.scrollLeft, 60, '松手后不再跟着动');
-  Object.assign(bar, { scrollWidth: 200, clientWidth: 200, scrollLeft: 0 }); bar.fire('wheel', { deltaY: 1 }); assert.equal(bar.scrollLeft, 0, '放得下就不滚');
+  bar.fire('wheel', { deltaY: 1 });
+  assert.equal(bar.scrollLeft, 80, '滚轮向下 = 向右滚');
+  bar.fire('wheel', { deltaY: -1 });
+  assert.equal(bar.scrollLeft, 0, '滚轮向上 = 向左滚');
+  bar.fire('wheel', { deltaY: -1 });
+  assert.equal(bar.scrollLeft, 0, '不滚过头');
+  bar.fire('mousedown', { clientX: 300 });
+  bar.fire('mousemove', { clientX: 240 });
+  assert.equal(bar.scrollLeft, 60, '按住向左拖 = 内容向右滚');
+  bar.fire('mouseup');
+  bar.fire('mousemove', { clientX: 100 });
+  assert.equal(bar.scrollLeft, 60, '松手后不再跟着动');
+  Object.assign(bar, { scrollWidth: 200, clientWidth: 200, scrollLeft: 0 });
+  bar.fire('wheel', { deltaY: 1 });
+  assert.equal(bar.scrollLeft, 0, '放得下就不滚');
 }
 // ---- 解锁所有成就：先把名单读全，再每 64 条一批发出去，最后提示总数
 {
   open(true);
-  let b = body(); c.pxAdvancements(b);
-  const mk = (a, n) => Array.from({ length: n }, (_, i) => ({ id: 'minecraft:test/a' + (a + i), has_display: true, done: false, criteria: [{ name: 'x', done: false }, { name: 'y', done: false }] }));
+  let b = body();
+  c.pxAdvancements(b);
+  const mk = (a, n) =>
+    Array.from({ length: n }, (_, i) => ({
+      id: 'minecraft:test/a' + (a + i),
+      has_display: true,
+      done: false,
+      criteria: [
+        { name: 'x', done: false },
+        { name: 'y', done: false }
+      ]
+    }));
   opened(last(), 'advancements', { entries: mk(0, 40) }, {}, { total: 70, nextOffset: 40 });
-  b = body(); c.pxAdvancements(b);
-  assert.ok(btn(b, '解锁所有成就'), '底部有「解锁所有成就」'); assert.ok(btn(b, '再加载'), '旁边还有「再加载」');
-  btn(b, '解锁所有成就').fire('click'); assert.ok(/无法撤销/.test(t.root.textContent), '先确认：会触发奖励和公告'); btn(t.root, '解锁').fire('click');
-  assert.equal(last().action, 'read'); assert.equal(last().offset, 40, '先把没加载的名单读全');
-  c.pxResult({ status: 'opened', requestId: last().requestId, playerExtended: { view: 'advancements', revision: 'r2', value: { entries: mk(40, 30) }, schema: {}, total: 70, nextOffset: null } });
-  assert.equal(last().action, 'apply'); assert.equal(last().patch.entries.length, 64, '第一批 64 条');
-  assert.ok(last().patch.entries.every(e => e.criteria.every(x => x.done === true)), '每个条件都标为完成');
-  c.pxResult({ status: 'saved', requestId: last().requestId, playerExtended: { view: 'advancements', revision: 'r3', value: { entries: [] }, schema: {}, total: 70, nextOffset: null } });
-  assert.equal(last().action, 'apply'); assert.equal(last().patch.entries.length, 6, '第二批剩下 6 条'); assert.equal(last().revision, 'r3', '带上一批保存后的 revision');
-  toasts = []; c.pxResult({ status: 'saved', requestId: last().requestId, playerExtended: { view: 'advancements', revision: 'r4', value: { entries: [] }, schema: {}, total: 70, nextOffset: null } });
-  assert.ok(toasts.some(x => /已解锁 70 个成就/.test(x)), '结束提示总数'); assert.equal(c.PX.unlock, null);
+  b = body();
+  c.pxAdvancements(b);
+  assert.ok(btn(b, '解锁所有成就'), '底部有「解锁所有成就」');
+  assert.ok(btn(b, '再加载'), '旁边还有「再加载」');
+  btn(b, '解锁所有成就').fire('click');
+  assert.ok(/无法撤销/.test(t.root.textContent), '先确认：会触发奖励和公告');
+  btn(t.root, '解锁').fire('click');
+  assert.equal(last().action, 'read');
+  assert.equal(last().offset, 40, '先把没加载的名单读全');
+  c.pxResult({
+    status: 'opened',
+    requestId: last().requestId,
+    playerExtended: {
+      view: 'advancements',
+      revision: 'r2',
+      value: { entries: mk(40, 30) },
+      schema: {},
+      total: 70,
+      nextOffset: null
+    }
+  });
+  assert.equal(last().action, 'apply');
+  assert.equal(last().patch.entries.length, 64, '第一批 64 条');
+  assert.ok(
+    last().patch.entries.every((e) => e.criteria.every((x) => x.done === true)),
+    '每个条件都标为完成'
+  );
+  c.pxResult({
+    status: 'saved',
+    requestId: last().requestId,
+    playerExtended: {
+      view: 'advancements',
+      revision: 'r3',
+      value: { entries: [] },
+      schema: {},
+      total: 70,
+      nextOffset: null
+    }
+  });
+  assert.equal(last().action, 'apply');
+  assert.equal(last().patch.entries.length, 6, '第二批剩下 6 条');
+  assert.equal(last().revision, 'r3', '带上一批保存后的 revision');
+  toasts = [];
+  c.pxResult({
+    status: 'saved',
+    requestId: last().requestId,
+    playerExtended: {
+      view: 'advancements',
+      revision: 'r4',
+      value: { entries: [] },
+      schema: {},
+      total: 70,
+      nextOffset: null
+    }
+  });
+  assert.ok(
+    toasts.some((x) => /已解锁 70 个成就/.test(x)),
+    '结束提示总数'
+  );
+  assert.equal(c.PX.unlock, null);
   // 被拒绝就停下
-  open(true); b = body(); c.pxAdvancements(b); opened(last(), 'advancements', { entries: mk(0, 3) }, {}, { total: 3, nextOffset: null });
-  c.pxUnlockAll(c.pxState('advancements')); assert.equal(last().action, 'apply'); c.pxResult({ status: 'rejected', requestId: last().requestId, code: 'player_forbidden' }); assert.equal(c.PX.unlock, null, '被拒绝就停');
+  open(true);
+  b = body();
+  c.pxAdvancements(b);
+  opened(last(), 'advancements', { entries: mk(0, 3) }, {}, { total: 3, nextOffset: null });
+  c.pxUnlockAll(c.pxState('advancements'));
+  assert.equal(last().action, 'apply');
+  c.pxResult({ status: 'rejected', requestId: last().requestId, code: 'player_forbidden' });
+  assert.equal(c.PX.unlock, null, '被拒绝就停');
 }
 // ---- 看别人 / 离线 / 预设：标签只留有意义的；顶栏「返回自己」；预设页没有「存入保险库」
 {
-  const w = (player) => { c.WE.w = { kind: 'entity', type: 'minecraft:player', slot: { kind: 'entity', uuid: 'u9' }, player }; return c.weTabs().map(x => x.id); };
-  assert.deepEqual(Array.from(w({ self: true })), ['pinv', 'pender', 'pstat', 'pabil', 'pattr', 'ppos', 'prec', 'padv', 'pstats', 'poff', 'data'].filter(x => x !== 'data').concat([]), '自己：全部标签（含存档玩家名单）');
-  assert.deepEqual(Array.from(w({ self: false })), ['pinv', 'pender', 'pstat', 'pabil', 'pattr', 'ppos', 'prec', 'pstats'], '别的在线玩家：没有成就和名单');
-  assert.deepEqual(Array.from(w({ self: false, offline: true })), ['pinv', 'pender', 'pstat', 'pabil', 'pattr'], '离线玩家：只留能改存档的标签');
+  const w = (player) => {
+    c.WE.w = { kind: 'entity', type: 'minecraft:player', slot: { kind: 'entity', uuid: 'u9' }, player };
+    return c.weTabs().map((x) => x.id);
+  };
+  assert.deepEqual(
+    Array.from(w({ self: true })),
+    ['pinv', 'pender', 'pstat', 'pabil', 'pattr', 'ppos', 'prec', 'padv', 'pstats', 'poff', 'data']
+      .filter((x) => x !== 'data')
+      .concat([]),
+    '自己：全部标签（含存档玩家名单）'
+  );
+  assert.deepEqual(
+    Array.from(w({ self: false })),
+    ['pinv', 'pender', 'pstat', 'pabil', 'pattr', 'ppos', 'prec', 'pstats'],
+    '别的在线玩家：没有成就和名单'
+  );
+  assert.deepEqual(
+    Array.from(w({ self: false, offline: true })),
+    ['pinv', 'pender', 'pstat', 'pabil', 'pattr'],
+    '离线玩家：只留能改存档的标签'
+  );
   assert.deepEqual(Array.from(w({ self: false, preset: true })), ['pinv', 'pender', 'pattr'], '预设：只留预设里有的');
-  c.drawWorldTop(); const back = qa(t.root, '.k-btn').filter(x => /返回自己/.test(x.textContent))[0]; assert.ok(back, '看别人时左上角有「返回自己」'); assert.ok(/玩家预设/.test(t.root.textContent), '顶栏标明这是预设');
-  sent.length = 0; back.fire('click'); assert.equal(sent.filter(x => x[0] === 'open_world')[0][1].self, true);
+  c.drawWorldTop();
+  const back = qa(t.root, '.k-btn').filter((x) => /返回自己/.test(x.textContent))[0];
+  assert.ok(back, '看别人时左上角有「返回自己」');
+  assert.ok(/玩家预设/.test(t.root.textContent), '顶栏标明这是预设');
+  sent.length = 0;
+  back.fire('click');
+  assert.equal(sent.filter((x) => x[0] === 'open_world')[0][1].self, true);
   assert.equal(c.vwKind(), null, '预设页没有「存入保险库」');
-  c.WE.w.player = { self: true }; c.drawWorldTop(); assert.equal(qa(t.root, '.k-btn').filter(x => /返回自己/.test(x.textContent)).length, 0, '自己的页面没有');
+  c.WE.w.player = { self: true };
+  c.drawWorldTop();
+  assert.equal(qa(t.root, '.k-btn').filter((x) => /返回自己/.test(x.textContent)).length, 0, '自己的页面没有');
 }
 // ---- 复制：宿主能写就直接写；写不了就弹窗说明，内容放在里面能手动复制
 {
-  c.Prefs.hostClip = true; sent.length = 0; assert.equal(c.copyText('abc', ' UUID'), true); assert.equal(sent.filter(x => x[0] === 'clipboard')[0][1].text, 'abc');
-  c.Prefs.hostClip = false; sent.length = 0; assert.equal(c.copyText('11111111-2222-3333-4444-555555555555', ' UUID'), false, '写不了剪贴板');
-  assert.equal(sent.filter(x => x[0] === 'clipboard').length, 0); assert.ok(/不能直接复制/.test(t.root.textContent), '弹窗说明现在不能复制');
-  assert.ok(qa(t.root, 'input').some(i => i.value === '11111111-2222-3333-4444-555555555555'), 'ID 放在窗口里可以手动复制'); c.closeModal();
-  c.copyText('{a:1}' + 'x'.repeat(100), ''); assert.ok(qa(t.root, 'textarea').length >= 1, '长内容用多行文本框'); c.closeModal(); c.Prefs.hostClip = true;
+  c.Prefs.hostClip = true;
+  sent.length = 0;
+  assert.equal(c.copyText('abc', ' UUID'), true);
+  assert.equal(sent.filter((x) => x[0] === 'clipboard')[0][1].text, 'abc');
+  c.Prefs.hostClip = false;
+  sent.length = 0;
+  assert.equal(c.copyText('11111111-2222-3333-4444-555555555555', ' UUID'), false, '写不了剪贴板');
+  assert.equal(sent.filter((x) => x[0] === 'clipboard').length, 0);
+  assert.ok(/不能直接复制/.test(t.root.textContent), '弹窗说明现在不能复制');
+  assert.ok(
+    qa(t.root, 'input').some((i) => i.value === '11111111-2222-3333-4444-555555555555'),
+    'ID 放在窗口里可以手动复制'
+  );
+  c.closeModal();
+  c.copyText('{a:1}' + 'x'.repeat(100), '');
+  assert.ok(qa(t.root, 'textarea').length >= 1, '长内容用多行文本框');
+  c.closeModal();
+  c.Prefs.hostClip = true;
 }

@@ -1,1 +1,0 @@
-{"required":true,"package":"dev.rinorsi.editor.entityprobe.mixin","compatibilityLevel":"JAVA_25","client":["OffscreenWindowMixin"],"injectors":{"defaultRequire":1}}

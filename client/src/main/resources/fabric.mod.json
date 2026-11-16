@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "cadeditor",
+  "version": "${version}",
+  "name": "CAD Editor",
+  "license": "MIT",
+  "icon": "assets/cadeditor/icon.png",
+  "authors": ["云诺羲Rinorsi"],
+  "contributors": ["GTedd"],
+  "contact": {
+    "homepage": "https://github.com/Rinorsi/CAD-Editor-Recast",
+    "sources": "https://github.com/Rinorsi/CAD-Editor-Recast"
+  },
+  "description": "CAD Editor (Recast): visual item component and data editor for Minecraft 26.3, with a server-side edit history and permission nodes. UI powered by Oriel UI.",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "dev.rinorsi.editor.fabric.FabricEditor"
+    ],
+    "client": [
+      "dev.rinorsi.editor.fabric.FabricEditorClient"
+    ]
+  },
+  "accessWidener": "cadeditor.accesswidener",
+  "mixins": ["cadeditor.client.mixins.json"],
+  "depends": {
+    "fabricloader": ">=${fabric_loader_version}",
+    "fabric-api": "*",
+    "minecraft": "${fabric_minecraft_version}",
+    "java": ">=25",
+    "oriel": ">=${oriel_version} <0.16.0"
+  }
+}

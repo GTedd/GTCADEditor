@@ -1,0 +1,118 @@
+// The editor's headless regression programs (main() methods that throw on failure) on the real game classes: codecs,
+// schemas, world/vault editing, client-side state. Nothing here ships in the jar. JUnit tests run in :client:test.
+def scratch = layout.buildDirectory.dir('verification').get().asFile
+def reports = layout.buildDirectory.dir('reports/verification').get().asFile
+def pinyin = project.file('src/main/resources/assets/cadeditor/ui/js/pinyin-data.js').absolutePath
+def clientSources = project.file('src/main/java').absolutePath
+
+def verify = { String name, String mainClassName, Closure configure = {} ->
+    def task = tasks.register(name, JavaExec) {
+        group = 'verification'
+        dependsOn('testClasses')
+        classpath = sourceSets.test.runtimeClasspath
+        mainClass = mainClassName
+        // Several programs read sources and catalogs by repository-relative path.
+        workingDir = rootProject.projectDir
+        jvmArgs('-Djava.awt.headless=true')
+        doFirst { scratch.mkdirs(); reports.mkdirs() }
+    }
+    task.configure(configure)
+    tasks.named('check') { dependsOn(task) }
+    task
+}
+
+verify('i18nTest', 'dev.rinorsi.editor.EditorI18nTest')
+verify('writeLogTest', 'dev.rinorsi.editor.EditorWriteLogTest')
+verify('linkedAttributeTest', 'dev.rinorsi.editor.registry.LinkedAttributeTest')
+verify('codecTest', 'dev.rinorsi.editor.StackCodecTest') { workingDir = scratch }
+verify('prefsTest', 'dev.rinorsi.editor.client.EditorPrefsTest') { workingDir = scratch }
+verify('toastTest', 'dev.rinorsi.editor.client.EditorToastTest')
+verify('clipboardTest', 'dev.rinorsi.editor.client.EditorClipboardTest') { workingDir = scratch }
+verify('clipboardHostTest', 'dev.rinorsi.editor.client.EditorClipboardHostTest') { args(clientSources) }
+verify('searchTest', 'dev.rinorsi.editor.registry.search.SearchTest') { args(pinyin) }
+verify('soundPreviewTest', 'dev.rinorsi.editor.client.EditorSoundPreviewTest') { workingDir = scratch }
+verify('hotbarCommandTest', 'dev.rinorsi.editor.client.HotbarCommandTest') { workingDir = scratch }
+verify('lazyCatalogTest', 'dev.rinorsi.editor.registry.LazyCatalogTest') { args(pinyin) }
+verify('spawnerEquipmentTest', 'dev.rinorsi.editor.registry.SpawnerEquipmentTest')
+verify('tooltipTest', 'dev.rinorsi.editor.registry.TooltipPreviewTest')
+verify('imageArtTest', 'dev.rinorsi.editor.registry.ImageArtTest')
+// Live-Codec schema snapshot drift gate (docs/editor/component-schema-26.3.json); -PwriteSchemaSnapshot rewrites it.
+verify('componentSchemaTest', 'dev.rinorsi.editor.registry.ComponentSchemaTest') {
+    if (providers.gradleProperty('writeSchemaSnapshot').isPresent()) args('--write-snapshot')
+}
+verify('genericSchemaTest', 'dev.rinorsi.editor.registry.GenericSchemaTest') { args(new File(reports, 'generic-schema-findings.json').absolutePath) }
+[true, false].each { clientSide ->
+    def side = clientSide ? 'client' : 'server'
+    verify(clientSide ? 'entitySchemaTest' : 'entitySchemaServerTest', 'dev.rinorsi.editor.registry.EntitySchemaTest') {
+        jvmArgs('-Dcadeditor.schema.client=' + clientSide)
+        args(new File(reports, "entity-schema-${side}.json").absolutePath)
+    }
+    verify(clientSide ? 'entitySchemaDetailsTest' : 'entitySchemaDetailsServerTest', 'dev.rinorsi.editor.registry.EntitySchemaDetailsTest') {
+        jvmArgs('-Dcadeditor.schema.client=' + clientSide)
+        args(new File(reports, "entity-schema-details-${side}.json").absolutePath)
+    }
+}
+verify('worldEditTest', 'dev.rinorsi.editor.registry.WorldEditTest') { args(new File(reports, 'world-edit').absolutePath) }
+verify('vaultTest', 'dev.rinorsi.editor.vault.VaultTest') { maxHeapSize = '2G' }
+verify('vaultTemplateTest', 'dev.rinorsi.editor.vault.VaultTemplateTest') { maxHeapSize = '2G' }
+verify('vaultOrganizeTest', 'dev.rinorsi.editor.vault.VaultOrganizeTest') { maxHeapSize = '2G' }
+verify('vaultImportsTest', 'dev.rinorsi.editor.vault.VaultImportsTest') { maxHeapSize = '2G' }
+verify('entityWorldEditTest', 'dev.rinorsi.editor.registry.EntityWorldEditTest')
+verify('entityVehicleViewTest', 'dev.rinorsi.editor.registry.EntityVehicleViewTest')
+verify('entityHorseViewTest', 'dev.rinorsi.editor.registry.EntityHorseViewTest')
+verify('translateTest', 'dev.rinorsi.editor.registry.TranslateTest')
+verify('playerWorldEditTest', 'dev.rinorsi.editor.registry.PlayerWorldEditTest')
+verify('editDispatchTest', 'dev.rinorsi.editor.registry.EditDispatchTest') { systemProperty('editor.sourceJava', clientSources) }
+verify('worldMergeTest', 'dev.rinorsi.editor.registry.WorldMergeTest')
+verify('worldRevisionTest', 'dev.rinorsi.editor.registry.WorldRevisionTest')
+verify('registryPagesTest', 'dev.rinorsi.editor.registry.RegistryPagesTest')
+verify('entityScopeTest', 'dev.rinorsi.editor.registry.EntityScopePagesTest')
+verify('registryFragmentsTest', 'dev.rinorsi.editor.registry.RegistryFragmentsTest')
+verify('entitySchemaTransportTest', 'dev.rinorsi.editor.registry.EntitySchemaTransportTest') { args(new File(reports, 'entity-schema-transport.json').absolutePath) }
+
+verify('backendDataTest', 'dev.rinorsi.editor.BackendDataTest') { args(new File(reports, 'backend-data').absolutePath) }
+verify('complexStackRoundTripTest', 'dev.rinorsi.editor.ComplexStackRoundTripTest')
+verify('pageTraceTest', 'dev.rinorsi.editor.client.EditorPageTraceTest')
+verify('scalePrefsTest', 'dev.rinorsi.editor.client.EditorScalePrefsTest') { workingDir = scratch }
+verify('blockWorldEditTest', 'dev.rinorsi.editor.registry.BlockWorldEditTest') { args(new File(reports, 'block-edit').absolutePath) }
+verify('bookTextRoundTripTest', 'dev.rinorsi.editor.registry.BookTextRoundTripTest')
+verify('bucketItemConsumerTest', 'dev.rinorsi.editor.registry.BucketItemConsumerTest') { args(new File(reports, 'bucket-item-consumer.json').absolutePath) }
+verify('bucketItemMetadataTest', 'dev.rinorsi.editor.registry.BucketItemMetadataTest')
+verify('draftChannelOwnerTest', 'dev.rinorsi.editor.registry.DraftChannelOwnerTest') { args(rootProject.projectDir.absolutePath) }
+verify('draftUtf8CounterTest', 'dev.rinorsi.editor.registry.DraftUtf8CounterTest')
+verify('draftWriteOrderTest', 'dev.rinorsi.editor.registry.DraftWriteOrderTest')
+verify('entityDataTest', 'dev.rinorsi.editor.registry.EntityDataTest') { args(new File(reports, 'entity-data.json').absolutePath) }
+verify('frontendWiringTest', 'dev.rinorsi.editor.registry.FrontendWiringTest') { args(new File(reports, 'frontend-wiring.json').absolutePath) }
+verify('jukeboxReplacementTest', 'dev.rinorsi.editor.registry.JukeboxReplacementTest')
+verify('registryDeliveryTest', 'dev.rinorsi.editor.registry.RegistryDeliveryTest')
+verify('registryStressTest', 'dev.rinorsi.editor.registry.RegistryStressTest') { args(new File(reports, 'registry-stress.json').absolutePath) }
+verify('resourceIdsTest', 'dev.rinorsi.editor.registry.ResourceIdsTest')
+verify('codeAssistTest', 'dev.rinorsi.editor.registry.CodeAssistTest')
+verify('spawnerApplyTest', 'dev.rinorsi.editor.registry.SpawnerApplyTest')
+verify('vaultPermissionTest', 'dev.rinorsi.editor.vault.PermissionTest')
+verify('vaultEntityTest', 'dev.rinorsi.editor.vault.VaultEntityTest') { args(new File(reports, 'vault-entity').absolutePath); maxHeapSize = '2G' }
+verify('vaultGlobalTest', 'dev.rinorsi.editor.vault.VaultGlobalTest') { workingDir = scratch }
+verify('vaultPersistenceTest', 'dev.rinorsi.editor.vault.VaultPersistenceTest') { workingDir = scratch }
+// ItemDraftPersistenceTest, WorldDraftPersistenceTest and EffectRetentionTest are multi-step tools that read files a
+// game client wrote (their first argument names the step); they are run by hand, not by check.
+
+// Not part of check: a search speed benchmark (pinyin index).
+tasks.register('searchBench', JavaExec) {
+    group = 'verification'
+    dependsOn('testClasses')
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'dev.rinorsi.editor.registry.search.SearchBench'
+    args(pinyin)
+    workingDir = rootProject.projectDir
+}
+
+// Not part of check: a memory benchmark of the lazy registry catalog.
+tasks.register('catalogMemoryBench', JavaExec) {
+    group = 'verification'
+    dependsOn('testClasses')
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'dev.rinorsi.editor.registry.CatalogMemoryBench'
+    args(pinyin)
+    maxHeapSize = '3G'
+    workingDir = rootProject.projectDir
+}

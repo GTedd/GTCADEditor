@@ -27,7 +27,7 @@ div
         img.o-ico [src="oriel:textures/icons/down.png" style="height:8px;width:8px"]
       span "预览"
       div.grow
-      div.ed-view.k-seg [title="方块预览：2D 图标 / 3D 模型（会记住你的选择）"]
+      div.ed-view.k-seg [title="2D 图标 / 3D 模型"]
         div.k-segi.on "2D"
         div.k-segi "3D"
     div.ed-stage
@@ -113,6 +113,12 @@ div
               img.o-ico [src="oriel:textures/icons/down.png" style="height:8px;width:8px"]
           div.k-cbody
             textarea.ed-snbt.we-cmd [placeholder="/say hi（可以省略开头的 /）" value="say hi"]
+            div.cma
+              div.cma-row
+                div.cma-st.k-sub [title="按服务器下发给你的命令树检查，只检查不执行" role="status"] "检查中…"
+                div.cma-btn.k-btn.sm [title="命令补全（Ctrl+Space）"]
+                  img.o-ico [src="oriel:textures/icons/sparkle.png" style="height:16px;width:16px"]
+              div.cma-pop [role="listbox" style="display:none"]
             div.k-srow.k-xrow
               div.k-xhead
                 div.tx
@@ -130,7 +136,8 @@ div
             div.k-srow.k-xrow
               div.k-xhead
                 div.tx
-                  div.z "当前通电"
+                  div.z "当前激活"
+                  div.s "是否收到红石信号"
                 div.k-toggle [role="switch"]
                   i
             div.k-srow.k-xrow
@@ -180,7 +187,7 @@ div
         img.o-ico [src="oriel:textures/icons/down.png" style="height:8px;width:8px"]
       span "预览"
       div.grow
-      div.ed-view.k-seg [title="方块预览：2D 图标 / 3D 模型（会记住你的选择）"]
+      div.ed-view.k-seg [title="2D 图标 / 3D 模型"]
         div.k-segi.on "2D"
         div.k-segi "3D"
     div.ed-stage
@@ -295,7 +302,7 @@ div
         img.o-ico [src="oriel:textures/icons/down.png" style="height:8px;width:8px"]
       span "预览"
       div.grow
-      div.ed-view.k-seg [title="方块预览：2D 图标 / 3D 模型（会记住你的选择）"]
+      div.ed-view.k-seg [title="2D 图标 / 3D 模型"]
         div.k-segi.on "2D"
         div.k-segi "3D"
     div.ed-stage
@@ -365,14 +372,25 @@ div
                     img.o-ico [src="oriel:textures/icons/layers.png" style="height:16px;width:16px"]
                   div.k-btn.kc-tool [title="复制"]
                     img.o-ico [src="oriel:textures/icons/copy.png" style="height:16px;width:16px"]
-                div.kc-fonts [title="仅调整 SNBT 字号，不改变全局界面比例或内容"]
-                  div.k-btn.sm [title="缩小 SNBT 字号"]
+                  div.k-btn.kc-tool [title="折叠"]
+                    img.o-ico [src="oriel:textures/icons/layers_cards.png" style="height:16px;width:16px"]
+                  div.k-btn.kc-tool [title="查找与替换（Ctrl+F / Ctrl+H，跳转 Ctrl+G）"]
+                    img.o-ico [src="oriel:textures/icons/search.png" style="height:16px;width:16px"]
+                  div.k-btn.kc-tool [title="补全：输入时自动弹出（Ctrl+Space 立即显示）"]
+                    img.o-ico [src="oriel:textures/icons/sparkle.png" style="height:16px;width:16px"]
+                  div.k-btn.kc-tool [title="编辑光标处的字符串（Ctrl+O）"]
+                    img.o-ico [src="oriel:textures/icons/external.png" style="height:16px;width:16px"]
+                div.kc-fonts [title="仅调整 SNBT 字号，不改变全局界面比例或内容；也可按住 Ctrl 滚动滚轮"]
+                  div.k-btn.sm [title="缩小 SNBT 字号（Ctrl+滚轮向下）"]
                     span "A−"
                   span.kc-font-label "12"
-                  div.k-btn.sm [title="放大 SNBT 字号"]
+                  div.k-btn.sm [title="放大 SNBT 字号（Ctrl+滚轮向上）"]
                     span "A+"
               div.kc-surface
-                textarea.ed-snbt.kc-ta [value="{\n  id: \"minecraft:command_block\",\n  x: 1,\n  y: 2,\n  z: 3\n}" style="fontSize:12px;height:360px;lineHeight:14px;minHeight:80px"]
+                div.kc-gut [style="height:360px;width:10px"]
+                  div.kc-gut-in [style="top:4px"]
+                    div.kc-fm [style="height:14px;lineHeight:14px;top:0px"] "−"
+                textarea.ed-snbt.kc-ta [value="{\n  id: \"minecraft:command_block\",\n  x: 1,\n  y: 2,\n  z: 3\n}" style="fontSize:12px;height:360px;lineHeight:14px;minHeight:80px;paddingLeft:13px"]
                 div.k-sub.kc-st "✓ SNBT 有效 · 6 行"
               div.kc-diagnostic [style="display:none"]
             div.k-btn

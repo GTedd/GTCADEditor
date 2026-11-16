@@ -3,43 +3,31 @@ pluginManagement {
         gradlePluginPortal()
         mavenCentral()
         exclusiveContent {
-            forRepository {
-                maven {
-                    name = 'Fabric'
-                    url = uri('https://maven.fabricmc.net')
-                }
-            }
-            filter {
-                includeGroupAndSubgroups('net.fabricmc')
-            }
+            forRepository { maven { name = 'Fabric'; url = uri('https://maven.fabricmc.net') } }
+            filter { includeGroupAndSubgroups('net.fabricmc') }
         }
-        exclusiveContent {
-            forRepository {
-                maven {
-                    name = 'KikuGie'
-                    url = uri('https://maven.kikugie.dev/releases')
-                }
-            }
-            filter {
-                includeGroupAndSubgroups('dev.kikugie')
-            }
-        }
+        maven { name = 'PaperMC'; url = uri('https://repo.papermc.io/repository/maven-public/') }
+    }
+    // Versions only; each module applies its own plugin, so Loom and paperweight never share a classloader.
+    plugins {
+        // https://maven.fabricmc.net/net/fabricmc/fabric-loom/net.fabricmc.fabric-loom.gradle.plugin/maven-metadata.xml
+        id 'net.fabricmc.fabric-loom' version '1.18.2'
+        // https://plugins.gradle.org/plugin/io.papermc.paperweight.userdev (needs the daemon on JDK 21+, see
+        // gradle/gradle-daemon-jvm.properties)
+        id 'io.papermc.paperweight.userdev' version '2.0.0-beta.24'
+        // https://plugins.gradle.org/plugin/com.diffplug.spotless
+        id 'com.diffplug.spotless' version '8.11.0'
     }
 }
 
 plugins {
     id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
-    // https://maven.kikugie.dev/#/releases/dev/kikugie/stonecutter
-    id 'dev.kikugie.stonecutter' version '0.9.8'
 }
 
-rootProject.name = 'CAD-Editor-Recast'
-includeBuild('build-logic')
-stonecutter {
-    create(rootProject) {
-        vcsVersion = '26.3'
-        for (String name in ['common', 'fabric', 'neoforge']) {
-            branch(name) { for (String v in ['26.3', '26.2', '26.1']) version(v) }
-        }
-    }
-}
+rootProject.name = 'cadeditor'
+// The mod: Fabric on Minecraft 26.3 only. It compiles the shared sources in common/src together with its own
+// (client/src); common is a source tree, not a Gradle project.
+include('client')
+// The Paper 26.3 plugin: the same shared sources (the editor's server side) on Paper, so modded clients get the full
+// editor on a Paper server.
+include('paper')

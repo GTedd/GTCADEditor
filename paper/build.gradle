@@ -1,0 +1,79 @@
+// The plugin: the CAD Editor server on Paper 26.3. It compiles the same shared sources as the mod (common/src: the
+// editor's server side, history and permissions) against Paper's server internals (paperweight-userdev, Mojang names),
+// with its own Platform implementation and Bukkit transport (paper/src).
+plugins {
+    id 'java'
+    id 'io.papermc.paperweight.userdev'
+}
+
+base.archivesName = "cadeditor-paper-${minecraft_version}"
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(java_version as int)
+    withSourcesJar()
+}
+
+repositories {
+    mavenCentral()
+    maven { name = 'PaperMC'; url = uri('https://repo.papermc.io/repository/maven-public/') }
+}
+
+// The editor's dedicated-server probes use three page-side helpers of the mod that have no client types.
+def probeHelpers = tasks.register('probeHelperSources', Sync) {
+    from(rootProject.file('client/src/main/java')) {
+        include('dev/rinorsi/editor/client/WorldPageTarget.java', 'dev/rinorsi/editor/vault/PlayerPresetPage.java',
+                'dev/rinorsi/editor/vault/VaultStacks.java')
+    }
+    into(layout.buildDirectory.dir('generated/probe-helpers'))
+}
+sourceSets {
+    main {
+        java.srcDir(rootProject.file('common/src/main/java'))
+        resources.srcDir(rootProject.file('common/src/main/resources'))
+    }
+    // The editor's dedicated-server probes, run on a test server only (the -probe jar).
+    probe {
+        java.srcDir(probeHelpers)
+        compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
+        runtimeClasspath += output + compileClasspath
+    }
+}
+
+dependencies {
+    paperweight.paperDevBundle(paper_version)
+    testImplementation(platform("org.junit:junit-bom:${junit_version}"))
+    testImplementation('org.junit.jupiter:junit-jupiter')
+    testRuntimeOnly('org.junit.platform:junit-platform-launcher')
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = java_version as int
+}
+
+processResources {
+    filteringCharset = 'UTF-8'
+    def props = [version: project.version.toString(), minecraftVersion: minecraft_version.toString()]
+    inputs.properties(props)
+    filesMatching(['paper-plugin.yml', 'cadeditor-paper.properties']) { expand(props) }
+}
+
+tasks.withType(Jar).configureEach {
+    from(rootProject.file('LICENSE'))
+    from(rootProject.file('NOTICE'))
+    manifest.attributes('paperweight-mappings-namespace': 'mojang')
+}
+
+tasks.register('probeJar', Jar) {
+    group = 'build'
+    description = 'The plugin plus the editor server probes, for a test server only (-Dcadeditor.paper.probe=<class>).'
+    archiveClassifier = 'probe'
+    from(sourceSets.main.output)
+    from(sourceSets.probe.output)
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+    workingDir = layout.buildDirectory.dir('test-run').get().asFile
+    doFirst { workingDir.mkdirs() }
+}
+tasks.named('check') { dependsOn('probeClasses') }

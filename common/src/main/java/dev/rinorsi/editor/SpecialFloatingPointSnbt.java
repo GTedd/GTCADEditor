@@ -51,15 +51,21 @@ final class SpecialFloatingPointSnbt {
                 if (isFloat) {
                     float placeholder = Float.intBitsToFloat(nextFloat);
                     float value = nan ? Float.NaN : negative ? Float.NEGATIVE_INFINITY : Float.POSITIVE_INFINITY;
-                    if (pass == 0) floats.put(nextFloat, new FloatReplacement(
-                            Float.floatToRawIntBits(Float.MAX_VALUE / 4.0f) - floats.size(), value));
+                    if (pass == 0)
+                        floats.put(
+                                nextFloat,
+                                new FloatReplacement(
+                                        Float.floatToRawIntBits(Float.MAX_VALUE / 4.0f) - floats.size(), value));
                     nextFloat--;
                     rewritten.append(Float.toString(placeholder)).append('f');
                 } else {
                     double placeholder = Double.longBitsToDouble(nextDouble);
                     double value = nan ? Double.NaN : negative ? Double.NEGATIVE_INFINITY : Double.POSITIVE_INFINITY;
-                    if (pass == 0) doubles.put(nextDouble, new DoubleReplacement(
-                            Double.doubleToRawLongBits(Double.MAX_VALUE / 4.0d) - doubles.size(), value));
+                    if (pass == 0)
+                        doubles.put(
+                                nextDouble,
+                                new DoubleReplacement(
+                                        Double.doubleToRawLongBits(Double.MAX_VALUE / 4.0d) - doubles.size(), value));
                     nextDouble--;
                     rewritten.append(Double.toString(placeholder)).append('d');
                 }
@@ -75,7 +81,8 @@ final class SpecialFloatingPointSnbt {
      * sets. An ordinary number equal to either marker stays unchanged, even when
      * duplicate keys discard a special token or an operation computes a marker.
      * A transformation whose result cannot be attributed to one token fails closed. */
-    private static Tag restore(Tag tag, Tag check, Map<Integer, FloatReplacement> floats, Map<Long, DoubleReplacement> doubles) {
+    private static Tag restore(
+            Tag tag, Tag check, Map<Integer, FloatReplacement> floats, Map<Long, DoubleReplacement> doubles) {
         if (tag instanceof FloatTag value && check instanceof FloatTag other) {
             int bits = Float.floatToRawIntBits(value.value()), otherBits = Float.floatToRawIntBits(other.value());
             if (bits == otherBits) return tag;
@@ -84,7 +91,8 @@ final class SpecialFloatingPointSnbt {
             throw ambiguous();
         }
         if (tag instanceof DoubleTag value && check instanceof DoubleTag other) {
-            long bits = Double.doubleToRawLongBits(value.value()), otherBits = Double.doubleToRawLongBits(other.value());
+            long bits = Double.doubleToRawLongBits(value.value()),
+                    otherBits = Double.doubleToRawLongBits(other.value());
             if (bits == otherBits) return tag;
             var replacement = doubles.get(bits);
             if (replacement != null && otherBits == replacement.checkBits) return DoubleTag.valueOf(replacement.value);
@@ -92,25 +100,31 @@ final class SpecialFloatingPointSnbt {
         }
         if (tag instanceof CompoundTag compound && check instanceof CompoundTag other) {
             if (!compound.keySet().equals(other.keySet())) throw ambiguous();
-            for (String key : List.copyOf(compound.keySet())) compound.put(key, restore(compound.get(key), other.get(key), floats, doubles));
+            for (String key : List.copyOf(compound.keySet()))
+                compound.put(key, restore(compound.get(key), other.get(key), floats, doubles));
         } else if (tag instanceof ListTag list && check instanceof ListTag other) {
             if (list.size() != other.size()) throw ambiguous();
             for (int i = 0; i < list.size(); i++) list.set(i, restore(list.get(i), other.get(i), floats, doubles));
         } else if (!tag.equals(check)) throw ambiguous();
         return tag;
     }
+
     private static IllegalArgumentException ambiguous() {
-        return new IllegalArgumentException(EditorI18n.tr("cadeditor.message.specialfloatingpointsnbt.97181ad227"));
+        return new IllegalArgumentException(
+                EditorI18n.tr("cadeditor.message.specialfloatingpointsnbt.special_floating_point_value_derived"));
     }
+
     private record FloatReplacement(int checkBits, float value) {}
+
     private record DoubleReplacement(long checkBits, double value) {}
 
     private static List<Token> scan(String text) {
         var out = new ArrayList<Token>();
-        for (int i = 0; i < text.length();) {
+        for (int i = 0; i < text.length(); ) {
             char c = text.charAt(i);
             if (c == '\'' || c == '"') {
-                char quote = c; i++;
+                char quote = c;
+                i++;
                 while (i < text.length()) {
                     char q = text.charAt(i++);
                     if (q == '\\' && i < text.length()) i++;
@@ -118,20 +132,30 @@ final class SpecialFloatingPointSnbt {
                 }
                 continue;
             }
-            if (!bare(c)) { i++; continue; }
+            if (!bare(c)) {
+                i++;
+                continue;
+            }
             int start = i++;
             while (i < text.length() && bare(text.charAt(i))) i++;
             String token = text.substring(start, i);
-            int next = i; while (next < text.length() && Character.isWhitespace(text.charAt(next))) next++;
+            int next = i;
+            while (next < text.length() && Character.isWhitespace(text.charAt(next))) next++;
             boolean valueToken = next >= text.length() || text.charAt(next) != ':';
-            out.add(new Token(start, i, token, valueToken && SPECIAL.matcher(token).matches()));
+            out.add(new Token(
+                    start, i, token, valueToken && SPECIAL.matcher(token).matches()));
         }
         return out;
     }
 
     private static boolean bare(char c) {
-        return c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c >= '0' && c <= '9'
-                || c == '_' || c == '.' || c == '+' || c == '-';
+        return c >= 'a' && c <= 'z'
+                || c >= 'A' && c <= 'Z'
+                || c >= '0' && c <= '9'
+                || c == '_'
+                || c == '.'
+                || c == '+'
+                || c == '-';
     }
 
     private record Token(int start, int end, String text, boolean special) {}

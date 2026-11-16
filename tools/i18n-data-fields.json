@@ -5,7 +5,7 @@
       0,
       "name"
     ],
-    "key": "cadeditor.data.1237426ac2"
+    "key": "cadeditor.data.appearance_text"
   },
   {
     "path": [
@@ -13,7 +13,7 @@
       1,
       "name"
     ],
-    "key": "cadeditor.data.34f8172f7b"
+    "key": "cadeditor.data.durability_stack"
   },
   {
     "path": [
@@ -21,7 +21,7 @@
       2,
       "name"
     ],
-    "key": "cadeditor.data.32268ce7c3"
+    "key": "cadeditor.data.combat_tools"
   },
   {
     "path": [
@@ -29,7 +29,7 @@
       3,
       "name"
     ],
-    "key": "cadeditor.ui.cards1.5cfebda177"
+    "key": "cadeditor.ui.cards1.enchantments"
   },
   {
     "path": [
@@ -37,7 +37,7 @@
       4,
       "name"
     ],
-    "key": "cadeditor.data.53416e3009"
+    "key": "cadeditor.data.food_use"
   },
   {
     "path": [
@@ -45,7 +45,7 @@
       5,
       "name"
     ],
-    "key": "cadeditor.data.97c664fde8"
+    "key": "cadeditor.data.equipment_trim"
   },
   {
     "path": [
@@ -53,7 +53,7 @@
       6,
       "name"
     ],
-    "key": "cadeditor.data.ed9cca0102"
+    "key": "cadeditor.data.container_data"
   },
   {
     "path": [
@@ -61,7 +61,7 @@
       7,
       "name"
     ],
-    "key": "cadeditor.data.c5e7641b5a"
+    "key": "cadeditor.data.books_maps_signs"
   },
   {
     "path": [
@@ -69,7 +69,7 @@
       8,
       "name"
     ],
-    "key": "cadeditor.data.6e60f56011"
+    "key": "cadeditor.data.firework_potion_sound"
   },
   {
     "path": [
@@ -77,7 +77,7 @@
       9,
       "name"
     ],
-    "key": "cadeditor.data.42fcd618c6"
+    "key": "cadeditor.data.entity_variant_color"
   },
   {
     "path": [
@@ -85,7 +85,7 @@
       0,
       "name"
     ],
-    "key": "cadeditor.data.6e7c4709c7"
+    "key": "cadeditor.data.custom_model_data"
   },
   {
     "path": [
@@ -93,7 +93,7 @@
       0,
       "desc"
     ],
-    "key": "cadeditor.data.688eb3ded6"
+    "key": "cadeditor.data.component_responsible_saving_custom_data"
   },
   {
     "path": [
@@ -101,7 +101,7 @@
       0,
       "app"
     ],
-    "key": "cadeditor.data.09abab7ad9"
+    "key": "cadeditor.data.resource_pack_model_must_read"
   },
   {
     "path": [
@@ -112,7 +112,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.b72baaa633"
+    "key": "cadeditor.data.model_selection_floating_point_number"
   },
   {
     "path": [
@@ -123,7 +123,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.3540e181de"
+    "key": "cadeditor.data.model_condition_boolean_array"
   },
   {
     "path": [
@@ -134,7 +134,7 @@
       2,
       "d"
     ],
-    "key": "cadeditor.data.608719288d"
+    "key": "cadeditor.data.model_selection_string_array"
   },
   {
     "path": [
@@ -145,7 +145,7 @@
       3,
       "d"
     ],
-    "key": "cadeditor.data.fd3b4376d2"
+    "key": "cadeditor.data.model_colour_array"
   },
   {
     "path": [
@@ -153,7 +153,7 @@
       1,
       "name"
     ],
-    "key": "cadeditor.ui.forms.bf3b4816f1"
+    "key": "cadeditor.ui.forms.custom_name"
   },
   {
     "path": [
@@ -161,7 +161,7 @@
       1,
       "desc"
     ],
-    "key": "cadeditor.data.00e497d452"
+    "key": "cadeditor.data.component_responsible_saving_custom"
   },
   {
     "path": [
@@ -169,7 +169,7 @@
       1,
       "app"
     ],
-    "key": "cadeditor.data.2b3e51c0cc"
+    "key": "cadeditor.data.custom_name_custom_name_rewrited"
   },
   {
     "path": [
@@ -177,7 +177,7 @@
       2,
       "name"
     ],
-    "key": "cadeditor.ui.cards1.0e694eeb27"
+    "key": "cadeditor.ui.cards1.dye"
   },
   {
     "path": [
@@ -185,7 +185,7 @@
       2,
       "desc"
     ],
-    "key": "cadeditor.data.d4a88e55f1"
+    "key": "cadeditor.data.component_saves_dye_data_item"
   },
   {
     "path": [
@@ -193,7 +193,7 @@
       2,
       "app"
     ],
-    "key": "cadeditor.data.07517f3177"
+    "key": "cadeditor.data.only_item_models_equipment_rendering"
   },
   {
     "path": [
@@ -201,7 +201,7 @@
       3,
       "name"
     ],
-    "key": "cadeditor.ui.cards1.5dbcf4984d"
+    "key": "cadeditor.ui.cards1.enchantment_glint"
   },
   {
     "path": [
@@ -209,7 +209,7 @@
       3,
       "desc"
     ],
-    "key": "cadeditor.data.2176be4fc5"
+    "key": "cadeditor.data.component_control_item_display_pv"
   },
   {
     "path": [
@@ -217,7 +217,7 @@
       3,
       "app"
     ],
-    "key": "cadeditor.data.e1398cd9f7"
+    "key": "cadeditor.data.true_forced_light_false_forced"
   },
   {
     "path": [
@@ -225,7 +225,7 @@
       4,
       "name"
     ],
-    "key": "cadeditor.data.0fdec8c06b"
+    "key": "cadeditor.data.item_model"
   },
   {
     "path": [
@@ -233,7 +233,7 @@
       4,
       "desc"
     ],
-    "key": "cadeditor.data.ffc12a51cb"
+    "key": "cadeditor.data.component_s_under_control_item"
   },
   {
     "path": [
@@ -241,7 +241,7 @@
       4,
       "app"
     ],
-    "key": "cadeditor.data.c4736c8e63"
+    "key": "cadeditor.data.client_resource_pack_must_corresponding"
   },
   {
     "path": [
@@ -249,7 +249,7 @@
       5,
       "name"
     ],
-    "key": "cadeditor.ui.forms.800e576671"
+    "key": "cadeditor.ui.forms.base_name"
   },
   {
     "path": [
@@ -257,7 +257,7 @@
       5,
       "desc"
     ],
-    "key": "cadeditor.data.b456e8b5d4"
+    "key": "cadeditor.data.component_s_under_control_item_2"
   },
   {
     "path": [
@@ -265,7 +265,7 @@
       5,
       "app"
     ],
-    "key": "cadeditor.data.2b3e51c0cc"
+    "key": "cadeditor.data.custom_name_custom_name_rewrited"
   },
   {
     "path": [
@@ -273,7 +273,7 @@
       6,
       "name"
     ],
-    "key": "cadeditor.ui.cards1.a75800abd2"
+    "key": "cadeditor.ui.cards1.lore"
   },
   {
     "path": [
@@ -281,7 +281,7 @@
       6,
       "desc"
     ],
-    "key": "cadeditor.data.00f3ff3732"
+    "key": "cadeditor.data.component_responsible_saving_custom_2"
   },
   {
     "path": [
@@ -289,7 +289,7 @@
       6,
       "app"
     ],
-    "key": "cadeditor.data.c0731e1fd4"
+    "key": "cadeditor.data.up_256_line_hint_text"
   },
   {
     "path": [
@@ -297,7 +297,7 @@
       7,
       "name"
     ],
-    "key": "cadeditor.ui.cards1.5309323295"
+    "key": "cadeditor.ui.cards1.rarity"
   },
   {
     "path": [
@@ -305,7 +305,7 @@
       7,
       "desc"
     ],
-    "key": "cadeditor.data.300ced8d58"
+    "key": "cadeditor.data.component_responsible_basics_item"
   },
   {
     "path": [
@@ -313,7 +313,7 @@
       7,
       "app"
     ],
-    "key": "cadeditor.data.d72d972af6"
+    "key": "cadeditor.data.impacts_presentation_name_colours_etc"
   },
   {
     "path": [
@@ -321,7 +321,7 @@
       8,
       "name"
     ],
-    "key": "cadeditor.data.0a72152082"
+    "key": "cadeditor.data.tooltip_display"
   },
   {
     "path": [
@@ -329,7 +329,7 @@
       8,
       "desc"
     ],
-    "key": "cadeditor.data.45b26bbde4"
+    "key": "cadeditor.data.component_controls_tooltip_text"
   },
   {
     "path": [
@@ -337,7 +337,7 @@
       8,
       "app"
     ],
-    "key": "cadeditor.data.9168249d72"
+    "key": "cadeditor.data.only_affects_hint_presentation_close"
   },
   {
     "path": [
@@ -348,7 +348,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.db099729f1"
+    "key": "cadeditor.data.hide_whole_hint"
   },
   {
     "path": [
@@ -359,7 +359,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.93b11dfc2e"
+    "key": "cadeditor.data.hide_counter_component_s_hint"
   },
   {
     "path": [
@@ -367,7 +367,7 @@
       9,
       "name"
     ],
-    "key": "cadeditor.data.0cb59c6a23"
+    "key": "cadeditor.data.tooltip_styles"
   },
   {
     "path": [
@@ -375,7 +375,7 @@
       9,
       "desc"
     ],
-    "key": "cadeditor.data.12fa69e57d"
+    "key": "cadeditor.data.component_responsible_tooltip_appearance"
   },
   {
     "path": [
@@ -383,7 +383,7 @@
       9,
       "app"
     ],
-    "key": "cadeditor.data.c4736c8e63"
+    "key": "cadeditor.data.client_resource_pack_must_corresponding"
   },
   {
     "path": [
@@ -391,7 +391,7 @@
       10,
       "name"
     ],
-    "key": "cadeditor.data.1cc16f7a03"
+    "key": "cadeditor.data.break_sound"
   },
   {
     "path": [
@@ -399,7 +399,7 @@
       10,
       "desc"
     ],
-    "key": "cadeditor.data.be20b21e9b"
+    "key": "cadeditor.data.component_responsible_playing_sound_item"
   },
   {
     "path": [
@@ -407,7 +407,7 @@
       10,
       "app"
     ],
-    "key": "cadeditor.data.05537a8837"
+    "key": "cadeditor.data.durability_exhaustion_results_item"
   },
   {
     "path": [
@@ -420,7 +420,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.300e1d8042"
+    "key": "cadeditor.data.sound_resources_id"
   },
   {
     "path": [
@@ -433,7 +433,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.0fd9de9e89"
+    "key": "cadeditor.data.fixed_distribution_range_source_code"
   },
   {
     "path": [
@@ -441,7 +441,7 @@
       11,
       "name"
     ],
-    "key": "cadeditor.data.e592161e6d"
+    "key": "cadeditor.data.lost_durability"
   },
   {
     "path": [
@@ -449,7 +449,7 @@
       11,
       "desc"
     ],
-    "key": "cadeditor.data.776a916c53"
+    "key": "cadeditor.data.component_responsible_stored_item_damage"
   },
   {
     "path": [
@@ -457,7 +457,7 @@
       11,
       "app"
     ],
-    "key": "cadeditor.data.f27d41b876"
+    "key": "cadeditor.data.durability_non_negative_reaching_maximum"
   },
   {
     "path": [
@@ -465,7 +465,7 @@
       12,
       "name"
     ],
-    "key": "cadeditor.data.37f4516980"
+    "key": "cadeditor.data.damage_immunity"
   },
   {
     "path": [
@@ -473,7 +473,7 @@
       12,
       "desc"
     ],
-    "key": "cadeditor.data.675aadad50"
+    "key": "cadeditor.data.component_control_item_immunized_damage"
   },
   {
     "path": [
@@ -481,7 +481,7 @@
       12,
       "app"
     ],
-    "key": "cadeditor.data.210a319c69"
+    "key": "cadeditor.data.protects_entity_corresponding_damage"
   },
   {
     "path": [
@@ -492,7 +492,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.439ddec894"
+    "key": "cadeditor.data.immuno_damage_collection"
   },
   {
     "path": [
@@ -500,7 +500,7 @@
       13,
       "name"
     ],
-    "key": "cadeditor.ui.cards1.5ac8daecfb"
+    "key": "cadeditor.ui.cards1.max_durability"
   },
   {
     "path": [
@@ -508,7 +508,7 @@
       13,
       "desc"
     ],
-    "key": "cadeditor.data.8433cd0a65"
+    "key": "cadeditor.data.stores_maximum_item_durability_together"
   },
   {
     "path": [
@@ -516,7 +516,7 @@
       13,
       "app"
     ],
-    "key": "cadeditor.data.d6f1afcad8"
+    "key": "cadeditor.data.maximum_durability_corruptable_stack"
   },
   {
     "path": [
@@ -524,7 +524,7 @@
       14,
       "name"
     ],
-    "key": "cadeditor.ui.cards1.bd96a95955"
+    "key": "cadeditor.ui.cards1.max_stack_size"
   },
   {
     "path": [
@@ -532,7 +532,7 @@
       14,
       "desc"
     ],
-    "key": "cadeditor.data.c5c68a7841"
+    "key": "cadeditor.data.component_responsible_maximum_number"
   },
   {
     "path": [
@@ -540,7 +540,7 @@
       14,
       "app"
     ],
-    "key": "cadeditor.data.552f7dcd1f"
+    "key": "cadeditor.data.maximum_number_stacks_damages_max"
   },
   {
     "path": [
@@ -548,7 +548,7 @@
       15,
       "name"
     ],
-    "key": "cadeditor.ui.cards1.6398233929"
+    "key": "cadeditor.ui.cards1.anvil_cost"
   },
   {
     "path": [
@@ -556,7 +556,7 @@
       15,
       "desc"
     ],
-    "key": "cadeditor.data.4eed4822cd"
+    "key": "cadeditor.data.component_responsible_preserving"
   },
   {
     "path": [
@@ -564,7 +564,7 @@
       15,
       "app"
     ],
-    "key": "cadeditor.data.54f3498ca2"
+    "key": "cadeditor.data.anvil_punishment_past_work_total"
   },
   {
     "path": [
@@ -572,7 +572,7 @@
       16,
       "name"
     ],
-    "key": "cadeditor.data.6f1dd4edc4"
+    "key": "cadeditor.data.recoverable_materials"
   },
   {
     "path": [
@@ -580,7 +580,7 @@
       16,
       "desc"
     ],
-    "key": "cadeditor.data.53f8965dc6"
+    "key": "cadeditor.data.component_responsible_item_what_used"
   },
   {
     "path": [
@@ -588,7 +588,7 @@
       16,
       "app"
     ],
-    "key": "cadeditor.data.68070d34e1"
+    "key": "cadeditor.data.anvil_et_al_repair_read"
   },
   {
     "path": [
@@ -599,7 +599,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.a15ceb76f3"
+    "key": "cadeditor.data.repair_material_collection"
   },
   {
     "path": [
@@ -607,7 +607,7 @@
       17,
       "name"
     ],
-    "key": "cadeditor.ui.cards1.f1e99743e4"
+    "key": "cadeditor.ui.cards1.unbreakable"
   },
   {
     "path": [
@@ -615,7 +615,7 @@
       17,
       "desc"
     ],
-    "key": "cadeditor.data.d6790b9c69"
+    "key": "cadeditor.data.component_exists_item_durability_degrees"
   },
   {
     "path": [
@@ -623,7 +623,7 @@
       17,
       "app"
     ],
-    "key": "cadeditor.data.c84330f2ae"
+    "key": "cadeditor.data.stops_normal_durability_damage"
   },
   {
     "path": [
@@ -632,7 +632,7 @@
       "schema",
       "d"
     ],
-    "key": "cadeditor.data.63fcd9fc68"
+    "key": "cadeditor.data.existence_enabled_write_true_false"
   },
   {
     "path": [
@@ -640,7 +640,7 @@
       18,
       "name"
     ],
-    "key": "cadeditor.data.10113f7878"
+    "key": "cadeditor.data.attack_range"
   },
   {
     "path": [
@@ -648,7 +648,7 @@
       18,
       "desc"
     ],
-    "key": "cadeditor.data.d773a79784"
+    "key": "cadeditor.data.component_responsible_mob_use_item"
   },
   {
     "path": [
@@ -656,7 +656,7 @@
       18,
       "app"
     ],
-    "key": "cadeditor.data.ce09b971bf"
+    "key": "cadeditor.data.near_term_battle_attack_reading"
   },
   {
     "path": [
@@ -667,7 +667,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.815df87f92"
+    "key": "cadeditor.data.block_determines_minimum_distance_eye"
   },
   {
     "path": [
@@ -678,7 +678,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.d0896ff05a"
+    "key": "cadeditor.data.max_distance"
   },
   {
     "path": [
@@ -689,7 +689,7 @@
       2,
       "d"
     ],
-    "key": "cadeditor.data.d493abde4d"
+    "key": "cadeditor.data.creative_mode_minimum_distance"
   },
   {
     "path": [
@@ -700,7 +700,7 @@
       3,
       "d"
     ],
-    "key": "cadeditor.data.0243790175"
+    "key": "cadeditor.data.creative_mode_maximum_distance"
   },
   {
     "path": [
@@ -711,7 +711,7 @@
       4,
       "d"
     ],
-    "key": "cadeditor.data.52af330949"
+    "key": "cadeditor.data.target_collage_box_spreads_one"
   },
   {
     "path": [
@@ -722,7 +722,7 @@
       5,
       "d"
     ],
-    "key": "cadeditor.data.8c9f41e8b8"
+    "key": "cadeditor.data.non_player_distance_multiplier"
   },
   {
     "path": [
@@ -730,7 +730,7 @@
       19,
       "name"
     ],
-    "key": "cadeditor.data.2ac7910aad"
+    "key": "cadeditor.data.attribute_modifier"
   },
   {
     "path": [
@@ -738,7 +738,7 @@
       19,
       "desc"
     ],
-    "key": "cadeditor.data.b21d473945"
+    "key": "cadeditor.data.component_responsible_stored_modifier"
   },
   {
     "path": [
@@ -746,7 +746,7 @@
       19,
       "app"
     ],
-    "key": "cadeditor.data.9321f499f3"
+    "key": "cadeditor.data.equipment_slot_matches_slot_only"
   },
   {
     "path": [
@@ -758,7 +758,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.e5ad9ec6ff"
+    "key": "cadeditor.data.attribute_id"
   },
   {
     "path": [
@@ -770,7 +770,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.8a6143f1a5"
+    "key": "cadeditor.data.modifier_id_same_id_added"
   },
   {
     "path": [
@@ -782,7 +782,7 @@
       2,
       "d"
     ],
-    "key": "cadeditor.data.884efb8e1d"
+    "key": "cadeditor.data.double_precision_modifier"
   },
   {
     "path": [
@@ -794,7 +794,7 @@
       3,
       "d"
     ],
-    "key": "cadeditor.data.5089c1b89b"
+    "key": "cadeditor.data.add_base_multiplier_total_value"
   },
   {
     "path": [
@@ -806,7 +806,7 @@
       4,
       "d"
     ],
-    "key": "cadeditor.data.862663a353"
+    "key": "cadeditor.data.active_slot_group"
   },
   {
     "path": [
@@ -823,7 +823,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.a1ff34ba02"
+    "key": "cadeditor.data.replace_hint_text"
   },
   {
     "path": [
@@ -835,7 +835,7 @@
       5,
       "d"
     ],
-    "key": "cadeditor.data.791197d0b3"
+    "key": "cadeditor.data.hint_display_mode"
   },
   {
     "path": [
@@ -843,7 +843,7 @@
       20,
       "name"
     ],
-    "key": "cadeditor.data.7db3993bf2"
+    "key": "cadeditor.data.blocking"
   },
   {
     "path": [
@@ -851,7 +851,7 @@
       20,
       "desc"
     ],
-    "key": "cadeditor.data.8357b52b01"
+    "key": "cadeditor.data.component_responsible_item_block_action"
   },
   {
     "path": [
@@ -859,7 +859,7 @@
       20,
       "app"
     ],
-    "key": "cadeditor.data.64724fa6d6"
+    "key": "cadeditor.data.item_being_read_used_block"
   },
   {
     "path": [
@@ -870,7 +870,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.006f94f3d2"
+    "key": "cadeditor.data.delays_started_after_use_seconds"
   },
   {
     "path": [
@@ -881,7 +881,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.39d76824da"
+    "key": "cadeditor.data.break_cooldown_zoom"
   },
   {
     "path": [
@@ -896,7 +896,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.6a1d846eac"
+    "key": "cadeditor.data.horizontally_blocked_half_angle_degrees"
   },
   {
     "path": [
@@ -911,7 +911,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.26c3f6c6f5"
+    "key": "cadeditor.data.apply_damage_classes_omitted_all"
   },
   {
     "path": [
@@ -926,7 +926,7 @@
       2,
       "d"
     ],
-    "key": "cadeditor.data.cc90c11f5f"
+    "key": "cadeditor.data.base_damage_reduction"
   },
   {
     "path": [
@@ -941,7 +941,7 @@
       3,
       "d"
     ],
-    "key": "cadeditor.data.253419640f"
+    "key": "cadeditor.data.enter_damage_multiplier"
   },
   {
     "path": [
@@ -952,7 +952,7 @@
       2,
       "d"
     ],
-    "key": "cadeditor.data.2763e8c9ed"
+    "key": "cadeditor.data.reduction_injury_type_type"
   },
   {
     "path": [
@@ -966,7 +966,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.cc79bf86ef"
+    "key": "cadeditor.data.below_damage_loss_item"
   },
   {
     "path": [
@@ -980,7 +980,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.76e6683373"
+    "key": "cadeditor.data.basic_durability_damage"
   },
   {
     "path": [
@@ -994,7 +994,7 @@
       2,
       "d"
     ],
-    "key": "cadeditor.data.253419640f"
+    "key": "cadeditor.data.enter_damage_multiplier"
   },
   {
     "path": [
@@ -1005,7 +1005,7 @@
       3,
       "d"
     ],
-    "key": "cadeditor.data.ef19575f1f"
+    "key": "cadeditor.data.durability_damage_function"
   },
   {
     "path": [
@@ -1016,7 +1016,7 @@
       4,
       "d"
     ],
-    "key": "cadeditor.data.d28aa8965c"
+    "key": "cadeditor.data.get_over_block_damage"
   },
   {
     "path": [
@@ -1032,7 +1032,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.300e1d8042"
+    "key": "cadeditor.data.sound_resources_id"
   },
   {
     "path": [
@@ -1048,7 +1048,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.0fd9de9e89"
+    "key": "cadeditor.data.fixed_distribution_range_source_code"
   },
   {
     "path": [
@@ -1059,7 +1059,7 @@
       5,
       "d"
     ],
-    "key": "cadeditor.data.c637c49786"
+    "key": "cadeditor.data.block_sound"
   },
   {
     "path": [
@@ -1075,7 +1075,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.300e1d8042"
+    "key": "cadeditor.data.sound_resources_id"
   },
   {
     "path": [
@@ -1091,7 +1091,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.0fd9de9e89"
+    "key": "cadeditor.data.fixed_distribution_range_source_code"
   },
   {
     "path": [
@@ -1102,7 +1102,7 @@
       6,
       "d"
     ],
-    "key": "cadeditor.data.eba10965df"
+    "key": "cadeditor.data.block_disable_sound"
   },
   {
     "path": [
@@ -1110,7 +1110,7 @@
       21,
       "name"
     ],
-    "key": "cadeditor.data.57ce33dba9"
+    "key": "cadeditor.data.attack_damage_type"
   },
   {
     "path": [
@@ -1118,7 +1118,7 @@
       21,
       "desc"
     ],
-    "key": "cadeditor.data.0d5e424dda"
+    "key": "cadeditor.data.component_responsible_mob_use_item_2"
   },
   {
     "path": [
@@ -1126,7 +1126,7 @@
       21,
       "app"
     ],
-    "key": "cadeditor.data.5fece7cf14"
+    "key": "cadeditor.data.read_constructing_damage_source_close"
   },
   {
     "path": [
@@ -1134,7 +1134,7 @@
       22,
       "name"
     ],
-    "key": "cadeditor.data.0bb47e6791"
+    "key": "cadeditor.data.kinetic_weapon"
   },
   {
     "path": [
@@ -1142,7 +1142,7 @@
       22,
       "desc"
     ],
-    "key": "cadeditor.data.1d804c311b"
+    "key": "cadeditor.data.component_determines_whether_item"
   },
   {
     "path": [
@@ -1150,7 +1150,7 @@
       22,
       "app"
     ],
-    "key": "cadeditor.data.c2f178e209"
+    "key": "cadeditor.data.ongoing_use_determined_relative_motion"
   },
   {
     "path": [
@@ -1161,7 +1161,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.dde3e965f9"
+    "key": "cadeditor.data.contact_target_cooldown_cut"
   },
   {
     "path": [
@@ -1172,7 +1172,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.ba778d5937"
+    "key": "cadeditor.data.start_using_take_effect_delay"
   },
   {
     "path": [
@@ -1186,7 +1186,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.e3ab4ead66"
+    "key": "cadeditor.data.maximum_use_time_moment"
   },
   {
     "path": [
@@ -1200,7 +1200,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.45c67acf4b"
+    "key": "cadeditor.data.user_minimum_speed"
   },
   {
     "path": [
@@ -1214,7 +1214,7 @@
       2,
       "d"
     ],
-    "key": "cadeditor.data.41b1c652e9"
+    "key": "cadeditor.data.lowest_relative_speed_towards_target"
   },
   {
     "path": [
@@ -1225,7 +1225,7 @@
       2,
       "d"
     ],
-    "key": "cadeditor.data.d720501448"
+    "key": "cadeditor.data.make_target_dismount_condition"
   },
   {
     "path": [
@@ -1239,7 +1239,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.e3ab4ead66"
+    "key": "cadeditor.data.maximum_use_time_moment"
   },
   {
     "path": [
@@ -1253,7 +1253,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.45c67acf4b"
+    "key": "cadeditor.data.user_minimum_speed"
   },
   {
     "path": [
@@ -1267,7 +1267,7 @@
       2,
       "d"
     ],
-    "key": "cadeditor.data.41b1c652e9"
+    "key": "cadeditor.data.lowest_relative_speed_towards_target"
   },
   {
     "path": [
@@ -1278,7 +1278,7 @@
       3,
       "d"
     ],
-    "key": "cadeditor.data.bbcea4a9b6"
+    "key": "cadeditor.data.knockback_conditions"
   },
   {
     "path": [
@@ -1292,7 +1292,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.e3ab4ead66"
+    "key": "cadeditor.data.maximum_use_time_moment"
   },
   {
     "path": [
@@ -1306,7 +1306,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.45c67acf4b"
+    "key": "cadeditor.data.user_minimum_speed"
   },
   {
     "path": [
@@ -1320,7 +1320,7 @@
       2,
       "d"
     ],
-    "key": "cadeditor.data.41b1c652e9"
+    "key": "cadeditor.data.lowest_relative_speed_towards_target"
   },
   {
     "path": [
@@ -1331,7 +1331,7 @@
       4,
       "d"
     ],
-    "key": "cadeditor.data.46de490a3b"
+    "key": "cadeditor.data.damage_conditions"
   },
   {
     "path": [
@@ -1342,7 +1342,7 @@
       5,
       "d"
     ],
-    "key": "cadeditor.data.696a1eea3f"
+    "key": "cadeditor.data.move_fixes_forward"
   },
   {
     "path": [
@@ -1353,7 +1353,7 @@
       6,
       "d"
     ],
-    "key": "cadeditor.ui.specs.63ec4d8a1e"
+    "key": "cadeditor.ui.specs.speed_damage_multiplier"
   },
   {
     "path": [
@@ -1369,7 +1369,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.300e1d8042"
+    "key": "cadeditor.data.sound_resources_id"
   },
   {
     "path": [
@@ -1385,7 +1385,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.0fd9de9e89"
+    "key": "cadeditor.data.fixed_distribution_range_source_code"
   },
   {
     "path": [
@@ -1396,7 +1396,7 @@
       7,
       "d"
     ],
-    "key": "cadeditor.ui.cards3.97b5066755"
+    "key": "cadeditor.ui.cards3.use_sound"
   },
   {
     "path": [
@@ -1412,7 +1412,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.300e1d8042"
+    "key": "cadeditor.data.sound_resources_id"
   },
   {
     "path": [
@@ -1428,7 +1428,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.0fd9de9e89"
+    "key": "cadeditor.data.fixed_distribution_range_source_code"
   },
   {
     "path": [
@@ -1439,7 +1439,7 @@
       8,
       "d"
     ],
-    "key": "cadeditor.ui.specs.b46fa8c8f8"
+    "key": "cadeditor.ui.specs.hit_sound"
   },
   {
     "path": [
@@ -1447,7 +1447,7 @@
       23,
       "name"
     ],
-    "key": "cadeditor.data.ed56cf24e0"
+    "key": "cadeditor.data.minimum_attack_charge"
   },
   {
     "path": [
@@ -1455,7 +1455,7 @@
       23,
       "desc"
     ],
-    "key": "cadeditor.data.2918859b11"
+    "key": "cadeditor.data.component_responsible_player_use_item"
   },
   {
     "path": [
@@ -1463,7 +1463,7 @@
       23,
       "app"
     ],
-    "key": "cadeditor.data.bd5b1f9a13"
+    "key": "cadeditor.data.player_attack_charge_ratios_below"
   },
   {
     "path": [
@@ -1471,7 +1471,7 @@
       24,
       "name"
     ],
-    "key": "cadeditor.data.082042083a"
+    "key": "cadeditor.data.piercing_weapon"
   },
   {
     "path": [
@@ -1479,7 +1479,7 @@
       24,
       "desc"
     ],
-    "key": "cadeditor.data.dbf7e8b733"
+    "key": "cadeditor.data.component_responsible_whether_item"
   },
   {
     "path": [
@@ -1487,7 +1487,7 @@
       24,
       "app"
     ],
-    "key": "cadeditor.data.31a4348ea1"
+    "key": "cadeditor.data.punctuation_logic_read_concentration"
   },
   {
     "path": [
@@ -1498,7 +1498,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.5e5abef776"
+    "key": "cadeditor.data.knockback"
   },
   {
     "path": [
@@ -1509,7 +1509,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.825aba4f65"
+    "key": "cadeditor.data.whether_get_target_dismount"
   },
   {
     "path": [
@@ -1525,7 +1525,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.300e1d8042"
+    "key": "cadeditor.data.sound_resources_id"
   },
   {
     "path": [
@@ -1541,7 +1541,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.0fd9de9e89"
+    "key": "cadeditor.data.fixed_distribution_range_source_code"
   },
   {
     "path": [
@@ -1552,7 +1552,7 @@
       2,
       "d"
     ],
-    "key": "cadeditor.data.50c247e046"
+    "key": "cadeditor.data.attack_sound"
   },
   {
     "path": [
@@ -1568,7 +1568,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.300e1d8042"
+    "key": "cadeditor.data.sound_resources_id"
   },
   {
     "path": [
@@ -1584,7 +1584,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.0fd9de9e89"
+    "key": "cadeditor.data.fixed_distribution_range_source_code"
   },
   {
     "path": [
@@ -1595,7 +1595,7 @@
       3,
       "d"
     ],
-    "key": "cadeditor.data.9e54dcde04"
+    "key": "cadeditor.data.hit_sound"
   },
   {
     "path": [
@@ -1603,7 +1603,7 @@
       25,
       "name"
     ],
-    "key": "cadeditor.data.5e698a6e6a"
+    "key": "cadeditor.data.swing_animation"
   },
   {
     "path": [
@@ -1611,7 +1611,7 @@
       25,
       "desc"
     ],
-    "key": "cadeditor.data.d273d94a6d"
+    "key": "cadeditor.data.moving_animated_drawings_split_26"
   },
   {
     "path": [
@@ -1619,7 +1619,7 @@
       25,
       "app"
     ],
-    "key": "cadeditor.data.b79394ad7d"
+    "key": "cadeditor.data.n26_1_26_2_client"
   },
   {
     "path": [
@@ -1630,7 +1630,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.ed2171022b"
+    "key": "cadeditor.data.splash_thin_animated"
   },
   {
     "path": [
@@ -1641,7 +1641,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.e9c90f8adf"
+    "key": "cadeditor.data.length_game_ticks"
   },
   {
     "path": [
@@ -1649,7 +1649,7 @@
       26,
       "name"
     ],
-    "key": "cadeditor.ui.pages.5ca6730d44"
+    "key": "cadeditor.ui.pages.tools"
   },
   {
     "path": [
@@ -1657,7 +1657,7 @@
       26,
       "desc"
     ],
-    "key": "cadeditor.data.1e3b379074"
+    "key": "cadeditor.data.component_responsible_behaviour_item"
   },
   {
     "path": [
@@ -1665,7 +1665,7 @@
       26,
       "app"
     ],
-    "key": "cadeditor.data.ef96b34e8f"
+    "key": "cadeditor.data.mining_speed_correct_tool_read"
   },
   {
     "path": [
@@ -1680,7 +1680,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.2d9e42b5b3"
+    "key": "cadeditor.data.recipe_block_collection"
   },
   {
     "path": [
@@ -1695,7 +1695,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.34f570c9e8"
+    "key": "cadeditor.data.speed_must_greater_0"
   },
   {
     "path": [
@@ -1710,7 +1710,7 @@
       2,
       "d"
     ],
-    "key": "cadeditor.data.0c341275a8"
+    "key": "cadeditor.data.whether_correct_tool_lost"
   },
   {
     "path": [
@@ -1721,7 +1721,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.da4ca309f5"
+    "key": "cadeditor.data.ordered_rules_speed_fall_determination"
   },
   {
     "path": [
@@ -1732,7 +1732,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.0887bea963"
+    "key": "cadeditor.data.speed_missed_speed_rule"
   },
   {
     "path": [
@@ -1743,7 +1743,7 @@
       2,
       "d"
     ],
-    "key": "cadeditor.data.2202bf07c3"
+    "key": "cadeditor.data.destruction_block_durability_damage"
   },
   {
     "path": [
@@ -1754,7 +1754,7 @@
       3,
       "d"
     ],
-    "key": "cadeditor.data.f5e508b072"
+    "key": "cadeditor.data.destroy_block"
   },
   {
     "path": [
@@ -1762,7 +1762,7 @@
       27,
       "name"
     ],
-    "key": "cadeditor.data.4fe131173e"
+    "key": "cadeditor.data.weapon"
   },
   {
     "path": [
@@ -1770,7 +1770,7 @@
       27,
       "desc"
     ],
-    "key": "cadeditor.data.fd7cd95ef4"
+    "key": "cadeditor.data.attack_time_loss_block_time"
   },
   {
     "path": [
@@ -1778,7 +1778,7 @@
       27,
       "app"
     ],
-    "key": "cadeditor.data.075dd84a4d"
+    "key": "cadeditor.data.near_war_hit_break_logic"
   },
   {
     "path": [
@@ -1789,7 +1789,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.7eca79a248"
+    "key": "cadeditor.data.every_attack_durability_damage"
   },
   {
     "path": [
@@ -1800,7 +1800,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.6561ce03e6"
+    "key": "cadeditor.data.number_breakback_seconds"
   },
   {
     "path": [
@@ -1808,7 +1808,7 @@
       28,
       "name"
     ],
-    "key": "cadeditor.data.de929dea46"
+    "key": "cadeditor.data.enchantability"
   },
   {
     "path": [
@@ -1816,7 +1816,7 @@
       28,
       "desc"
     ],
-    "key": "cadeditor.data.f905e6c7a0"
+    "key": "cadeditor.data.component_responsible_stored_item_s"
   },
   {
     "path": [
@@ -1824,7 +1824,7 @@
       28,
       "app"
     ],
-    "key": "cadeditor.data.b60661edb0"
+    "key": "cadeditor.data.determines_enchanting_table_calculated"
   },
   {
     "path": [
@@ -1835,7 +1835,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.f613606cd5"
+    "key": "cadeditor.data.enchantment_capability_value"
   },
   {
     "path": [
@@ -1843,7 +1843,7 @@
       29,
       "name"
     ],
-    "key": "cadeditor.ui.cards1.5cfebda177"
+    "key": "cadeditor.ui.cards1.enchantments"
   },
   {
     "path": [
@@ -1851,7 +1851,7 @@
       29,
       "desc"
     ],
-    "key": "cadeditor.data.f3c17f987b"
+    "key": "cadeditor.data.enchantment_map_take_effect_directly"
   },
   {
     "path": [
@@ -1859,7 +1859,7 @@
       29,
       "app"
     ],
-    "key": "cadeditor.data.8bbcd9bda5"
+    "key": "cadeditor.data.type_enchantment_registry_id_level"
   },
   {
     "path": [
@@ -1867,7 +1867,7 @@
       30,
       "name"
     ],
-    "key": "cadeditor.data.5af6ddc2f6"
+    "key": "cadeditor.data.enchantment_stored"
   },
   {
     "path": [
@@ -1875,7 +1875,7 @@
       30,
       "desc"
     ],
-    "key": "cadeditor.data.696d36a5b5"
+    "key": "cadeditor.data.enchanted_book_stored_enchantment_map"
   },
   {
     "path": [
@@ -1883,7 +1883,7 @@
       30,
       "app"
     ],
-    "key": "cadeditor.data.8bbcd9bda5"
+    "key": "cadeditor.data.type_enchantment_registry_id_level"
   },
   {
     "path": [
@@ -1891,7 +1891,7 @@
       31,
       "name"
     ],
-    "key": "cadeditor.data.0ce189d466"
+    "key": "cadeditor.data.consumable"
   },
   {
     "path": [
@@ -1899,7 +1899,7 @@
       31,
       "desc"
     ],
-    "key": "cadeditor.data.4b0a3c89fa"
+    "key": "cadeditor.data.component_controls_whether_item"
   },
   {
     "path": [
@@ -1907,7 +1907,7 @@
       31,
       "app"
     ],
-    "key": "cadeditor.data.e73ef8add1"
+    "key": "cadeditor.data.common_consumption_capacity_restore_food"
   },
   {
     "path": [
@@ -1918,7 +1918,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.5cb71e4112"
+    "key": "cadeditor.data.time_spent_seconds"
   },
   {
     "path": [
@@ -1929,7 +1929,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.dd26c4b20d"
+    "key": "cadeditor.data.use_animation"
   },
   {
     "path": [
@@ -1945,7 +1945,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.300e1d8042"
+    "key": "cadeditor.data.sound_resources_id"
   },
   {
     "path": [
@@ -1961,7 +1961,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.0fd9de9e89"
+    "key": "cadeditor.data.fixed_distribution_range_source_code"
   },
   {
     "path": [
@@ -1972,7 +1972,7 @@
       2,
       "d"
     ],
-    "key": "cadeditor.data.e63b576022"
+    "key": "cadeditor.data.consume_sound"
   },
   {
     "path": [
@@ -1983,7 +1983,7 @@
       3,
       "d"
     ],
-    "key": "cadeditor.data.f9d1ec94f6"
+    "key": "cadeditor.data.consume_particles"
   },
   {
     "path": [
@@ -2000,7 +2000,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.007e1ed3ae"
+    "key": "cadeditor.data.status_effect_add"
   },
   {
     "path": [
@@ -2017,7 +2017,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.ec873939c7"
+    "key": "cadeditor.data.trigger_probability_group"
   },
   {
     "path": [
@@ -2034,7 +2034,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.c6437071c2"
+    "key": "cadeditor.data.set_effects_remove"
   },
   {
     "path": [
@@ -2051,7 +2051,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.0b19b526b4"
+    "key": "cadeditor.data.random_teleport_regional_diameter_block"
   },
   {
     "path": [
@@ -2068,7 +2068,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.ui.cards3.246f139dcf"
+    "key": "cadeditor.ui.cards3.play_sound"
   },
   {
     "path": [
@@ -2079,7 +2079,7 @@
       4,
       "d"
     ],
-    "key": "cadeditor.data.0808cf3c2c"
+    "key": "cadeditor.data.list_effect_after_completion_consumption"
   },
   {
     "path": [
@@ -2087,7 +2087,7 @@
       32,
       "name"
     ],
-    "key": "cadeditor.ui.cards3.22f9a36306"
+    "key": "cadeditor.ui.cards3.death_protection"
   },
   {
     "path": [
@@ -2095,7 +2095,7 @@
       32,
       "desc"
     ],
-    "key": "cadeditor.data.b55d8d9c37"
+    "key": "cadeditor.data.provides_totem_undying_behavior_held"
   },
   {
     "path": [
@@ -2103,7 +2103,7 @@
       32,
       "app"
     ],
-    "key": "cadeditor.data.2f7e26ceb1"
+    "key": "cadeditor.data.mob_read_fatally_injured_holding"
   },
   {
     "path": [
@@ -2120,7 +2120,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.007e1ed3ae"
+    "key": "cadeditor.data.status_effect_add"
   },
   {
     "path": [
@@ -2137,7 +2137,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.ec873939c7"
+    "key": "cadeditor.data.trigger_probability_group"
   },
   {
     "path": [
@@ -2154,7 +2154,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.c6437071c2"
+    "key": "cadeditor.data.set_effects_remove"
   },
   {
     "path": [
@@ -2171,7 +2171,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.0b19b526b4"
+    "key": "cadeditor.data.random_teleport_regional_diameter_block"
   },
   {
     "path": [
@@ -2188,7 +2188,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.ui.cards3.246f139dcf"
+    "key": "cadeditor.ui.cards3.play_sound"
   },
   {
     "path": [
@@ -2199,7 +2199,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.3f6f7e6ffb"
+    "key": "cadeditor.data.avoiding_post_death_implementation"
   },
   {
     "path": [
@@ -2207,7 +2207,7 @@
       33,
       "name"
     ],
-    "key": "cadeditor.ui.cards3.ab2775f0d3"
+    "key": "cadeditor.ui.cards3.food"
   },
   {
     "path": [
@@ -2215,7 +2215,7 @@
       33,
       "desc"
     ],
-    "key": "cadeditor.data.ab02cc3d97"
+    "key": "cadeditor.data.component_control_item_food_available"
   },
   {
     "path": [
@@ -2223,7 +2223,7 @@
       33,
       "app"
     ],
-    "key": "cadeditor.data.0f7f58da31"
+    "key": "cadeditor.data.actual_recovery_requires_consumption"
   },
   {
     "path": [
@@ -2234,7 +2234,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.ui.cards3.81858022a9"
+    "key": "cadeditor.ui.cards3.food_restored"
   },
   {
     "path": [
@@ -2245,7 +2245,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.c9696cb644"
+    "key": "cadeditor.data.restore_saturation_value_old_version"
   },
   {
     "path": [
@@ -2256,7 +2256,7 @@
       2,
       "d"
     ],
-    "key": "cadeditor.data.41ac7f8826"
+    "key": "cadeditor.data.still_eat_re_full"
   },
   {
     "path": [
@@ -2264,7 +2264,7 @@
       34,
       "name"
     ],
-    "key": "cadeditor.data.21ebb84296"
+    "key": "cadeditor.data.t_pick_up_projection"
   },
   {
     "path": [
@@ -2272,7 +2272,7 @@
       34,
       "desc"
     ],
-    "key": "cadeditor.data.c4cc4d4e28"
+    "key": "cadeditor.data.component_responsible_whether_arrow"
   },
   {
     "path": [
@@ -2280,7 +2280,7 @@
       34,
       "app"
     ],
-    "key": "cadeditor.data.b8be34de23"
+    "key": "cadeditor.data.projectile_properly_retrieved_mark_read"
   },
   {
     "path": [
@@ -2289,7 +2289,7 @@
       "schema",
       "d"
     ],
-    "key": "cadeditor.data.63fcd9fc68"
+    "key": "cadeditor.data.existence_enabled_write_true_false"
   },
   {
     "path": [
@@ -2297,7 +2297,7 @@
       35,
       "name"
     ],
-    "key": "cadeditor.data.1f51d8dd07"
+    "key": "cadeditor.data.strength_ominous_bottle"
   },
   {
     "path": [
@@ -2305,7 +2305,7 @@
       35,
       "desc"
     ],
-    "key": "cadeditor.data.de0524c7b4"
+    "key": "cadeditor.data.player_obtained_ominous_sign_status"
   },
   {
     "path": [
@@ -2313,7 +2313,7 @@
       35,
       "app"
     ],
-    "key": "cadeditor.data.43be6581c6"
+    "key": "cadeditor.data.n0_i_4_v_drinking"
   },
   {
     "path": [
@@ -2321,7 +2321,7 @@
       36,
       "name"
     ],
-    "key": "cadeditor.ui.cards3.19fb51ff95"
+    "key": "cadeditor.ui.cards3.suspicious_stew_effects"
   },
   {
     "path": [
@@ -2329,7 +2329,7 @@
       36,
       "desc"
     ],
-    "key": "cadeditor.data.4a9381f76e"
+    "key": "cadeditor.data.stored_mystery_stew_status_effect"
   },
   {
     "path": [
@@ -2337,7 +2337,7 @@
       36,
       "app"
     ],
-    "key": "cadeditor.data.1f4b72509c"
+    "key": "cadeditor.data.mystery_stew_consumed_read_only"
   },
   {
     "path": [
@@ -2349,7 +2349,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.0cf1d18edd"
+    "key": "cadeditor.data.effect_id"
   },
   {
     "path": [
@@ -2361,7 +2361,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.44116518ce"
+    "key": "cadeditor.data.continuous_ticks_subject_negative"
   },
   {
     "path": [
@@ -2369,7 +2369,7 @@
       37,
       "name"
     ],
-    "key": "cadeditor.ui.cards2.71751b365e"
+    "key": "cadeditor.ui.cards2.use_cooldown"
   },
   {
     "path": [
@@ -2377,7 +2377,7 @@
       37,
       "desc"
     ],
-    "key": "cadeditor.data.d950c9953b"
+    "key": "cadeditor.data.component_responsible_using_item"
   },
   {
     "path": [
@@ -2385,7 +2385,7 @@
       37,
       "app"
     ],
-    "key": "cadeditor.data.ab12686636"
+    "key": "cadeditor.data.sets_player_cooldown_process_completed"
   },
   {
     "path": [
@@ -2396,7 +2396,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.0064ef7819"
+    "key": "cadeditor.data.cooldown_seconds_greater_0"
   },
   {
     "path": [
@@ -2407,7 +2407,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.5e2107113c"
+    "key": "cadeditor.data.share_cooldown_grouping_omitted_grouping"
   },
   {
     "path": [
@@ -2415,7 +2415,7 @@
       38,
       "name"
     ],
-    "key": "cadeditor.data.eda780099d"
+    "key": "cadeditor.data.effect_use"
   },
   {
     "path": [
@@ -2423,7 +2423,7 @@
       38,
       "desc"
     ],
-    "key": "cadeditor.data.459bdcd4fd"
+    "key": "cadeditor.data.component_responsible_some_actions_using"
   },
   {
     "path": [
@@ -2431,7 +2431,7 @@
       38,
       "app"
     ],
-    "key": "cadeditor.data.693b1ed82e"
+    "key": "cadeditor.data.read_during_continuous_use_without"
   },
   {
     "path": [
@@ -2442,7 +2442,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.86457382d2"
+    "key": "cadeditor.data.running"
   },
   {
     "path": [
@@ -2453,7 +2453,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.27e2c93431"
+    "key": "cadeditor.data.whether_interact_vibrate"
   },
   {
     "path": [
@@ -2464,7 +2464,7 @@
       2,
       "d"
     ],
-    "key": "cadeditor.ui.cards3.74997757d7"
+    "key": "cadeditor.ui.cards3.movement_multiplier_use"
   },
   {
     "path": [
@@ -2472,7 +2472,7 @@
       39,
       "name"
     ],
-    "key": "cadeditor.ui.cards3.fee47d111b"
+    "key": "cadeditor.ui.cards3.use_remainder_2"
   },
   {
     "path": [
@@ -2480,7 +2480,7 @@
       39,
       "desc"
     ],
-    "key": "cadeditor.data.e717530276"
+    "key": "cadeditor.data.component_responsible_item_returned_item"
   },
   {
     "path": [
@@ -2488,7 +2488,7 @@
       39,
       "app"
     ],
-    "key": "cadeditor.data.5dc2a49a1e"
+    "key": "cadeditor.data.remaining_stack_generated_after"
   },
   {
     "path": [
@@ -2496,7 +2496,7 @@
       40,
       "name"
     ],
-    "key": "cadeditor.ui.pages.3bab4b496f"
+    "key": "cadeditor.ui.pages.banner_patterns"
   },
   {
     "path": [
@@ -2504,7 +2504,7 @@
       40,
       "desc"
     ],
-    "key": "cadeditor.data.6ad9a3cb4f"
+    "key": "cadeditor.data.component_responsible_stored_flag_flag"
   },
   {
     "path": [
@@ -2512,7 +2512,7 @@
       40,
       "app"
     ],
-    "key": "cadeditor.data.588e8e52dc"
+    "key": "cadeditor.data.flag_shield_layer_order_drawing"
   },
   {
     "path": [
@@ -2524,7 +2524,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.f739fd6bd3"
+    "key": "cadeditor.data.pattern_registry_id"
   },
   {
     "path": [
@@ -2536,7 +2536,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.6bcdda26f9"
+    "key": "cadeditor.data.layer_colour"
   },
   {
     "path": [
@@ -2544,7 +2544,7 @@
       41,
       "name"
     ],
-    "key": "cadeditor.data.38bb30e80b"
+    "key": "cadeditor.data.shield_base_color"
   },
   {
     "path": [
@@ -2552,7 +2552,7 @@
       41,
       "desc"
     ],
-    "key": "cadeditor.data.06e8eacb8e"
+    "key": "cadeditor.data.component_responsible_underlying_color"
   },
   {
     "path": [
@@ -2560,7 +2560,7 @@
       41,
       "app"
     ],
-    "key": "cadeditor.data.ff3b3e15c6"
+    "key": "cadeditor.data.shield_background_colour_flag_colour"
   },
   {
     "path": [
@@ -2568,7 +2568,7 @@
       42,
       "name"
     ],
-    "key": "cadeditor.data.2412a5bedf"
+    "key": "cadeditor.data.equippable"
   },
   {
     "path": [
@@ -2576,7 +2576,7 @@
       42,
       "desc"
     ],
-    "key": "cadeditor.data.e761ba3d8f"
+    "key": "cadeditor.data.component_responsible_whether_item_worn"
   },
   {
     "path": [
@@ -2584,7 +2584,7 @@
       42,
       "app"
     ],
-    "key": "cadeditor.data.ab5f1050f1"
+    "key": "cadeditor.data.entity_must_sink_match_allowed"
   },
   {
     "path": [
@@ -2595,7 +2595,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.04bd81ea88"
+    "key": "cadeditor.data.equipment_slot"
   },
   {
     "path": [
@@ -2611,7 +2611,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.300e1d8042"
+    "key": "cadeditor.data.sound_resources_id"
   },
   {
     "path": [
@@ -2627,7 +2627,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.0fd9de9e89"
+    "key": "cadeditor.data.fixed_distribution_range_source_code"
   },
   {
     "path": [
@@ -2638,7 +2638,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.03d5fedfc7"
+    "key": "cadeditor.data.equip_sound"
   },
   {
     "path": [
@@ -2649,7 +2649,7 @@
       2,
       "d"
     ],
-    "key": "cadeditor.data.0bd4957620"
+    "key": "cadeditor.data.equipment_resource_pack_assets_id"
   },
   {
     "path": [
@@ -2660,7 +2660,7 @@
       3,
       "d"
     ],
-    "key": "cadeditor.data.074b325ac2"
+    "key": "cadeditor.data.first_person_overlays_textures"
   },
   {
     "path": [
@@ -2671,7 +2671,7 @@
       4,
       "d"
     ],
-    "key": "cadeditor.data.d2c8ce1def"
+    "key": "cadeditor.data.allowed_entity_type_omitted_additional"
   },
   {
     "path": [
@@ -2682,7 +2682,7 @@
       5,
       "d"
     ],
-    "key": "cadeditor.data.9dd3d74914"
+    "key": "cadeditor.data.launcher_equipment"
   },
   {
     "path": [
@@ -2693,7 +2693,7 @@
       6,
       "d"
     ],
-    "key": "cadeditor.data.9556dcf33c"
+    "key": "cadeditor.data.we_switch_existing_equipment"
   },
   {
     "path": [
@@ -2704,7 +2704,7 @@
       7,
       "d"
     ],
-    "key": "cadeditor.data.74afd157cf"
+    "key": "cadeditor.data.durability_injury_damage"
   },
   {
     "path": [
@@ -2715,7 +2715,7 @@
       8,
       "d"
     ],
-    "key": "cadeditor.data.017f2a96b5"
+    "key": "cadeditor.data.interactive_equipment_entity"
   },
   {
     "path": [
@@ -2726,7 +2726,7 @@
       9,
       "d"
     ],
-    "key": "cadeditor.data.9a2a169ef9"
+    "key": "cadeditor.data.sheared"
   },
   {
     "path": [
@@ -2742,7 +2742,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.300e1d8042"
+    "key": "cadeditor.data.sound_resources_id"
   },
   {
     "path": [
@@ -2758,7 +2758,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.0fd9de9e89"
+    "key": "cadeditor.data.fixed_distribution_range_source_code"
   },
   {
     "path": [
@@ -2769,7 +2769,7 @@
       10,
       "d"
     ],
-    "key": "cadeditor.data.1ba7bc2117"
+    "key": "cadeditor.data.shear_sound"
   },
   {
     "path": [
@@ -2777,7 +2777,7 @@
       43,
       "name"
     ],
-    "key": "cadeditor.ui.cards2.254e042e68"
+    "key": "cadeditor.ui.cards2.gliding"
   },
   {
     "path": [
@@ -2785,7 +2785,7 @@
       43,
       "desc"
     ],
-    "key": "cadeditor.data.421a1099d1"
+    "key": "cadeditor.data.component_exists_item_wear_let"
   },
   {
     "path": [
@@ -2793,7 +2793,7 @@
       43,
       "app"
     ],
-    "key": "cadeditor.data.b7c418d44a"
+    "key": "cadeditor.data.equipment_slot_glider_determination"
   },
   {
     "path": [
@@ -2802,7 +2802,7 @@
       "schema",
       "d"
     ],
-    "key": "cadeditor.data.63fcd9fc68"
+    "key": "cadeditor.data.existence_enabled_write_true_false"
   },
   {
     "path": [
@@ -2810,7 +2810,7 @@
       44,
       "name"
     ],
-    "key": "cadeditor.data.6cdc80aa18"
+    "key": "cadeditor.data.provision_flags"
   },
   {
     "path": [
@@ -2818,7 +2818,7 @@
       44,
       "desc"
     ],
-    "key": "cadeditor.data.e5b8200f5c"
+    "key": "cadeditor.data.component_responsible_item_flag_pattern"
   },
   {
     "path": [
@@ -2826,7 +2826,7 @@
       44,
       "app"
     ],
-    "key": "cadeditor.data.5a135e3265"
+    "key": "cadeditor.data.weaving_machine_pattern_item_slots"
   },
   {
     "path": [
@@ -2834,7 +2834,7 @@
       45,
       "name"
     ],
-    "key": "cadeditor.data.cfe64ea636"
+    "key": "cadeditor.data.provision_trim_materials"
   },
   {
     "path": [
@@ -2842,7 +2842,7 @@
       45,
       "desc"
     ],
-    "key": "cadeditor.data.7dad94031d"
+    "key": "cadeditor.data.component_responsible_armor_trim"
   },
   {
     "path": [
@@ -2850,7 +2850,7 @@
       45,
       "app"
     ],
-    "key": "cadeditor.data.56283cff39"
+    "key": "cadeditor.data.exercise_counter_reads_trim_material"
   },
   {
     "path": [
@@ -2858,7 +2858,7 @@
       46,
       "name"
     ],
-    "key": "cadeditor.ui.cards1.6bd90f70c2"
+    "key": "cadeditor.ui.cards1.armor_trim"
   },
   {
     "path": [
@@ -2866,7 +2866,7 @@
       46,
       "desc"
     ],
-    "key": "cadeditor.data.0e6335addc"
+    "key": "cadeditor.data.component_save_item_s_armor"
   },
   {
     "path": [
@@ -2874,7 +2874,7 @@
       46,
       "app"
     ],
-    "key": "cadeditor.data.030d3963b1"
+    "key": "cadeditor.data.display_equipment_rendering_layer_trim"
   },
   {
     "path": [
@@ -2885,7 +2885,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.ce4ce700a5"
+    "key": "cadeditor.data.material_id_combination_definition"
   },
   {
     "path": [
@@ -2896,7 +2896,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.a425b249e1"
+    "key": "cadeditor.data.pattern_id_internal_definition"
   },
   {
     "path": [
@@ -2904,7 +2904,7 @@
       47,
       "name"
     ],
-    "key": "cadeditor.ui.worldview.395dcc6ad3"
+    "key": "cadeditor.ui.worldview.bee"
   },
   {
     "path": [
@@ -2912,7 +2912,7 @@
       47,
       "desc"
     ],
-    "key": "cadeditor.data.e51c085d6d"
+    "key": "cadeditor.data.component_responsible_saving_bee_data"
   },
   {
     "path": [
@@ -2920,7 +2920,7 @@
       47,
       "app"
     ],
-    "key": "cadeditor.data.121a9af602"
+    "key": "cadeditor.data.read_after_nesting_beebox_placement"
   },
   {
     "path": [
@@ -2932,7 +2932,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.b3fda51919"
+    "key": "cadeditor.data.bee_entity_nbt_id"
   },
   {
     "path": [
@@ -2944,7 +2944,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.6cfd844a84"
+    "key": "cadeditor.data.stayed_ticks_filled"
   },
   {
     "path": [
@@ -2956,7 +2956,7 @@
       2,
       "d"
     ],
-    "key": "cadeditor.data.77c09ee3a8"
+    "key": "cadeditor.data.least_stay_ticks_must_fill"
   },
   {
     "path": [
@@ -2964,7 +2964,7 @@
       48,
       "name"
     ],
-    "key": "cadeditor.ui.rules.87b4e5d3f6"
+    "key": "cadeditor.ui.rules.block_entity_data"
   },
   {
     "path": [
@@ -2972,7 +2972,7 @@
       48,
       "desc"
     ],
-    "key": "cadeditor.data.148ff3956f"
+    "key": "cadeditor.data.component_responsible_saving_block"
   },
   {
     "path": [
@@ -2980,7 +2980,7 @@
       48,
       "app"
     ],
-    "key": "cadeditor.data.ae4d081c22"
+    "key": "cadeditor.data.read_placing_block_type_matches"
   },
   {
     "path": [
@@ -2991,7 +2991,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.147e5acf13"
+    "key": "cadeditor.data.block_entity_type_id"
   },
   {
     "path": [
@@ -3002,7 +3002,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.d9db68e5f8"
+    "key": "cadeditor.data.rest_keys_explained_structure_block"
   },
   {
     "path": [
@@ -3010,7 +3010,7 @@
       49,
       "name"
     ],
-    "key": "cadeditor.ui.rules.a528d413f7"
+    "key": "cadeditor.ui.rules.block_state"
   },
   {
     "path": [
@@ -3018,7 +3018,7 @@
       49,
       "desc"
     ],
-    "key": "cadeditor.data.4e69470306"
+    "key": "cadeditor.data.component_responsible_saving_block_2"
   },
   {
     "path": [
@@ -3026,7 +3026,7 @@
       49,
       "app"
     ],
-    "key": "cadeditor.data.ec27c34f30"
+    "key": "cadeditor.data.only_attribute_values_supported_block"
   },
   {
     "path": [
@@ -3034,7 +3034,7 @@
       50,
       "name"
     ],
-    "key": "cadeditor.data.7d56317f9f"
+    "key": "cadeditor.data.bucket_entity_data"
   },
   {
     "path": [
@@ -3042,7 +3042,7 @@
       50,
       "desc"
     ],
-    "key": "cadeditor.data.076d8c5db4"
+    "key": "cadeditor.data.component_save_mob_bucket_data"
   },
   {
     "path": [
@@ -3050,7 +3050,7 @@
       50,
       "app"
     ],
-    "key": "cadeditor.data.78551f921b"
+    "key": "cadeditor.data.custom_data_create_game_behaviour"
   },
   {
     "path": [
@@ -3058,7 +3058,7 @@
       51,
       "name"
     ],
-    "key": "cadeditor.ui.cards3.d77e7441c1"
+    "key": "cadeditor.ui.cards3.bundle_contents"
   },
   {
     "path": [
@@ -3066,7 +3066,7 @@
       51,
       "desc"
     ],
-    "key": "cadeditor.data.a9d166d733"
+    "key": "cadeditor.data.component_saves_item_contained_inside"
   },
   {
     "path": [
@@ -3074,7 +3074,7 @@
       51,
       "app"
     ],
-    "key": "cadeditor.data.0239469503"
+    "key": "cadeditor.data.bundle_behavioral_reading_actual"
   },
   {
     "path": [
@@ -3082,7 +3082,7 @@
       52,
       "name"
     ],
-    "key": "cadeditor.data.7625b86948"
+    "key": "cadeditor.data.destroyable_block"
   },
   {
     "path": [
@@ -3090,7 +3090,7 @@
       52,
       "desc"
     ],
-    "key": "cadeditor.data.e50dd7d5d1"
+    "key": "cadeditor.data.component_control_adventure_mode_player"
   },
   {
     "path": [
@@ -3098,7 +3098,7 @@
       52,
       "app"
     ],
-    "key": "cadeditor.data.70866cb86f"
+    "key": "cadeditor.data.adventure_mode_destruction_placement"
   },
   {
     "path": [
@@ -3106,7 +3106,7 @@
       53,
       "name"
     ],
-    "key": "cadeditor.data.dd9cf5ad89"
+    "key": "cadeditor.data.placed"
   },
   {
     "path": [
@@ -3114,7 +3114,7 @@
       53,
       "desc"
     ],
-    "key": "cadeditor.data.e50dd7d5d1"
+    "key": "cadeditor.data.component_control_adventure_mode_player"
   },
   {
     "path": [
@@ -3122,7 +3122,7 @@
       53,
       "app"
     ],
-    "key": "cadeditor.data.70866cb86f"
+    "key": "cadeditor.data.adventure_mode_destruction_placement"
   },
   {
     "path": [
@@ -3130,7 +3130,7 @@
       54,
       "name"
     ],
-    "key": "cadeditor.data.7de3c020e2"
+    "key": "cadeditor.data.loaded_ammunition"
   },
   {
     "path": [
@@ -3138,7 +3138,7 @@
       54,
       "desc"
     ],
-    "key": "cadeditor.data.8f54b02782"
+    "key": "cadeditor.data.component_responsible_stored_s_loaded"
   },
   {
     "path": [
@@ -3146,7 +3146,7 @@
       54,
       "app"
     ],
-    "key": "cadeditor.data.795b407d37"
+    "key": "cadeditor.data.launch_logic_readings_crossbows"
   },
   {
     "path": [
@@ -3154,7 +3154,7 @@
       55,
       "name"
     ],
-    "key": "cadeditor.ui.cards3.d20ef99801"
+    "key": "cadeditor.ui.cards3.container_contents"
   },
   {
     "path": [
@@ -3162,7 +3162,7 @@
       55,
       "desc"
     ],
-    "key": "cadeditor.data.de2158a062"
+    "key": "cadeditor.data.component_stored_container_block"
   },
   {
     "path": [
@@ -3170,7 +3170,7 @@
       55,
       "app"
     ],
-    "key": "cadeditor.data.a5e340e798"
+    "key": "cadeditor.data.container_moved_slot_number_placed"
   },
   {
     "path": [
@@ -3182,7 +3182,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.e117e7ab68"
+    "key": "cadeditor.data.slot_number_starting_0"
   },
   {
     "path": [
@@ -3194,7 +3194,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.658f056421"
+    "key": "cadeditor.data.slot_item_stack"
   },
   {
     "path": [
@@ -3202,7 +3202,7 @@
       56,
       "name"
     ],
-    "key": "cadeditor.data.47eb05b3d4"
+    "key": "cadeditor.data.container_loot"
   },
   {
     "path": [
@@ -3210,7 +3210,7 @@
       56,
       "desc"
     ],
-    "key": "cadeditor.data.6d4a8dcc24"
+    "key": "cadeditor.data.component_save_loot_container_block"
   },
   {
     "path": [
@@ -3218,7 +3218,7 @@
       56,
       "app"
     ],
-    "key": "cadeditor.data.b6eb3412ba"
+    "key": "cadeditor.data.container_generated_first_visit_support"
   },
   {
     "path": [
@@ -3229,7 +3229,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.e46408ef2c"
+    "key": "cadeditor.data.loot_table_id"
   },
   {
     "path": [
@@ -3240,7 +3240,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.0efdd14c90"
+    "key": "cadeditor.data.n64_bit_seed_0_uses"
   },
   {
     "path": [
@@ -3248,7 +3248,7 @@
       57,
       "name"
     ],
-    "key": "cadeditor.data.f1acfa6aa0"
+    "key": "cadeditor.data.custom_data"
   },
   {
     "path": [
@@ -3256,7 +3256,7 @@
       57,
       "desc"
     ],
-    "key": "cadeditor.data.80d09d52af"
+    "key": "cadeditor.data.component_responsible_saving_custom_data_2"
   },
   {
     "path": [
@@ -3264,7 +3264,7 @@
       57,
       "app"
     ],
-    "key": "cadeditor.data.78551f921b"
+    "key": "cadeditor.data.custom_data_create_game_behaviour"
   },
   {
     "path": [
@@ -3272,7 +3272,7 @@
       58,
       "name"
     ],
-    "key": "cadeditor.data.df88ebe65f"
+    "key": "cadeditor.data.debug_stick_status"
   },
   {
     "path": [
@@ -3280,7 +3280,7 @@
       58,
       "desc"
     ],
-    "key": "cadeditor.data.417dfeebf5"
+    "key": "cadeditor.data.component_responsible_saving_debugging"
   },
   {
     "path": [
@@ -3288,7 +3288,7 @@
       58,
       "app"
     ],
-    "key": "cadeditor.data.84e3071857"
+    "key": "cadeditor.data.type_block_id_block_selected"
   },
   {
     "path": [
@@ -3296,7 +3296,7 @@
       59,
       "name"
     ],
-    "key": "cadeditor.ui.spawn.20afdf83d8"
+    "key": "cadeditor.ui.spawn.entity_data"
   },
   {
     "path": [
@@ -3304,7 +3304,7 @@
       59,
       "desc"
     ],
-    "key": "cadeditor.data.d3e1a2ae3c"
+    "key": "cadeditor.data.component_responsible_stored_item"
   },
   {
     "path": [
@@ -3312,7 +3312,7 @@
       59,
       "app"
     ],
-    "key": "cadeditor.data.2fa668bc43"
+    "key": "cadeditor.data.scrubbing_eggs_forth_generate_path"
   },
   {
     "path": [
@@ -3323,7 +3323,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.8ffdd7e1d1"
+    "key": "cadeditor.data.entity_type_id_must_filled"
   },
   {
     "path": [
@@ -3334,7 +3334,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.4d776c7df3"
+    "key": "cadeditor.data.remaining_data_explained_entity_saved"
   },
   {
     "path": [
@@ -3342,7 +3342,7 @@
       60,
       "name"
     ],
-    "key": "cadeditor.data.4d62408c95"
+    "key": "cadeditor.data.container_lock"
   },
   {
     "path": [
@@ -3350,7 +3350,7 @@
       60,
       "desc"
     ],
-    "key": "cadeditor.data.5d1ac7a1a6"
+    "key": "cadeditor.data.component_responsible_saving_locked"
   },
   {
     "path": [
@@ -3358,7 +3358,7 @@
       60,
       "app"
     ],
-    "key": "cadeditor.data.e43a5812fb"
+    "key": "cadeditor.data.container_readings_support_locks"
   },
   {
     "path": [
@@ -3366,7 +3366,7 @@
       61,
       "name"
     ],
-    "key": "cadeditor.data.89c52c9a4d"
+    "key": "cadeditor.data.pot_decorations"
   },
   {
     "path": [
@@ -3374,7 +3374,7 @@
       61,
       "desc"
     ],
-    "key": "cadeditor.data.f6725a902c"
+    "key": "cadeditor.data.component_s_pottery_pottery_data"
   },
   {
     "path": [
@@ -3382,7 +3382,7 @@
       61,
       "app"
     ],
-    "key": "cadeditor.data.2ed4e831d3"
+    "key": "cadeditor.data.n26_3_saves_item_stack"
   },
   {
     "path": [
@@ -3390,7 +3390,7 @@
       62,
       "name"
     ],
-    "key": "cadeditor.data.eec2033679"
+    "key": "cadeditor.data.head_profile"
   },
   {
     "path": [
@@ -3398,7 +3398,7 @@
       62,
       "desc"
     ],
-    "key": "cadeditor.data.acb38b2248"
+    "key": "cadeditor.data.component_responsible_game_file_data"
   },
   {
     "path": [
@@ -3406,7 +3406,7 @@
       62,
       "app"
     ],
-    "key": "cadeditor.data.b592ded82c"
+    "key": "cadeditor.data.player_head_player_model_read"
   },
   {
     "path": [
@@ -3419,7 +3419,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.ui.screens.4498621999"
+    "key": "cadeditor.ui.screens.player_name"
   },
   {
     "path": [
@@ -3432,7 +3432,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.f4f05c1032"
+    "key": "cadeditor.data.only_four_integer_group_uuid"
   },
   {
     "path": [
@@ -3451,7 +3451,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.1550aa8753"
+    "key": "cadeditor.data.attribute_name_common_textures"
   },
   {
     "path": [
@@ -3470,7 +3470,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.76e469fd25"
+    "key": "cadeditor.data.attribute_value_textures_using_base64"
   },
   {
     "path": [
@@ -3489,7 +3489,7 @@
       2,
       "d"
     ],
-    "key": "cadeditor.data.3da7c413d5"
+    "key": "cadeditor.data.signature"
   },
   {
     "path": [
@@ -3502,7 +3502,7 @@
       2,
       "d"
     ],
-    "key": "cadeditor.data.810253205a"
+    "key": "cadeditor.data.attribute_list_up_16_attribute"
   },
   {
     "path": [
@@ -3515,7 +3515,7 @@
       3,
       "d"
     ],
-    "key": "cadeditor.data.60a9360d03"
+    "key": "cadeditor.data.body_texture_resource_id_load"
   },
   {
     "path": [
@@ -3528,7 +3528,7 @@
       4,
       "d"
     ],
-    "key": "cadeditor.data.49c90c82f3"
+    "key": "cadeditor.data.cape_texture_resource"
   },
   {
     "path": [
@@ -3541,7 +3541,7 @@
       5,
       "d"
     ],
-    "key": "cadeditor.data.ad05e188c0"
+    "key": "cadeditor.data.elytra_texture_resources"
   },
   {
     "path": [
@@ -3554,7 +3554,7 @@
       6,
       "d"
     ],
-    "key": "cadeditor.data.f5d00e4846"
+    "key": "cadeditor.data.skin_model"
   },
   {
     "path": [
@@ -3562,7 +3562,7 @@
       63,
       "name"
     ],
-    "key": "cadeditor.data.0f3fcada25"
+    "key": "cadeditor.data.lodestone_tracker"
   },
   {
     "path": [
@@ -3570,7 +3570,7 @@
       63,
       "desc"
     ],
-    "key": "cadeditor.data.3ba9348055"
+    "key": "cadeditor.data.component_data_saves_lodestone_pointer"
   },
   {
     "path": [
@@ -3578,7 +3578,7 @@
       63,
       "app"
     ],
-    "key": "cadeditor.data.11f5f2e55b"
+    "key": "cadeditor.data.compass_behaviour_read_tracked_false"
   },
   {
     "path": [
@@ -3592,7 +3592,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.df98f637e9"
+    "key": "cadeditor.data.target_dimension_id"
   },
   {
     "path": [
@@ -3606,7 +3606,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.ae496d4158"
+    "key": "cadeditor.data.block_coordinate_x_y_z"
   },
   {
     "path": [
@@ -3617,7 +3617,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.61fbeb11f3"
+    "key": "cadeditor.data.tracking_target"
   },
   {
     "path": [
@@ -3628,7 +3628,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.240516f455"
+    "key": "cadeditor.data.check_target_lodestone_still_exists"
   },
   {
     "path": [
@@ -3636,7 +3636,7 @@
       64,
       "name"
     ],
-    "key": "cadeditor.data.1cc9a1e273"
+    "key": "cadeditor.data.map_color"
   },
   {
     "path": [
@@ -3644,7 +3644,7 @@
       64,
       "desc"
     ],
-    "key": "cadeditor.data.89677dcad3"
+    "key": "cadeditor.data.map_item_colour_26_3"
   },
   {
     "path": [
@@ -3652,7 +3652,7 @@
       64,
       "app"
     ],
-    "key": "cadeditor.data.b42d02d3da"
+    "key": "cadeditor.data.n26_1_26_2_map"
   },
   {
     "path": [
@@ -3660,7 +3660,7 @@
       65,
       "name"
     ],
-    "key": "cadeditor.data.d1bf3aeeef"
+    "key": "cadeditor.data.map_decorations"
   },
   {
     "path": [
@@ -3668,7 +3668,7 @@
       65,
       "desc"
     ],
-    "key": "cadeditor.data.ef512941cf"
+    "key": "cadeditor.data.component_saves_map_icons_part"
   },
   {
     "path": [
@@ -3676,7 +3676,7 @@
       65,
       "app"
     ],
-    "key": "cadeditor.data.fb656b4ca2"
+    "key": "cadeditor.data.map_behavior_read_map_key"
   },
   {
     "path": [
@@ -3688,7 +3688,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.827c5ecaf0"
+    "key": "cadeditor.data.decoration_registry_id"
   },
   {
     "path": [
@@ -3700,7 +3700,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.9de74d5d94"
+    "key": "cadeditor.data.world_x_coordinate_double_precision"
   },
   {
     "path": [
@@ -3712,7 +3712,7 @@
       2,
       "d"
     ],
-    "key": "cadeditor.data.83331a23e7"
+    "key": "cadeditor.data.world_z_coordinate_double_precision"
   },
   {
     "path": [
@@ -3724,7 +3724,7 @@
       3,
       "d"
     ],
-    "key": "cadeditor.ui.world.0798f8c3df"
+    "key": "cadeditor.ui.world.rotation"
   },
   {
     "path": [
@@ -3732,7 +3732,7 @@
       66,
       "name"
     ],
-    "key": "cadeditor.data.65b9b1229a"
+    "key": "cadeditor.data.map_id"
   },
   {
     "path": [
@@ -3740,7 +3740,7 @@
       66,
       "desc"
     ],
-    "key": "cadeditor.data.7a65deca08"
+    "key": "cadeditor.data.component_responsible_stored_map"
   },
   {
     "path": [
@@ -3748,7 +3748,7 @@
       66,
       "app"
     ],
-    "key": "cadeditor.data.e30f1c9bdf"
+    "key": "cadeditor.data.bind_world_map_stored_id"
   },
   {
     "path": [
@@ -3756,7 +3756,7 @@
       67,
       "name"
     ],
-    "key": "cadeditor.data.aa224f5c04"
+    "key": "cadeditor.data.unlock_recipes"
   },
   {
     "path": [
@@ -3764,7 +3764,7 @@
       67,
       "desc"
     ],
-    "key": "cadeditor.data.1b8f609829"
+    "key": "cadeditor.data.component_data_book_knowledge"
   },
   {
     "path": [
@@ -3772,7 +3772,7 @@
       67,
       "app"
     ],
-    "key": "cadeditor.data.b907dce6a3"
+    "key": "cadeditor.data.books_knowledge_used_unlock_recipe"
   },
   {
     "path": [
@@ -3780,7 +3780,7 @@
       68,
       "name"
     ],
-    "key": "cadeditor.ui.cards3.82ebdbb220"
+    "key": "cadeditor.ui.cards3.writable_book_contents"
   },
   {
     "path": [
@@ -3788,7 +3788,7 @@
       68,
       "desc"
     ],
-    "key": "cadeditor.data.c760b3d184"
+    "key": "cadeditor.data.stored_book_pen_data_player"
   },
   {
     "path": [
@@ -3796,7 +3796,7 @@
       68,
       "app"
     ],
-    "key": "cadeditor.data.95b37e7710"
+    "key": "cadeditor.data.book_pen_editor_ui_read"
   },
   {
     "path": [
@@ -3813,7 +3813,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.354b28c853"
+    "key": "cadeditor.data.original_text"
   },
   {
     "path": [
@@ -3830,7 +3830,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.a94764cb92"
+    "key": "cadeditor.data.filter_post_page"
   },
   {
     "path": [
@@ -3841,7 +3841,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.b4a9eccfef"
+    "key": "cadeditor.data.up_100_page_maximum_1024"
   },
   {
     "path": [
@@ -3849,7 +3849,7 @@
       69,
       "name"
     ],
-    "key": "cadeditor.ui.cards3.496d55c49a"
+    "key": "cadeditor.ui.cards3.written_book"
   },
   {
     "path": [
@@ -3857,7 +3857,7 @@
       69,
       "desc"
     ],
-    "key": "cadeditor.data.30ffbd4342"
+    "key": "cadeditor.data.data_stored_book_player_uses"
   },
   {
     "path": [
@@ -3865,7 +3865,7 @@
       69,
       "app"
     ],
-    "key": "cadeditor.data.786d55186a"
+    "key": "cadeditor.data.read_book_display_copy_without"
   },
   {
     "path": [
@@ -3881,7 +3881,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.1cc66c0579"
+    "key": "cadeditor.data.original_title"
   },
   {
     "path": [
@@ -3897,7 +3897,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.a54b13957c"
+    "key": "cadeditor.data.filtered_title"
   },
   {
     "path": [
@@ -3908,7 +3908,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.5ec50c6e6f"
+    "key": "cadeditor.data.title_up_32_characters"
   },
   {
     "path": [
@@ -3919,7 +3919,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.ui.cards3.7d4146ca08"
+    "key": "cadeditor.ui.cards3.author"
   },
   {
     "path": [
@@ -3930,7 +3930,7 @@
       2,
       "d"
     ],
-    "key": "cadeditor.data.f4c94ff10e"
+    "key": "cadeditor.data.n0_original_1_copy_2"
   },
   {
     "path": [
@@ -3947,7 +3947,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.2bedf3a376"
+    "key": "cadeditor.data.raw_text"
   },
   {
     "path": [
@@ -3964,7 +3964,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.a6da384cad"
+    "key": "cadeditor.data.filtering_text_omitting_raw"
   },
   {
     "path": [
@@ -3975,7 +3975,7 @@
       3,
       "d"
     ],
-    "key": "cadeditor.data.28cdd3b768"
+    "key": "cadeditor.data.rich_text_page_encoding_available"
   },
   {
     "path": [
@@ -3986,7 +3986,7 @@
       4,
       "d"
     ],
-    "key": "cadeditor.data.1ce2a04a14"
+    "key": "cadeditor.data.dynamic_text_solved"
   },
   {
     "path": [
@@ -3994,7 +3994,7 @@
       70,
       "name"
     ],
-    "key": "cadeditor.data.45f21de3b2"
+    "key": "cadeditor.data.dye"
   },
   {
     "path": [
@@ -4002,7 +4002,7 @@
       70,
       "desc"
     ],
-    "key": "cadeditor.data.6e579afd36"
+    "key": "cadeditor.data.component_responsible_dye_colour_stored"
   },
   {
     "path": [
@@ -4010,7 +4010,7 @@
       70,
       "app"
     ],
-    "key": "cadeditor.data.522dfc04e4"
+    "key": "cadeditor.data.colours_provided_dye_behaviour_support"
   },
   {
     "path": [
@@ -4018,7 +4018,7 @@
       71,
       "name"
     ],
-    "key": "cadeditor.data.117a46aa30"
+    "key": "cadeditor.data.firework_explosion"
   },
   {
     "path": [
@@ -4026,7 +4026,7 @@
       71,
       "desc"
     ],
-    "key": "cadeditor.data.8ec092bab7"
+    "key": "cadeditor.data.component_responsible_saving_data"
   },
   {
     "path": [
@@ -4034,7 +4034,7 @@
       71,
       "app"
     ],
-    "key": "cadeditor.data.e5d051e018"
+    "key": "cadeditor.data.pyrotechnic_synthesis_hint_read_rocket"
   },
   {
     "path": [
@@ -4045,7 +4045,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.9323d6c515"
+    "key": "cadeditor.data.explosion_shape"
   },
   {
     "path": [
@@ -4056,7 +4056,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.95d68fc6e7"
+    "key": "cadeditor.data.n32_bit_color_integer_list"
   },
   {
     "path": [
@@ -4067,7 +4067,7 @@
       2,
       "d"
     ],
-    "key": "cadeditor.data.5de3f3770d"
+    "key": "cadeditor.data.gradient_color_integer_list"
   },
   {
     "path": [
@@ -4078,7 +4078,7 @@
       3,
       "d"
     ],
-    "key": "cadeditor.ui.cards3.bc25b56f74"
+    "key": "cadeditor.ui.cards3.trail"
   },
   {
     "path": [
@@ -4089,7 +4089,7 @@
       4,
       "d"
     ],
-    "key": "cadeditor.ui.cards3.d92003913f"
+    "key": "cadeditor.ui.cards3.twinkle"
   },
   {
     "path": [
@@ -4097,7 +4097,7 @@
       72,
       "name"
     ],
-    "key": "cadeditor.ui.cards3.bbe5bc4a74"
+    "key": "cadeditor.ui.cards3.fireworks"
   },
   {
     "path": [
@@ -4105,7 +4105,7 @@
       72,
       "desc"
     ],
-    "key": "cadeditor.data.69bd9f8ac8"
+    "key": "cadeditor.data.component_save_firework_rockets_data"
   },
   {
     "path": [
@@ -4113,7 +4113,7 @@
       72,
       "app"
     ],
-    "key": "cadeditor.data.5b7855f6a6"
+    "key": "cadeditor.data.firework_rockets_read_entity_generated"
   },
   {
     "path": [
@@ -4124,7 +4124,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.2c58b50a7c"
+    "key": "cadeditor.data.long_flight_factor"
   },
   {
     "path": [
@@ -4139,7 +4139,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.9323d6c515"
+    "key": "cadeditor.data.explosion_shape"
   },
   {
     "path": [
@@ -4154,7 +4154,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.95d68fc6e7"
+    "key": "cadeditor.data.n32_bit_color_integer_list"
   },
   {
     "path": [
@@ -4169,7 +4169,7 @@
       2,
       "d"
     ],
-    "key": "cadeditor.data.5de3f3770d"
+    "key": "cadeditor.data.gradient_color_integer_list"
   },
   {
     "path": [
@@ -4184,7 +4184,7 @@
       3,
       "d"
     ],
-    "key": "cadeditor.ui.cards3.bc25b56f74"
+    "key": "cadeditor.ui.cards3.trail"
   },
   {
     "path": [
@@ -4199,7 +4199,7 @@
       4,
       "d"
     ],
-    "key": "cadeditor.ui.cards3.d92003913f"
+    "key": "cadeditor.ui.cards3.twinkle"
   },
   {
     "path": [
@@ -4210,7 +4210,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.b4346c3175"
+    "key": "cadeditor.data.maximum_256_explosive_effect"
   },
   {
     "path": [
@@ -4218,7 +4218,7 @@
       73,
       "name"
     ],
-    "key": "cadeditor.ui.labels.a59949fd38"
+    "key": "cadeditor.ui.labels.instrument"
   },
   {
     "path": [
@@ -4226,7 +4226,7 @@
       73,
       "desc"
     ],
-    "key": "cadeditor.data.b5f3baf9d4"
+    "key": "cadeditor.data.component_responsible_saving_data_goat"
   },
   {
     "path": [
@@ -4234,7 +4234,7 @@
       73,
       "app"
     ],
-    "key": "cadeditor.data.e9d3902341"
+    "key": "cadeditor.data.instrument_goat_horn_read_using"
   },
   {
     "path": [
@@ -4242,7 +4242,7 @@
       74,
       "name"
     ],
-    "key": "cadeditor.ui.picker.da7efa96d4"
+    "key": "cadeditor.ui.picker.record"
   },
   {
     "path": [
@@ -4250,7 +4250,7 @@
       74,
       "desc"
     ],
-    "key": "cadeditor.data.a0c0f9018a"
+    "key": "cadeditor.data.component_data_saves_music_music"
   },
   {
     "path": [
@@ -4258,7 +4258,7 @@
       74,
       "app"
     ],
-    "key": "cadeditor.data.fd09b15999"
+    "key": "cadeditor.data.music_disc_machine_song_registry"
   },
   {
     "path": [
@@ -4266,7 +4266,7 @@
       75,
       "name"
     ],
-    "key": "cadeditor.data.dc1f6928f4"
+    "key": "cadeditor.data.notebox_sound"
   },
   {
     "path": [
@@ -4274,7 +4274,7 @@
       75,
       "desc"
     ],
-    "key": "cadeditor.data.67f0490750"
+    "key": "cadeditor.data.component_responsible_saving_player"
   },
   {
     "path": [
@@ -4282,7 +4282,7 @@
       75,
       "app"
     ],
-    "key": "cadeditor.data.7135f4bdcd"
+    "key": "cadeditor.data.mob_head_used_playing_above"
   },
   {
     "path": [
@@ -4290,7 +4290,7 @@
       76,
       "name"
     ],
-    "key": "cadeditor.data.7ef9faf515"
+    "key": "cadeditor.data.potion_contents"
   },
   {
     "path": [
@@ -4298,7 +4298,7 @@
       76,
       "desc"
     ],
-    "key": "cadeditor.data.32eafbdced"
+    "key": "cadeditor.data.stored_potion_effect_status_effect"
   },
   {
     "path": [
@@ -4306,7 +4306,7 @@
       76,
       "app"
     ],
-    "key": "cadeditor.data.d8b523e1f3"
+    "key": "cadeditor.data.paths_potion_bottles_spray_stall"
   },
   {
     "path": [
@@ -4319,7 +4319,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.ui.cards3.cc05a1373c"
+    "key": "cadeditor.ui.cards3.base_potion"
   },
   {
     "path": [
@@ -4332,7 +4332,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.8dcb9586fb"
+    "key": "cadeditor.data.display_colour_overwrite"
   },
   {
     "path": [
@@ -4349,7 +4349,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.900738f5bc"
+    "key": "cadeditor.data.status_effect_registry_id"
   },
   {
     "path": [
@@ -4366,7 +4366,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.fcd0507806"
+    "key": "cadeditor.data.level_minus_one_0_i"
   },
   {
     "path": [
@@ -4383,7 +4383,7 @@
       2,
       "d"
     ],
-    "key": "cadeditor.data.aff58e3ec4"
+    "key": "cadeditor.data.game_ticks_1_infinite"
   },
   {
     "path": [
@@ -4400,7 +4400,7 @@
       3,
       "d"
     ],
-    "key": "cadeditor.data.27d23e993a"
+    "key": "cadeditor.data.ambient_effect"
   },
   {
     "path": [
@@ -4417,7 +4417,7 @@
       4,
       "d"
     ],
-    "key": "cadeditor.ui.cards3.0f09d514f4"
+    "key": "cadeditor.ui.cards3.show_particles"
   },
   {
     "path": [
@@ -4434,7 +4434,7 @@
       5,
       "d"
     ],
-    "key": "cadeditor.data.3209fbff04"
+    "key": "cadeditor.data.take_show_particles_values_omitting"
   },
   {
     "path": [
@@ -4454,7 +4454,7 @@
       0,
       "d"
     ],
-    "key": "cadeditor.data.fcd0507806"
+    "key": "cadeditor.data.level_minus_one_0_i"
   },
   {
     "path": [
@@ -4474,7 +4474,7 @@
       1,
       "d"
     ],
-    "key": "cadeditor.data.aff58e3ec4"
+    "key": "cadeditor.data.game_ticks_1_infinite"
   },
   {
     "path": [
@@ -4494,7 +4494,7 @@
       2,
       "d"
     ],
-    "key": "cadeditor.data.27d23e993a"
+    "key": "cadeditor.data.ambient_effect"
   },
   {
     "path": [
@@ -4514,7 +4514,7 @@
       3,
       "d"
     ],
-    "key": "cadeditor.ui.cards3.0f09d514f4"
+    "key": "cadeditor.ui.cards3.show_particles"
   },
   {
     "path": [
@@ -4534,7 +4534,7 @@
       4,
       "d"
     ],
-    "key": "cadeditor.data.3209fbff04"
+    "key": "cadeditor.data.take_show_particles_values_omitting"
   },
   {
     "path": [
@@ -4554,7 +4554,7 @@
       5,
       "d"
     ],
-    "key": "cadeditor.data.d3d2c7983c"
+    "key": "cadeditor.data.same_effect_hide_backup_data"
   },
   {
     "path": [
@@ -4571,7 +4571,7 @@
       6,
       "d"
     ],
-    "key": "cadeditor.data.d3d2c7983c"
+    "key": "cadeditor.data.same_effect_hide_backup_data"
   },
   {
     "path": [
@@ -4584,7 +4584,7 @@
       2,
       "d"
     ],
-    "key": "cadeditor.data.7ace8b3704"
+    "key": "cadeditor.data.additional_effects"
   },
   {
     "path": [
@@ -4597,7 +4597,7 @@
       3,
       "d"
     ],
-    "key": "cadeditor.data.8efca708be"
+    "key": "cadeditor.data.name_translation_key_snippet"
   },
   {
     "path": [
@@ -4605,7 +4605,7 @@
       77,
       "name"
     ],
-    "key": "cadeditor.data.a619800e21"
+    "key": "cadeditor.data.potion_time_length"
   },
   {
     "path": [
@@ -4613,7 +4613,7 @@
       77,
       "desc"
     ],
-    "key": "cadeditor.data.6a6c1cb2cb"
+    "key": "cadeditor.data.component_responsible_scaling_up_status"
   },
   {
     "path": [
@@ -4621,7 +4621,7 @@
       77,
       "app"
     ],
-    "key": "cadeditor.data.77fc426ebe"
+    "key": "cadeditor.data.scales_duration_potion_effect_actually"
   },
   {
     "path": [
@@ -4629,7 +4629,7 @@
       78,
       "name"
     ],
-    "key": "cadeditor.data.758b928849"
+    "key": "cadeditor.data.variation_axolotl"
   },
   {
     "path": [
@@ -4637,7 +4637,7 @@
       78,
       "app"
     ],
-    "key": "cadeditor.data.7482a11890"
+    "key": "cadeditor.data.reads_entity_generation_hidden_component"
   },
   {
     "path": [
@@ -4645,7 +4645,7 @@
       79,
       "name"
     ],
-    "key": "cadeditor.data.780975b610"
+    "key": "cadeditor.data.variation_cat_collar"
   },
   {
     "path": [
@@ -4653,7 +4653,7 @@
       79,
       "app"
     ],
-    "key": "cadeditor.data.851c72f2c8"
+    "key": "cadeditor.data.cat_collar_color_only_tame"
   },
   {
     "path": [
@@ -4661,7 +4661,7 @@
       80,
       "name"
     ],
-    "key": "cadeditor.data.b934ee75c8"
+    "key": "cadeditor.data.variation_cat_sound_variant"
   },
   {
     "path": [
@@ -4669,7 +4669,7 @@
       80,
       "app"
     ],
-    "key": "cadeditor.data.af6300de8b"
+    "key": "cadeditor.data.reads_entity_generation_place_hidden"
   },
   {
     "path": [
@@ -4677,7 +4677,7 @@
       81,
       "name"
     ],
-    "key": "cadeditor.data.b9bae02ca4"
+    "key": "cadeditor.data.variation_cat"
   },
   {
     "path": [
@@ -4685,7 +4685,7 @@
       81,
       "app"
     ],
-    "key": "cadeditor.data.af6300de8b"
+    "key": "cadeditor.data.reads_entity_generation_place_hidden"
   },
   {
     "path": [
@@ -4693,7 +4693,7 @@
       82,
       "name"
     ],
-    "key": "cadeditor.data.626d8cfea0"
+    "key": "cadeditor.data.variation_chicken_sound_variant"
   },
   {
     "path": [
@@ -4701,7 +4701,7 @@
       82,
       "app"
     ],
-    "key": "cadeditor.data.af6300de8b"
+    "key": "cadeditor.data.reads_entity_generation_place_hidden"
   },
   {
     "path": [
@@ -4709,7 +4709,7 @@
       83,
       "name"
     ],
-    "key": "cadeditor.data.b7242cb7de"
+    "key": "cadeditor.data.variation_chicken"
   },
   {
     "path": [
@@ -4717,7 +4717,7 @@
       83,
       "app"
     ],
-    "key": "cadeditor.data.af6300de8b"
+    "key": "cadeditor.data.reads_entity_generation_place_hidden"
   },
   {
     "path": [
@@ -4725,7 +4725,7 @@
       84,
       "name"
     ],
-    "key": "cadeditor.data.be6774361a"
+    "key": "cadeditor.data.variation_cow_sound_variant"
   },
   {
     "path": [
@@ -4733,7 +4733,7 @@
       84,
       "app"
     ],
-    "key": "cadeditor.data.af6300de8b"
+    "key": "cadeditor.data.reads_entity_generation_place_hidden"
   },
   {
     "path": [
@@ -4741,7 +4741,7 @@
       85,
       "name"
     ],
-    "key": "cadeditor.data.5edfbd10d3"
+    "key": "cadeditor.data.variation_cow"
   },
   {
     "path": [
@@ -4749,7 +4749,7 @@
       85,
       "app"
     ],
-    "key": "cadeditor.data.af6300de8b"
+    "key": "cadeditor.data.reads_entity_generation_place_hidden"
   },
   {
     "path": [
@@ -4757,7 +4757,7 @@
       86,
       "name"
     ],
-    "key": "cadeditor.data.fb045c61c5"
+    "key": "cadeditor.data.variation_fox"
   },
   {
     "path": [
@@ -4765,7 +4765,7 @@
       86,
       "app"
     ],
-    "key": "cadeditor.data.7482a11890"
+    "key": "cadeditor.data.reads_entity_generation_hidden_component"
   },
   {
     "path": [
@@ -4773,7 +4773,7 @@
       87,
       "name"
     ],
-    "key": "cadeditor.data.87342eb499"
+    "key": "cadeditor.data.variation_frog"
   },
   {
     "path": [
@@ -4781,7 +4781,7 @@
       87,
       "app"
     ],
-    "key": "cadeditor.data.af6300de8b"
+    "key": "cadeditor.data.reads_entity_generation_place_hidden"
   },
   {
     "path": [
@@ -4789,7 +4789,7 @@
       88,
       "name"
     ],
-    "key": "cadeditor.data.bad1d37888"
+    "key": "cadeditor.data.variation_horse"
   },
   {
     "path": [
@@ -4797,7 +4797,7 @@
       88,
       "app"
     ],
-    "key": "cadeditor.data.7482a11890"
+    "key": "cadeditor.data.reads_entity_generation_hidden_component"
   },
   {
     "path": [
@@ -4805,7 +4805,7 @@
       89,
       "name"
     ],
-    "key": "cadeditor.data.25880e5e9a"
+    "key": "cadeditor.data.variation_llama"
   },
   {
     "path": [
@@ -4813,7 +4813,7 @@
       89,
       "app"
     ],
-    "key": "cadeditor.data.7482a11890"
+    "key": "cadeditor.data.reads_entity_generation_hidden_component"
   },
   {
     "path": [
@@ -4821,7 +4821,7 @@
       90,
       "name"
     ],
-    "key": "cadeditor.data.2159dd0921"
+    "key": "cadeditor.data.variation_mooshroom"
   },
   {
     "path": [
@@ -4829,7 +4829,7 @@
       90,
       "app"
     ],
-    "key": "cadeditor.data.7482a11890"
+    "key": "cadeditor.data.reads_entity_generation_hidden_component"
   },
   {
     "path": [
@@ -4837,7 +4837,7 @@
       91,
       "name"
     ],
-    "key": "cadeditor.data.7bb1004f01"
+    "key": "cadeditor.data.variation_painting"
   },
   {
     "path": [
@@ -4845,7 +4845,7 @@
       91,
       "app"
     ],
-    "key": "cadeditor.data.af6300de8b"
+    "key": "cadeditor.data.reads_entity_generation_place_hidden"
   },
   {
     "path": [
@@ -4853,7 +4853,7 @@
       92,
       "name"
     ],
-    "key": "cadeditor.data.6f0ebefd9a"
+    "key": "cadeditor.data.variation_parrot"
   },
   {
     "path": [
@@ -4861,7 +4861,7 @@
       92,
       "app"
     ],
-    "key": "cadeditor.data.7482a11890"
+    "key": "cadeditor.data.reads_entity_generation_hidden_component"
   },
   {
     "path": [
@@ -4869,7 +4869,7 @@
       93,
       "name"
     ],
-    "key": "cadeditor.data.de2bfbf094"
+    "key": "cadeditor.data.variation_pig_sound_variant"
   },
   {
     "path": [
@@ -4877,7 +4877,7 @@
       93,
       "app"
     ],
-    "key": "cadeditor.data.af6300de8b"
+    "key": "cadeditor.data.reads_entity_generation_place_hidden"
   },
   {
     "path": [
@@ -4885,7 +4885,7 @@
       94,
       "name"
     ],
-    "key": "cadeditor.data.a50b4b362d"
+    "key": "cadeditor.data.variation_pig"
   },
   {
     "path": [
@@ -4893,7 +4893,7 @@
       94,
       "app"
     ],
-    "key": "cadeditor.data.af6300de8b"
+    "key": "cadeditor.data.reads_entity_generation_place_hidden"
   },
   {
     "path": [
@@ -4901,7 +4901,7 @@
       95,
       "name"
     ],
-    "key": "cadeditor.data.71c9a1770e"
+    "key": "cadeditor.data.variation_rabbit"
   },
   {
     "path": [
@@ -4909,7 +4909,7 @@
       95,
       "app"
     ],
-    "key": "cadeditor.data.7482a11890"
+    "key": "cadeditor.data.reads_entity_generation_hidden_component"
   },
   {
     "path": [
@@ -4917,7 +4917,7 @@
       96,
       "name"
     ],
-    "key": "cadeditor.data.146f81cf91"
+    "key": "cadeditor.data.variation_salmon_size"
   },
   {
     "path": [
@@ -4925,7 +4925,7 @@
       96,
       "app"
     ],
-    "key": "cadeditor.data.7482a11890"
+    "key": "cadeditor.data.reads_entity_generation_hidden_component"
   },
   {
     "path": [
@@ -4933,7 +4933,7 @@
       97,
       "name"
     ],
-    "key": "cadeditor.data.c86ebc3fd8"
+    "key": "cadeditor.data.variation_sheep_color"
   },
   {
     "path": [
@@ -4941,7 +4941,7 @@
       97,
       "app"
     ],
-    "key": "cadeditor.data.d23a2cd5f4"
+    "key": "cadeditor.data.sheep_wool_retains_colour_identity"
   },
   {
     "path": [
@@ -4949,7 +4949,7 @@
       98,
       "name"
     ],
-    "key": "cadeditor.data.07e8cc41df"
+    "key": "cadeditor.data.variation_shulker_color"
   },
   {
     "path": [
@@ -4957,7 +4957,7 @@
       98,
       "app"
     ],
-    "key": "cadeditor.data.81dd33ec4a"
+    "key": "cadeditor.data.shulker_color_vanilla_undyed_state"
   },
   {
     "path": [
@@ -4965,7 +4965,7 @@
       99,
       "name"
     ],
-    "key": "cadeditor.data.207cde271e"
+    "key": "cadeditor.data.variation_tropical_fish_base_color"
   },
   {
     "path": [
@@ -4973,7 +4973,7 @@
       99,
       "app"
     ],
-    "key": "cadeditor.data.3d24cc74d2"
+    "key": "cadeditor.data.tropical_fish_colour_barrel_release"
   },
   {
     "path": [
@@ -4981,7 +4981,7 @@
       100,
       "name"
     ],
-    "key": "cadeditor.data.0036e0e598"
+    "key": "cadeditor.data.variation_tropical_fish_pattern"
   },
   {
     "path": [
@@ -4989,7 +4989,7 @@
       100,
       "desc"
     ],
-    "key": "cadeditor.data.bebff82e33"
+    "key": "cadeditor.data.component_provide_item_tooltip_content"
   },
   {
     "path": [
@@ -4997,7 +4997,7 @@
       100,
       "app"
     ],
-    "key": "cadeditor.data.7482a11890"
+    "key": "cadeditor.data.reads_entity_generation_hidden_component"
   },
   {
     "path": [
@@ -5005,7 +5005,7 @@
       101,
       "name"
     ],
-    "key": "cadeditor.data.dc2cefaabb"
+    "key": "cadeditor.data.variation_tropical_fish_pattern_color"
   },
   {
     "path": [
@@ -5013,7 +5013,7 @@
       101,
       "app"
     ],
-    "key": "cadeditor.data.3c4f8f54c7"
+    "key": "cadeditor.data.tropical_fish_colour_conjunction_pattern"
   },
   {
     "path": [
@@ -5021,7 +5021,7 @@
       102,
       "name"
     ],
-    "key": "cadeditor.data.ffdce449c8"
+    "key": "cadeditor.data.variation_villager"
   },
   {
     "path": [
@@ -5029,7 +5029,7 @@
       102,
       "app"
     ],
-    "key": "cadeditor.data.af6300de8b"
+    "key": "cadeditor.data.reads_entity_generation_place_hidden"
   },
   {
     "path": [
@@ -5037,7 +5037,7 @@
       103,
       "name"
     ],
-    "key": "cadeditor.data.840900724b"
+    "key": "cadeditor.data.variation_wolf_collar"
   },
   {
     "path": [
@@ -5045,7 +5045,7 @@
       103,
       "app"
     ],
-    "key": "cadeditor.data.75d9f954ac"
+    "key": "cadeditor.data.wolf_collar_only_tame_wolf"
   },
   {
     "path": [
@@ -5053,7 +5053,7 @@
       104,
       "name"
     ],
-    "key": "cadeditor.data.62366226be"
+    "key": "cadeditor.data.variation_wolf_sound_variant"
   },
   {
     "path": [
@@ -5061,7 +5061,7 @@
       104,
       "app"
     ],
-    "key": "cadeditor.data.af6300de8b"
+    "key": "cadeditor.data.reads_entity_generation_place_hidden"
   },
   {
     "path": [
@@ -5069,7 +5069,7 @@
       105,
       "name"
     ],
-    "key": "cadeditor.data.7668a2f70f"
+    "key": "cadeditor.data.variation_wolf"
   },
   {
     "path": [
@@ -5077,7 +5077,7 @@
       105,
       "app"
     ],
-    "key": "cadeditor.data.af6300de8b"
+    "key": "cadeditor.data.reads_entity_generation_place_hidden"
   },
   {
     "path": [
@@ -5085,7 +5085,7 @@
       106,
       "name"
     ],
-    "key": "cadeditor.data.e953e755ad"
+    "key": "cadeditor.data.variation_zombie_nautilus"
   },
   {
     "path": [
@@ -5093,7 +5093,7 @@
       106,
       "app"
     ],
-    "key": "cadeditor.data.af6300de8b"
+    "key": "cadeditor.data.reads_entity_generation_place_hidden"
   },
   {
     "path": [
@@ -5101,7 +5101,7 @@
       0,
       "desc"
     ],
-    "key": "cadeditor.data.16e6bb8afe"
+    "key": "cadeditor.data.prevention_underwater_mining_speed"
   },
   {
     "path": [
@@ -5109,7 +5109,7 @@
       1,
       "desc"
     ],
-    "key": "cadeditor.data.447195d9e0"
+    "key": "cadeditor.data.arteries_mob_adding_additional_damage"
   },
   {
     "path": [
@@ -5117,7 +5117,7 @@
       2,
       "desc"
     ],
-    "key": "cadeditor.data.7c24ecee08"
+    "key": "cadeditor.data.item_affected_cannot_unloaded_equipment"
   },
   {
     "path": [
@@ -5125,7 +5125,7 @@
       3,
       "desc"
     ],
-    "key": "cadeditor.data.a5e53bc9e8"
+    "key": "cadeditor.data.reduce_exposure_explosion_damage_reduce"
   },
   {
     "path": [
@@ -5133,7 +5133,7 @@
       4,
       "desc"
     ],
-    "key": "cadeditor.data.9f2cac67c0"
+    "key": "cadeditor.data.decreasing_alpha_value_attack_target"
   },
   {
     "path": [
@@ -5141,7 +5141,7 @@
       5,
       "desc"
     ],
-    "key": "cadeditor.data.1a53eb88d9"
+    "key": "cadeditor.data.hit_trident_entity_lightning_called"
   },
   {
     "path": [
@@ -5149,7 +5149,7 @@
       6,
       "desc"
     ],
-    "key": "cadeditor.data.dbed08e345"
+    "key": "cadeditor.data.increase_hammer_s_whereabouts_attack"
   },
   {
     "path": [
@@ -5157,7 +5157,7 @@
       7,
       "desc"
     ],
-    "key": "cadeditor.data.4492888f67"
+    "key": "cadeditor.data.reducing_slowing_effect_water"
   },
   {
     "path": [
@@ -5165,7 +5165,7 @@
       8,
       "desc"
     ],
-    "key": "cadeditor.data.7dff3ebaf6"
+    "key": "cadeditor.data.speed_up_mining"
   },
   {
     "path": [
@@ -5173,7 +5173,7 @@
       9,
       "desc"
     ],
-    "key": "cadeditor.data.db2379d31f"
+    "key": "cadeditor.data.reduce_fall_damage"
   },
   {
     "path": [
@@ -5181,7 +5181,7 @@
       10,
       "desc"
     ],
-    "key": "cadeditor.data.b240ab67cd"
+    "key": "cadeditor.data.sets_melee_targets_fire"
   },
   {
     "path": [
@@ -5189,7 +5189,7 @@
       11,
       "desc"
     ],
-    "key": "cadeditor.data.be61a1898f"
+    "key": "cadeditor.data.reduce_exposure_fire_damage_time"
   },
   {
     "path": [
@@ -5197,7 +5197,7 @@
       12,
       "desc"
     ],
-    "key": "cadeditor.data.135e8f2248"
+    "key": "cadeditor.data.arrows_fire"
   },
   {
     "path": [
@@ -5205,7 +5205,7 @@
       13,
       "desc"
     ],
-    "key": "cadeditor.data.b88b155ba4"
+    "key": "cadeditor.data.increase_count_probability_block_falling"
   },
   {
     "path": [
@@ -5213,7 +5213,7 @@
       14,
       "desc"
     ],
-    "key": "cadeditor.data.82e8fa8f92"
+    "key": "cadeditor.data.damage_creates_frost_walking_water"
   },
   {
     "path": [
@@ -5221,7 +5221,7 @@
       15,
       "desc"
     ],
-    "key": "cadeditor.data.f2272f366b"
+    "key": "cadeditor.data.adding_damage_java_aquatic_mob"
   },
   {
     "path": [
@@ -5229,7 +5229,7 @@
       16,
       "desc"
     ],
-    "key": "cadeditor.data.9227cc8d28"
+    "key": "cadeditor.data.arrows_consumed_shooting_excluding"
   },
   {
     "path": [
@@ -5237,7 +5237,7 @@
       17,
       "desc"
     ],
-    "key": "cadeditor.data.27ed8ed19e"
+    "key": "cadeditor.data.increase_knockback_distance_attack"
   },
   {
     "path": [
@@ -5245,7 +5245,7 @@
       18,
       "desc"
     ],
-    "key": "cadeditor.data.8f1614b08a"
+    "key": "cadeditor.data.increase_count_probability_mob_falling"
   },
   {
     "path": [
@@ -5253,7 +5253,7 @@
       19,
       "desc"
     ],
-    "key": "cadeditor.data.12277148ed"
+    "key": "cadeditor.data.returning_throw_trident_holder"
   },
   {
     "path": [
@@ -5261,7 +5261,7 @@
       20,
       "desc"
     ],
-    "key": "cadeditor.data.d42751982c"
+    "key": "cadeditor.data.increase_probability_getting_treasure"
   },
   {
     "path": [
@@ -5269,7 +5269,7 @@
       21,
       "desc"
     ],
-    "key": "cadeditor.data.8a498a81d0"
+    "key": "cadeditor.data.move_distance_over_attack_attack"
   },
   {
     "path": [
@@ -5277,7 +5277,7 @@
       22,
       "desc"
     ],
-    "key": "cadeditor.data.71df246e86"
+    "key": "cadeditor.data.reducing_time_fishing"
   },
   {
     "path": [
@@ -5285,7 +5285,7 @@
       23,
       "desc"
     ],
-    "key": "cadeditor.data.6d90623600"
+    "key": "cadeditor.data.experience_gained_wear_tear_repair"
   },
   {
     "path": [
@@ -5293,7 +5293,7 @@
       24,
       "desc"
     ],
-    "key": "cadeditor.data.f517d478ad"
+    "key": "cadeditor.data.make_remote_weapon_refill_launch"
   },
   {
     "path": [
@@ -5301,7 +5301,7 @@
       25,
       "desc"
     ],
-    "key": "cadeditor.data.ec3fa17fdd"
+    "key": "cadeditor.data.put_arrows_through_multiple_entitys"
   },
   {
     "path": [
@@ -5309,7 +5309,7 @@
       26,
       "desc"
     ],
-    "key": "cadeditor.data.e2003d2166"
+    "key": "cadeditor.data.add_arrow_damage"
   },
   {
     "path": [
@@ -5317,7 +5317,7 @@
       27,
       "desc"
     ],
-    "key": "cadeditor.data.5659aa96c3"
+    "key": "cadeditor.data.reduce_exposure_ejector_damage"
   },
   {
     "path": [
@@ -5325,7 +5325,7 @@
       28,
       "desc"
     ],
-    "key": "cadeditor.data.203b2bca10"
+    "key": "cadeditor.data.reduction_damage_exposure_most"
   },
   {
     "path": [
@@ -5333,7 +5333,7 @@
       29,
       "desc"
     ],
-    "key": "cadeditor.data.cd510cb3b1"
+    "key": "cadeditor.data.add_arrow_knockback_distance"
   },
   {
     "path": [
@@ -5341,7 +5341,7 @@
       30,
       "desc"
     ],
-    "key": "cadeditor.data.727e37c838"
+    "key": "cadeditor.data.reduce_filling_time_crossbows"
   },
   {
     "path": [
@@ -5349,7 +5349,7 @@
       31,
       "desc"
     ],
-    "key": "cadeditor.data.25019bd384"
+    "key": "cadeditor.data.extending_underwater_breathing_time"
   },
   {
     "path": [
@@ -5357,7 +5357,7 @@
       32,
       "desc"
     ],
-    "key": "cadeditor.data.fd79063c6a"
+    "key": "cadeditor.data.player_fire_direction_trident_only"
   },
   {
     "path": [
@@ -5365,7 +5365,7 @@
       33,
       "desc"
     ],
-    "key": "cadeditor.data.7391e004ab"
+    "key": "cadeditor.data.increase_near_war_attack_damage"
   },
   {
     "path": [
@@ -5373,7 +5373,7 @@
       34,
       "desc"
     ],
-    "key": "cadeditor.data.84027d00ac"
+    "key": "cadeditor.data.replace_block_partially_mined_block"
   },
   {
     "path": [
@@ -5381,7 +5381,7 @@
       35,
       "desc"
     ],
-    "key": "cadeditor.data.6248bd6c26"
+    "key": "cadeditor.data.dead_mob_adding_additional_damage"
   },
   {
     "path": [
@@ -5389,7 +5389,7 @@
       36,
       "desc"
     ],
-    "key": "cadeditor.data.0de98e5cca"
+    "key": "cadeditor.data.increase_speed_player_sands_soul"
   },
   {
     "path": [
@@ -5397,7 +5397,7 @@
       37,
       "desc"
     ],
-    "key": "cadeditor.data.83178752b3"
+    "key": "cadeditor.data.increase_sweep_attack_damage"
   },
   {
     "path": [
@@ -5405,7 +5405,7 @@
       38,
       "desc"
     ],
-    "key": "cadeditor.data.3239ee5c93"
+    "key": "cadeditor.data.increase_speed_player_scuba_crawling"
   },
   {
     "path": [
@@ -5413,7 +5413,7 @@
       39,
       "desc"
     ],
-    "key": "cadeditor.data.101d0196ab"
+    "key": "cadeditor.data.damage_attack"
   },
   {
     "path": [
@@ -5421,7 +5421,7 @@
       40,
       "desc"
     ],
-    "key": "cadeditor.data.84f213d389"
+    "key": "cadeditor.data.reduce_probability_triggering_durability"
   },
   {
     "path": [
@@ -5429,7 +5429,7 @@
       41,
       "desc"
     ],
-    "key": "cadeditor.data.0bd8d63529"
+    "key": "cadeditor.data.mob_dies_affected_item_disappear"
   },
   {
     "path": [
@@ -5437,7 +5437,7 @@
       42,
       "desc"
     ],
-    "key": "cadeditor.data.31bccd93fa"
+    "key": "cadeditor.data.wind_blasts_hammer_dropped_attack"
   },
   {
     "path": [
@@ -5445,7 +5445,7 @@
       0,
       "desc"
     ],
-    "key": "cadeditor.data.a76af41ef7"
+    "key": "cadeditor.data.armor_value_versus_armor_resilient"
   },
   {
     "path": [
@@ -5453,7 +5453,7 @@
       1,
       "desc"
     ],
-    "key": "cadeditor.data.a76af41ef7"
+    "key": "cadeditor.data.armor_value_versus_armor_resilient"
   },
   {
     "path": [
@@ -5461,7 +5461,7 @@
       2,
       "desc"
     ],
-    "key": "cadeditor.data.a5bdb6c2d0"
+    "key": "cadeditor.data.mob_near_war_attack_damage"
   },
   {
     "path": [
@@ -5469,7 +5469,7 @@
       3,
       "desc"
     ],
-    "key": "cadeditor.data.2b65ff0568"
+    "key": "cadeditor.data.mob_s_attack_caused_knockback"
   },
   {
     "path": [
@@ -5477,7 +5477,7 @@
       4,
       "desc"
     ],
-    "key": "cadeditor.data.bb1ae9efbf"
+    "key": "cadeditor.data.attack_speed_player"
   },
   {
     "path": [
@@ -5485,7 +5485,7 @@
       5,
       "desc"
     ],
-    "key": "cadeditor.data.aa9c0e2fa8"
+    "key": "cadeditor.data.player_destroys_velocity_multiplier"
   },
   {
     "path": [
@@ -5493,7 +5493,7 @@
       6,
       "desc"
     ],
-    "key": "cadeditor.data.9a4a20b914"
+    "key": "cadeditor.data.player_distance_interact_block"
   },
   {
     "path": [
@@ -5501,7 +5501,7 @@
       7,
       "desc"
     ],
-    "key": "cadeditor.data.fefc599b18"
+    "key": "cadeditor.data.sets_multiplier_remaining_mob_firetime"
   },
   {
     "path": [
@@ -5509,7 +5509,7 @@
       8,
       "desc"
     ],
-    "key": "cadeditor.data.cd57ca7e01"
+    "key": "cadeditor.data.sets_distance_between_third_person"
   },
   {
     "path": [
@@ -5517,7 +5517,7 @@
       9,
       "desc"
     ],
-    "key": "cadeditor.data.bfa4be30a0"
+    "key": "cadeditor.data.player_distance_interact_entity"
   },
   {
     "path": [
@@ -5525,7 +5525,7 @@
       10,
       "desc"
     ],
-    "key": "cadeditor.data.173352948f"
+    "key": "cadeditor.data.mob_resistance_explosion_knockback"
   },
   {
     "path": [
@@ -5533,7 +5533,7 @@
       11,
       "desc"
     ],
-    "key": "cadeditor.data.adf1ee7ec3"
+    "key": "cadeditor.data.mob_falled_damage_multiplier"
   },
   {
     "path": [
@@ -5541,7 +5541,7 @@
       12,
       "desc"
     ],
-    "key": "cadeditor.data.e93099f56c"
+    "key": "cadeditor.data.speed_flight_movements_mob"
   },
   {
     "path": [
@@ -5549,7 +5549,7 @@
       13,
       "desc"
     ],
-    "key": "cadeditor.data.826df3fe63"
+    "key": "cadeditor.data.mob_ai_maximum_range_traceable"
   },
   {
     "path": [
@@ -5557,7 +5557,7 @@
       14,
       "desc"
     ],
-    "key": "cadeditor.data.cfdf7db826"
+    "key": "cadeditor.data.mob_accelerators_continue_accelerate"
   },
   {
     "path": [
@@ -5565,7 +5565,7 @@
       15,
       "desc"
     ],
-    "key": "cadeditor.data.4ce382788c"
+    "key": "cadeditor.data.mob_vertical_speed_obtained_jumping"
   },
   {
     "path": [
@@ -5573,7 +5573,7 @@
       16,
       "desc"
     ],
-    "key": "cadeditor.data.44bcf98bcf"
+    "key": "cadeditor.data.mob_resistance_knockback"
   },
   {
     "path": [
@@ -5581,7 +5581,7 @@
       17,
       "desc"
     ],
-    "key": "cadeditor.data.fa55e45972"
+    "key": "cadeditor.data.higher_luck_improves_loot_player"
   },
   {
     "path": [
@@ -5589,7 +5589,7 @@
       18,
       "desc"
     ],
-    "key": "cadeditor.data.20d702a1c5"
+    "key": "cadeditor.data.maximum_absorption_value_mob"
   },
   {
     "path": [
@@ -5597,7 +5597,7 @@
       19,
       "desc"
     ],
-    "key": "cadeditor.data.f899bdd78a"
+    "key": "cadeditor.data.maximum_health_mob"
   },
   {
     "path": [
@@ -5605,7 +5605,7 @@
       20,
       "desc"
     ],
-    "key": "cadeditor.data.99ceddfe60"
+    "key": "cadeditor.data.mining_speed_increase_player"
   },
   {
     "path": [
@@ -5613,7 +5613,7 @@
       21,
       "desc"
     ],
-    "key": "cadeditor.data.ed6f4021ba"
+    "key": "cadeditor.data.mob_resistance_block_foot"
   },
   {
     "path": [
@@ -5621,7 +5621,7 @@
       22,
       "desc"
     ],
-    "key": "cadeditor.data.d4f969b4c9"
+    "key": "cadeditor.data.mob_ground_speed_movement"
   },
   {
     "path": [
@@ -5629,7 +5629,7 @@
       23,
       "desc"
     ],
-    "key": "cadeditor.data.987e680eb6"
+    "key": "cadeditor.data.mob_ability_resist_oxygen_decline"
   },
   {
     "path": [
@@ -5637,7 +5637,7 @@
       24,
       "desc"
     ],
-    "key": "cadeditor.data.e1961a2668"
+    "key": "cadeditor.data.mob_fall_height_damage"
   },
   {
     "path": [
@@ -5645,7 +5645,7 @@
       25,
       "desc"
     ],
-    "key": "cadeditor.data.acd5a4a87d"
+    "key": "cadeditor.data.dimension_multiplier_mob"
   },
   {
     "path": [
@@ -5653,7 +5653,7 @@
       26,
       "desc"
     ],
-    "key": "cadeditor.data.9e353a9591"
+    "key": "cadeditor.data.speed_multiplier_player_dive"
   },
   {
     "path": [
@@ -5661,7 +5661,7 @@
       27,
       "desc"
     ],
-    "key": "cadeditor.data.0e55c71f76"
+    "key": "cadeditor.data.ability_zombies_generate_zombie"
   },
   {
     "path": [
@@ -5669,7 +5669,7 @@
       28,
       "desc"
     ],
-    "key": "cadeditor.data.d4be016c70"
+    "key": "cadeditor.data.mob_maximum_height_reached_without"
   },
   {
     "path": [
@@ -5677,7 +5677,7 @@
       29,
       "desc"
     ],
-    "key": "cadeditor.data.097baebff8"
+    "key": "cadeditor.data.player_mining_velocity_multiplier"
   },
   {
     "path": [
@@ -5685,7 +5685,7 @@
       30,
       "desc"
     ],
-    "key": "cadeditor.data.dc3da24e3d"
+    "key": "cadeditor.data.player_sweep_ratio_damage_near"
   },
   {
     "path": [
@@ -5693,7 +5693,7 @@
       31,
       "desc"
     ],
-    "key": "cadeditor.data.589dcc30ca"
+    "key": "cadeditor.data.mob_lured_player_maximum_distance"
   },
   {
     "path": [
@@ -5701,7 +5701,7 @@
       32,
       "desc"
     ],
-    "key": "cadeditor.data.49ce41202c"
+    "key": "cadeditor.data.mob_resistance_water_effects_mobility"
   },
   {
     "path": [
@@ -5709,7 +5709,7 @@
       33,
       "desc"
     ],
-    "key": "cadeditor.data.1dcb2bc542"
+    "key": "cadeditor.data.set_player_path_point_receive"
   },
   {
     "path": [
@@ -5717,7 +5717,7 @@
       34,
       "desc"
     ],
-    "key": "cadeditor.data.39c9b4f7db"
+    "key": "cadeditor.data.set_player_path_point_transmission"
   },
   {
     "path": [
@@ -5725,7 +5725,7 @@
       0,
       "desc"
     ],
-    "key": "cadeditor.data.e5fcedd76d"
+    "key": "cadeditor.data.add_absorption_value"
   },
   {
     "path": [
@@ -5733,7 +5733,7 @@
       0,
       "kind"
     ],
-    "key": "cadeditor.ui.picker.740f5e8102"
+    "key": "cadeditor.ui.picker.positive"
   },
   {
     "path": [
@@ -5741,7 +5741,7 @@
       1,
       "desc"
     ],
-    "key": "cadeditor.data.3a4f6adb6e"
+    "key": "cadeditor.data.enter_village_get_sign_attack"
   },
   {
     "path": [
@@ -5749,7 +5749,7 @@
       1,
       "kind"
     ],
-    "key": "cadeditor.ui.picker.574ce385b8"
+    "key": "cadeditor.ui.picker.neutral"
   },
   {
     "path": [
@@ -5757,7 +5757,7 @@
       2,
       "desc"
     ],
-    "key": "cadeditor.data.1b73c813f4"
+    "key": "cadeditor.data.weak_vision_running_near_war"
   },
   {
     "path": [
@@ -5765,7 +5765,7 @@
       2,
       "kind"
     ],
-    "key": "cadeditor.ui.picker.10db0d86d9"
+    "key": "cadeditor.ui.picker.negative"
   },
   {
     "path": [
@@ -5773,7 +5773,7 @@
       3,
       "desc"
     ],
-    "key": "cadeditor.data.8ed88d8d7a"
+    "key": "cadeditor.data.stop_oxygen_consumption"
   },
   {
     "path": [
@@ -5781,7 +5781,7 @@
       3,
       "kind"
     ],
-    "key": "cadeditor.ui.picker.740f5e8102"
+    "key": "cadeditor.ui.picker.positive"
   },
   {
     "path": [
@@ -5789,7 +5789,7 @@
       4,
       "desc"
     ],
-    "key": "cadeditor.data.f9f60993e0"
+    "key": "cadeditor.data.lighten_underwater_view_java_add"
   },
   {
     "path": [
@@ -5797,7 +5797,7 @@
       4,
       "kind"
     ],
-    "key": "cadeditor.ui.picker.740f5e8102"
+    "key": "cadeditor.ui.picker.positive"
   },
   {
     "path": [
@@ -5805,7 +5805,7 @@
       5,
       "desc"
     ],
-    "key": "cadeditor.data.2ffb451deb"
+    "key": "cadeditor.data.s_causing_vision_get_dark"
   },
   {
     "path": [
@@ -5813,7 +5813,7 @@
       5,
       "kind"
     ],
-    "key": "cadeditor.ui.picker.10db0d86d9"
+    "key": "cadeditor.ui.picker.negative"
   },
   {
     "path": [
@@ -5821,7 +5821,7 @@
       6,
       "desc"
     ],
-    "key": "cadeditor.data.11592dda62"
+    "key": "cadeditor.data.increase_swimming_speed"
   },
   {
     "path": [
@@ -5829,7 +5829,7 @@
       6,
       "kind"
     ],
-    "key": "cadeditor.ui.picker.740f5e8102"
+    "key": "cadeditor.ui.picker.positive"
   },
   {
     "path": [
@@ -5837,7 +5837,7 @@
       7,
       "desc"
     ],
-    "key": "cadeditor.data.b5211eb2c8"
+    "key": "cadeditor.data.immuno_flammation_damage_increasing_view"
   },
   {
     "path": [
@@ -5845,7 +5845,7 @@
       7,
       "kind"
     ],
-    "key": "cadeditor.ui.picker.740f5e8102"
+    "key": "cadeditor.ui.picker.positive"
   },
   {
     "path": [
@@ -5853,7 +5853,7 @@
       8,
       "desc"
     ],
-    "key": "cadeditor.data.39136d32d8"
+    "key": "cadeditor.data.highlighting_mob_contour_lines_also"
   },
   {
     "path": [
@@ -5861,7 +5861,7 @@
       8,
       "kind"
     ],
-    "key": "cadeditor.ui.picker.574ce385b8"
+    "key": "cadeditor.ui.picker.neutral"
   },
   {
     "path": [
@@ -5869,7 +5869,7 @@
       9,
       "desc"
     ],
-    "key": "cadeditor.data.1ae7f31d2e"
+    "key": "cadeditor.data.increase_mining_speed_increase_attack"
   },
   {
     "path": [
@@ -5877,7 +5877,7 @@
       9,
       "kind"
     ],
-    "key": "cadeditor.ui.picker.740f5e8102"
+    "key": "cadeditor.ui.picker.positive"
   },
   {
     "path": [
@@ -5885,7 +5885,7 @@
       10,
       "desc"
     ],
-    "key": "cadeditor.data.50c473e7cc"
+    "key": "cadeditor.data.add_max_health"
   },
   {
     "path": [
@@ -5893,7 +5893,7 @@
       10,
       "kind"
     ],
-    "key": "cadeditor.ui.picker.740f5e8102"
+    "key": "cadeditor.ui.picker.positive"
   },
   {
     "path": [
@@ -5901,7 +5901,7 @@
       11,
       "desc"
     ],
-    "key": "cadeditor.data.b22e016d98"
+    "key": "cadeditor.data.villagers_given_discounts_trading"
   },
   {
     "path": [
@@ -5909,7 +5909,7 @@
       11,
       "kind"
     ],
-    "key": "cadeditor.ui.picker.740f5e8102"
+    "key": "cadeditor.ui.picker.positive"
   },
   {
     "path": [
@@ -5917,7 +5917,7 @@
       12,
       "desc"
     ],
-    "key": "cadeditor.data.0737b33bca"
+    "key": "cadeditor.data.continue_adding_exhaustion"
   },
   {
     "path": [
@@ -5925,7 +5925,7 @@
       12,
       "kind"
     ],
-    "key": "cadeditor.ui.picker.10db0d86d9"
+    "key": "cadeditor.ui.picker.negative"
   },
   {
     "path": [
@@ -5933,7 +5933,7 @@
       13,
       "desc"
     ],
-    "key": "cadeditor.data.99d6d34aff"
+    "key": "cadeditor.data.probability_aphids_damage"
   },
   {
     "path": [
@@ -5941,7 +5941,7 @@
       13,
       "kind"
     ],
-    "key": "cadeditor.ui.picker.10db0d86d9"
+    "key": "cadeditor.ui.picker.negative"
   },
   {
     "path": [
@@ -5949,7 +5949,7 @@
       14,
       "desc"
     ],
-    "key": "cadeditor.data.f6b72fa3be"
+    "key": "cadeditor.data.damage_non_death_mob_treatment"
   },
   {
     "path": [
@@ -5957,7 +5957,7 @@
       14,
       "kind"
     ],
-    "key": "cadeditor.ui.picker.10db0d86d9"
+    "key": "cadeditor.ui.picker.negative"
   },
   {
     "path": [
@@ -5965,7 +5965,7 @@
       15,
       "desc"
     ],
-    "key": "cadeditor.data.29251e1919"
+    "key": "cadeditor.data.mob_damage_mob"
   },
   {
     "path": [
@@ -5973,7 +5973,7 @@
       15,
       "kind"
     ],
-    "key": "cadeditor.ui.picker.740f5e8102"
+    "key": "cadeditor.ui.picker.positive"
   },
   {
     "path": [
@@ -5981,7 +5981,7 @@
       16,
       "desc"
     ],
-    "key": "cadeditor.data.05f1986879"
+    "key": "cadeditor.data.make_appearance_invisible_lower_range"
   },
   {
     "path": [
@@ -5989,7 +5989,7 @@
       16,
       "kind"
     ],
-    "key": "cadeditor.ui.picker.740f5e8102"
+    "key": "cadeditor.ui.picker.positive"
   },
   {
     "path": [
@@ -5997,7 +5997,7 @@
       17,
       "desc"
     ],
-    "key": "cadeditor.data.0612dcb0eb"
+    "key": "cadeditor.data.increase_jump_drop_damage"
   },
   {
     "path": [
@@ -6005,7 +6005,7 @@
       17,
       "kind"
     ],
-    "key": "cadeditor.ui.picker.740f5e8102"
+    "key": "cadeditor.ui.picker.positive"
   },
   {
     "path": [
@@ -6013,7 +6013,7 @@
       18,
       "desc"
     ],
-    "key": "cadeditor.data.5ddb4965e0"
+    "key": "cadeditor.data.continue_overwrite_mob_vertical_speed"
   },
   {
     "path": [
@@ -6021,7 +6021,7 @@
       18,
       "kind"
     ],
-    "key": "cadeditor.ui.picker.10db0d86d9"
+    "key": "cadeditor.ui.picker.negative"
   },
   {
     "path": [
@@ -6029,7 +6029,7 @@
       19,
       "desc"
     ],
-    "key": "cadeditor.data.99d3ed4740"
+    "key": "cadeditor.data.increase_probability_getting_high"
   },
   {
     "path": [
@@ -6037,7 +6037,7 @@
       19,
       "kind"
     ],
-    "key": "cadeditor.ui.picker.740f5e8102"
+    "key": "cadeditor.ui.picker.positive"
   },
   {
     "path": [
@@ -6045,7 +6045,7 @@
       20,
       "desc"
     ],
-    "key": "cadeditor.data.313b069b26"
+    "key": "cadeditor.data.lower_mining_velocity_lower_attack"
   },
   {
     "path": [
@@ -6053,7 +6053,7 @@
       20,
       "kind"
     ],
-    "key": "cadeditor.ui.picker.10db0d86d9"
+    "key": "cadeditor.ui.picker.negative"
   },
   {
     "path": [
@@ -6061,7 +6061,7 @@
       21,
       "desc"
     ],
-    "key": "cadeditor.data.451280e988"
+    "key": "cadeditor.data.causes_vision_wobble"
   },
   {
     "path": [
@@ -6069,7 +6069,7 @@
       21,
       "kind"
     ],
-    "key": "cadeditor.ui.picker.10db0d86d9"
+    "key": "cadeditor.ui.picker.negative"
   },
   {
     "path": [
@@ -6077,7 +6077,7 @@
       22,
       "desc"
     ],
-    "key": "cadeditor.data.dd8f5c3f71"
+    "key": "cadeditor.data.brightens_vision"
   },
   {
     "path": [
@@ -6085,7 +6085,7 @@
       22,
       "kind"
     ],
-    "key": "cadeditor.ui.picker.740f5e8102"
+    "key": "cadeditor.ui.picker.positive"
   },
   {
     "path": [
@@ -6093,7 +6093,7 @@
       23,
       "desc"
     ],
-    "key": "cadeditor.data.17fcdc0c44"
+    "key": "cadeditor.data.generate_slime_after_death"
   },
   {
     "path": [
@@ -6101,7 +6101,7 @@
       23,
       "kind"
     ],
-    "key": "cadeditor.ui.picker.10db0d86d9"
+    "key": "cadeditor.ui.picker.negative"
   },
   {
     "path": [
@@ -6109,7 +6109,7 @@
       24,
       "desc"
     ],
-    "key": "cadeditor.data.03ced66108"
+    "key": "cadeditor.data.health_above_1_time_sustained"
   },
   {
     "path": [
@@ -6117,7 +6117,7 @@
       24,
       "kind"
     ],
-    "key": "cadeditor.ui.picker.10db0d86d9"
+    "key": "cadeditor.ui.picker.negative"
   },
   {
     "path": [
@@ -6125,7 +6125,7 @@
       25,
       "desc"
     ],
-    "key": "cadeditor.data.05db201543"
+    "key": "cadeditor.data.attack_triggered_effect_over"
   },
   {
     "path": [
@@ -6133,7 +6133,7 @@
       25,
       "kind"
     ],
-    "key": "cadeditor.ui.picker.574ce385b8"
+    "key": "cadeditor.ui.picker.neutral"
   },
   {
     "path": [
@@ -6141,7 +6141,7 @@
       26,
       "desc"
     ],
-    "key": "cadeditor.data.5e758a124c"
+    "key": "cadeditor.data.restoring_life_over_time"
   },
   {
     "path": [
@@ -6149,7 +6149,7 @@
       26,
       "kind"
     ],
-    "key": "cadeditor.ui.picker.740f5e8102"
+    "key": "cadeditor.ui.picker.positive"
   },
   {
     "path": [
@@ -6157,7 +6157,7 @@
       27,
       "desc"
     ],
-    "key": "cadeditor.data.491ea8076e"
+    "key": "cadeditor.data.lower_received_damage"
   },
   {
     "path": [
@@ -6165,7 +6165,7 @@
       27,
       "kind"
     ],
-    "key": "cadeditor.ui.picker.740f5e8102"
+    "key": "cadeditor.ui.picker.positive"
   },
   {
     "path": [
@@ -6173,7 +6173,7 @@
       28,
       "desc"
     ],
-    "key": "cadeditor.data.c870add34c"
+    "key": "cadeditor.data.restore_food_level_restore_saturation"
   },
   {
     "path": [
@@ -6181,7 +6181,7 @@
       28,
       "kind"
     ],
-    "key": "cadeditor.ui.picker.740f5e8102"
+    "key": "cadeditor.ui.picker.positive"
   },
   {
     "path": [
@@ -6189,7 +6189,7 @@
       29,
       "desc"
     ],
-    "key": "cadeditor.data.5e94f023d2"
+    "key": "cadeditor.data.substantially_reduced_mob_gravity"
   },
   {
     "path": [
@@ -6197,7 +6197,7 @@
       29,
       "kind"
     ],
-    "key": "cadeditor.ui.picker.740f5e8102"
+    "key": "cadeditor.ui.picker.positive"
   },
   {
     "path": [
@@ -6205,7 +6205,7 @@
       30,
       "desc"
     ],
-    "key": "cadeditor.data.092bef5c17"
+    "key": "cadeditor.data.lower_speed_movement"
   },
   {
     "path": [
@@ -6213,7 +6213,7 @@
       30,
       "kind"
     ],
-    "key": "cadeditor.ui.picker.10db0d86d9"
+    "key": "cadeditor.ui.picker.negative"
   },
   {
     "path": [
@@ -6221,7 +6221,7 @@
       31,
       "desc"
     ],
-    "key": "cadeditor.data.ede4adc46a"
+    "key": "cadeditor.data.increase_speed_movement"
   },
   {
     "path": [
@@ -6229,7 +6229,7 @@
       31,
       "kind"
     ],
-    "key": "cadeditor.ui.picker.740f5e8102"
+    "key": "cadeditor.ui.picker.positive"
   },
   {
     "path": [
@@ -6237,7 +6237,7 @@
       32,
       "desc"
     ],
-    "key": "cadeditor.data.7391e004ab"
+    "key": "cadeditor.data.increase_near_war_attack_damage"
   },
   {
     "path": [
@@ -6245,7 +6245,7 @@
       32,
       "kind"
     ],
-    "key": "cadeditor.ui.picker.740f5e8102"
+    "key": "cadeditor.ui.picker.positive"
   },
   {
     "path": [
@@ -6253,7 +6253,7 @@
       33,
       "desc"
     ],
-    "key": "cadeditor.data.7986baec21"
+    "key": "cadeditor.data.spawner_becomes_bad_test_spawner"
   },
   {
     "path": [
@@ -6261,7 +6261,7 @@
       33,
       "kind"
     ],
-    "key": "cadeditor.ui.picker.574ce385b8"
+    "key": "cadeditor.ui.picker.neutral"
   },
   {
     "path": [
@@ -6269,7 +6269,7 @@
       34,
       "desc"
     ],
-    "key": "cadeditor.data.2730fbe948"
+    "key": "cadeditor.data.reduce_probability_getting_high_quality"
   },
   {
     "path": [
@@ -6277,7 +6277,7 @@
       34,
       "kind"
     ],
-    "key": "cadeditor.ui.picker.10db0d86d9"
+    "key": "cadeditor.ui.picker.negative"
   },
   {
     "path": [
@@ -6285,7 +6285,7 @@
       35,
       "desc"
     ],
-    "key": "cadeditor.data.778e625244"
+    "key": "cadeditor.data.underwater_only_java_oxygen_recovery"
   },
   {
     "path": [
@@ -6293,7 +6293,7 @@
       35,
       "kind"
     ],
-    "key": "cadeditor.ui.picker.740f5e8102"
+    "key": "cadeditor.ui.picker.positive"
   },
   {
     "path": [
@@ -6301,7 +6301,7 @@
       36,
       "desc"
     ],
-    "key": "cadeditor.data.44ae5eec19"
+    "key": "cadeditor.data.down_near_war_attack_damage"
   },
   {
     "path": [
@@ -6309,7 +6309,7 @@
       36,
       "kind"
     ],
-    "key": "cadeditor.ui.picker.10db0d86d9"
+    "key": "cadeditor.ui.picker.negative"
   },
   {
     "path": [
@@ -6317,7 +6317,7 @@
       37,
       "desc"
     ],
-    "key": "cadeditor.data.875a12908c"
+    "key": "cadeditor.data.put_spider_web_after_death"
   },
   {
     "path": [
@@ -6325,7 +6325,7 @@
       37,
       "kind"
     ],
-    "key": "cadeditor.ui.picker.10db0d86d9"
+    "key": "cadeditor.ui.picker.negative"
   },
   {
     "path": [
@@ -6333,7 +6333,7 @@
       38,
       "desc"
     ],
-    "key": "cadeditor.data.0e7edce218"
+    "key": "cadeditor.data.s_windstorm_after_death"
   },
   {
     "path": [
@@ -6341,7 +6341,7 @@
       38,
       "kind"
     ],
-    "key": "cadeditor.ui.picker.10db0d86d9"
+    "key": "cadeditor.ui.picker.negative"
   },
   {
     "path": [
@@ -6349,7 +6349,7 @@
       39,
       "desc"
     ],
-    "key": "cadeditor.data.83c0864454"
+    "key": "cadeditor.data.keep_getting_damage_until_death"
   },
   {
     "path": [
@@ -6357,6 +6357,6 @@
       39,
       "kind"
     ],
-    "key": "cadeditor.ui.picker.10db0d86d9"
+    "key": "cadeditor.ui.picker.negative"
   }
 ]

@@ -14,9 +14,13 @@ public final class EditorI18n {
     private static final Pattern FORMAT = Pattern.compile("%%|%(?:([1-9][0-9]*)\\$)?s");
     private static final Map<String, String> ENGLISH = load("en_us");
     private static final Map<String, String> CHINESE = load("zh_cn");
-    private static final Map<String, Map<String, String>> EXTRA = java.util.Collections.synchronizedMap(new LinkedHashMap<>(16, 0.75f, true) {
-        @Override protected boolean removeEldestEntry(Map.Entry<String, Map<String, String>> entry) { return size() > 32; }
-    });
+    private static final Map<String, Map<String, String>> EXTRA =
+            java.util.Collections.synchronizedMap(new LinkedHashMap<>(16, 0.75f, true) {
+                @Override
+                protected boolean removeEldestEntry(Map.Entry<String, Map<String, String>> entry) {
+                    return size() > 32;
+                }
+            });
     private static final ThreadLocal<String> REQUEST_LANGUAGE = new ThreadLocal<>();
     private static volatile Supplier<String> clientLanguage = () -> "zh_cn";
     private static volatile Function<String, String> clientTranslation = key -> null;
@@ -49,16 +53,23 @@ public final class EditorI18n {
 
     public static final class Scope implements AutoCloseable {
         private final String previous;
-        private Scope(String previous) { this.previous = previous; }
-        @Override public void close() {
-            if (previous == null) REQUEST_LANGUAGE.remove(); else REQUEST_LANGUAGE.set(previous);
+
+        private Scope(String previous) {
+            this.previous = previous;
+        }
+
+        @Override
+        public void close() {
+            if (previous == null) REQUEST_LANGUAGE.remove();
+            else REQUEST_LANGUAGE.set(previous);
         }
     }
 
     public static String tr(String key, Object... args) {
         String template = null;
         if (REQUEST_LANGUAGE.get() == null) template = clientTranslation.apply(key);
-        if (template == null || template.equals(key)) template = catalog(locale()).getOrDefault(key, ENGLISH.getOrDefault(key, key));
+        if (template == null || template.equals(key))
+            template = catalog(locale()).getOrDefault(key, ENGLISH.getOrDefault(key, key));
         return format(template, args);
     }
 
@@ -96,12 +107,16 @@ public final class EditorI18n {
         String path = "/assets/cadeditor/lang/" + locale + ".json";
         try (var stream = EditorI18n.class.getResourceAsStream(path)) {
             if (stream == null) {
-                if (locale.equals("en_us") || locale.equals("zh_cn")) throw new IllegalStateException("Missing language resource: " + path);
+                if (locale.equals("en_us") || locale.equals("zh_cn"))
+                    throw new IllegalStateException("Missing language resource: " + path);
                 return Map.of();
             }
-            var values = JsonParser.parseReader(new InputStreamReader(stream, StandardCharsets.UTF_8)).getAsJsonObject();
+            var values = JsonParser.parseReader(new InputStreamReader(stream, StandardCharsets.UTF_8))
+                    .getAsJsonObject();
             var result = new LinkedHashMap<String, String>();
-            values.entrySet().forEach(entry -> result.put(entry.getKey(), entry.getValue().getAsString()));
+            values.entrySet()
+                    .forEach(
+                            entry -> result.put(entry.getKey(), entry.getValue().getAsString()));
             return Map.copyOf(result);
         } catch (java.io.IOException failure) {
             throw new java.io.UncheckedIOException("Unable to read language resource: " + path, failure);

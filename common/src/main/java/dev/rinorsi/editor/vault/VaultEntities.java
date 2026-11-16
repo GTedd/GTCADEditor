@@ -1,8 +1,7 @@
 package dev.rinorsi.editor.vault;
 
-import dev.rinorsi.editor.EditorI18n;
-
 import com.google.gson.*;
+import dev.rinorsi.editor.EditorI18n;
 import dev.rinorsi.editor.world.EntityVolatile;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -12,100 +11,106 @@ import net.minecraft.resources.Identifier;
 
 /** Typed templates, never instantiated on save and independent of a world. */
 public final class VaultEntities {
-  private VaultEntities() {}
+    private VaultEntities() {}
 
-  public record Validated(
-      String snbt,
-      String id,
-      String name,
-      JsonObject summary,
-      JsonArray stripped,
-      JsonArray warnings) {}
+    public record Validated(
+            String snbt, String id, String name, JsonObject summary, JsonArray stripped, JsonArray warnings) {}
 
-  public static Set<String> strippedFields() {
-    var keys = new TreeSet<>(EntityVolatile.CURRENT);
-    keys.addAll(Set.of("UUID", "UUIDMost", "UUIDLeast", "Dimension", "Passengers", "Leash"));
-    return Collections.unmodifiableSet(keys);
-  }
-
-  public static Validated validate(String text) {
-    if (text.getBytes(StandardCharsets.UTF_8).length > VaultStore.MAX_ENTRY_BYTES)
-      throw new VaultStore.Failure("ENTRY_TOO_LARGE", EditorI18n.tr("cadeditor.message.vaultentities.1b3cdbc0dd"));
-    int depth = 0;
-    char quote = 0;
-    boolean escape = false;
-    for (char c : text.toCharArray()) {
-      if (quote != 0) {
-        if (escape) escape = false;
-        else if (c == '\\') escape = true;
-        else if (c == quote) quote = 0;
-      } else if (c == '\'' || c == '"') quote = c;
-      else if (c == '{' || c == '[') {
-        if (++depth > 96) throw new VaultStore.Failure("INVALID_ENTITY", EditorI18n.tr("cadeditor.message.vaultentities.b99da925be"));
-      } else if (c == '}' || c == ']') depth--;
+    public static Set<String> strippedFields() {
+        var keys = new TreeSet<>(EntityVolatile.CURRENT);
+        keys.addAll(Set.of("UUID", "UUIDMost", "UUIDLeast", "Dimension", "Passengers", "Leash"));
+        // Scoreboard membership is a live relationship like Leash; world snapshots show it as Team.
+        keys.add(dev.rinorsi.editor.world.EntityTeams.KEY);
+        return Collections.unmodifiableSet(keys);
     }
-    CompoundTag tag;
-    try {
-      var parsed = TagParser.create(NbtOps.INSTANCE).parseFully(text);
-      if (!(parsed instanceof CompoundTag compound)) throw new IllegalArgumentException(EditorI18n.tr("cadeditor.message.vaultentities.bb3c61a3d1"));
-      tag = compound;
-    } catch (Exception bad) {
-      throw new VaultStore.Failure("INVALID_ENTITY", EditorI18n.tr("cadeditor.message.vaultentities.957f10fe93", (VaultStore.reason(bad))));
+
+    public static Validated validate(String text) {
+        if (text.getBytes(StandardCharsets.UTF_8).length > VaultStore.MAX_ENTRY_BYTES)
+            throw new VaultStore.Failure(
+                    "ENTRY_TOO_LARGE", EditorI18n.tr("cadeditor.message.vaultentities.mob_snbt_up_8_mib"));
+        int depth = 0;
+        char quote = 0;
+        boolean escape = false;
+        for (char c : text.toCharArray()) {
+            if (quote != 0) {
+                if (escape) escape = false;
+                else if (c == '\\') escape = true;
+                else if (c == quote) quote = 0;
+            } else if (c == '\'' || c == '"') quote = c;
+            else if (c == '{' || c == '[') {
+                if (++depth > 96)
+                    throw new VaultStore.Failure(
+                            "INVALID_ENTITY", EditorI18n.tr("cadeditor.message.vaultentities.snbt_overset"));
+            } else if (c == '}' || c == ']') depth--;
+        }
+        CompoundTag tag;
+        try {
+            var parsed = TagParser.create(NbtOps.INSTANCE).parseFully(text);
+            if (!(parsed instanceof CompoundTag compound))
+                throw new IllegalArgumentException(
+                        EditorI18n.tr("cadeditor.message.vaultentities.must_composite_label"));
+            tag = compound;
+        } catch (Exception bad) {
+            throw new VaultStore.Failure(
+                    "INVALID_ENTITY",
+                    EditorI18n.tr("cadeditor.message.vaultentities.mob_snbt_invalid", (VaultStore.reason(bad))));
+        }
+        String id = tag.getString("id").orElse("");
+        if (id.isEmpty() || Identifier.tryParse(id) == null)
+            throw new VaultStore.Failure(
+                    "INVALID_ENTITY_ID",
+                    EditorI18n.tr("cadeditor.message.vaultentities.mob_must_contain_valid_string"));
+        id = Identifier.parse(id).toString();
+        tag.putString("id", id);
+        JsonArray stripped = new JsonArray(), warnings = new JsonArray();
+        for (String key : strippedFields())
+            if (tag.contains(key)) {
+                tag.remove(key);
+                stripped.add(key);
+                if (key.equals("Passengers")) warnings.add("PASSENGERS_DROPPED");
+            }
+        JsonObject summary = new JsonObject();
+        summary.addProperty("id", id);
+        summary.addProperty("hasCustomName", tag.contains("CustomName") || tag.contains("custom_name"));
+        summary.addProperty(
+                "baby", negative(tag.get("Age")) || positive(tag.get("IsBaby")) || positive(tag.get("Baby")));
+        int equipment = 0;
+        if (tag.get("equipment") instanceof CompoundTag slots)
+            for (String key : slots.keySet()) if (nonempty(slots.get(key))) equipment++;
+        equipment += items(tag.get("ArmorItems")) + items(tag.get("HandItems"));
+        summary.addProperty("equipmentCount", equipment);
+        summary.addProperty("attributeCount", count(tag, "attributes", "Attributes"));
+        summary.addProperty("effectCount", count(tag, "active_effects", "ActiveEffects"));
+        var type =
+                BuiltInRegistries.ENTITY_TYPE.getOptional(Identifier.parse(id)).orElse(null);
+        String name = type == null ? id : type.getDescription().getString();
+        return new Validated(tag.toString(), id, name, summary, stripped, warnings);
     }
-    String id = tag.getString("id").orElse("");
-    if (id.isEmpty() || Identifier.tryParse(id) == null)
-      throw new VaultStore.Failure("INVALID_ENTITY_ID", EditorI18n.tr("cadeditor.message.vaultentities.2c42e22364"));
-    id = Identifier.parse(id).toString();
-    tag.putString("id", id);
-    JsonArray stripped = new JsonArray(), warnings = new JsonArray();
-    for (String key : strippedFields())
-      if (tag.contains(key)) {
-        tag.remove(key);
-        stripped.add(key);
-        if (key.equals("Passengers")) warnings.add("PASSENGERS_DROPPED");
-      }
-    JsonObject summary = new JsonObject();
-    summary.addProperty("id", id);
-    summary.addProperty("hasCustomName", tag.contains("CustomName") || tag.contains("custom_name"));
-    summary.addProperty(
-        "baby",
-        negative(tag.get("Age")) || positive(tag.get("IsBaby")) || positive(tag.get("Baby")));
-    int equipment = 0;
-    if (tag.get("equipment") instanceof CompoundTag slots)
-      for (String key : slots.keySet()) if (nonempty(slots.get(key))) equipment++;
-    equipment += items(tag.get("ArmorItems")) + items(tag.get("HandItems"));
-    summary.addProperty("equipmentCount", equipment);
-    summary.addProperty("attributeCount", count(tag, "attributes", "Attributes"));
-    summary.addProperty("effectCount", count(tag, "active_effects", "ActiveEffects"));
-    var type = BuiltInRegistries.ENTITY_TYPE.getOptional(Identifier.parse(id)).orElse(null);
-    String name = type == null ? id : type.getDescription().getString();
-    return new Validated(tag.toString(), id, name, summary, stripped, warnings);
-  }
 
-  public static boolean registered(String id) {
-    return BuiltInRegistries.ENTITY_TYPE.containsKey(Identifier.parse(id));
-  }
+    public static boolean registered(String id) {
+        return BuiltInRegistries.ENTITY_TYPE.containsKey(Identifier.parse(id));
+    }
 
-  private static boolean positive(Tag t) {
-    return t instanceof NumericTag n && n.doubleValue() != 0;
-  }
+    private static boolean positive(Tag t) {
+        return t instanceof NumericTag n && n.doubleValue() != 0;
+    }
 
-  private static boolean negative(Tag t) {
-    return t instanceof NumericTag n && n.doubleValue() < 0;
-  }
+    private static boolean negative(Tag t) {
+        return t instanceof NumericTag n && n.doubleValue() < 0;
+    }
 
-  private static int count(CompoundTag t, String a, String b) {
-    return t.get(a) instanceof ListTag l ? l.size() : t.get(b) instanceof ListTag l ? l.size() : 0;
-  }
+    private static int count(CompoundTag t, String a, String b) {
+        return t.get(a) instanceof ListTag l ? l.size() : t.get(b) instanceof ListTag l ? l.size() : 0;
+    }
 
-  private static boolean nonempty(Tag t) {
-    return t instanceof CompoundTag c
-        && c.getString("id").filter(s -> !s.equals("minecraft:air")).isPresent();
-  }
+    private static boolean nonempty(Tag t) {
+        return t instanceof CompoundTag c
+                && c.getString("id").filter(s -> !s.equals("minecraft:air")).isPresent();
+    }
 
-  private static int items(Tag t) {
-    int n = 0;
-    if (t instanceof ListTag l) for (Tag v : l) if (nonempty(v)) n++;
-    return n;
-  }
+    private static int items(Tag t) {
+        int n = 0;
+        if (t instanceof ListTag l) for (Tag v : l) if (nonempty(v)) n++;
+        return n;
+    }
 }

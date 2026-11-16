@@ -1,0 +1,90 @@
+// The mod: CAD Editor on Fabric, Minecraft 26.3 only (unobfuscated, so no remapping). It compiles the shared sources in
+// common/src (protocol, server-side editing, history, permissions) together with its own (client UI, Fabric glue), so
+// the same jar runs on clients, in singleplayer and on Fabric dedicated servers.
+plugins {
+    id 'net.fabricmc.fabric-loom'
+}
+
+base.archivesName = "cadeditor-fabric-${minecraft_version}"
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(java_version as int)
+    withSourcesJar()
+}
+sourceSets {
+    main {
+        java.srcDir(rootProject.file('common/src/main/java'))
+        resources.srcDir(rootProject.file('common/src/main/resources'))
+    }
+    // EditorI18nTest reads its fixture catalogs from the test classpath.
+    test { resources.srcDir(rootProject.file('tools/fixtures/i18n')) }
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        name = 'Oriel'
+        url = rootProject.file(orielRepository.toString()).toURI()
+        content { includeGroup('dev.oriel') }
+    }
+    mavenLocal { content { includeGroup('dev.oriel') } }
+}
+
+def orielModule = "dev.oriel:oriel-fabric-${minecraft_version}:${oriel_version}"
+def embedOriel = orielEmbedded.toString() == 'true'
+dependencies {
+    minecraft("com.mojang:minecraft:${minecraft_version}")
+    implementation("net.fabricmc:fabric-loader:${fabric_loader_version}")
+    implementation("net.fabricmc.fabric-api:fabric-api:${fabric_version}")
+    implementation(orielModule) { transitive = false }
+    if (embedOriel) include(orielModule) { transitive = false }
+
+    testImplementation(platform("org.junit:junit-bom:${junit_version}"))
+    testImplementation('org.junit.jupiter:junit-jupiter')
+    testRuntimeOnly('org.junit.platform:junit-platform-launcher')
+}
+
+loom {
+    accessWidenerPath = file('src/main/resources/cadeditor.accesswidener')
+    mods { cadeditor { sourceSet(sourceSets.main) } }
+    runs {
+        client {
+            runDirectory.set(layout.buildDirectory.dir('run/client').get().asFile.absolutePath)
+            // Oriel reloads edited pages from this source tree during development.
+            vmArg('-Doriel.sourceRoot=' + project.projectDir.absolutePath)
+        }
+        server {
+            runDirectory.set(layout.buildDirectory.dir('run/server').get().asFile.absolutePath)
+            programArg('--nogui')
+        }
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.compilerArgs.addAll(['-Xlint:deprecation', '-Xlint:unchecked'])
+}
+
+processResources {
+    dependsOn(rootProject.tasks.named('checkEditorI18n'))
+    filteringCharset = 'UTF-8'
+    def props = [version: project.version.toString(), fabric_minecraft_version: fabric_minecraft_version.toString(),
+            fabric_loader_version: fabric_loader_version.toString(), oriel_version: oriel_version.toString()]
+    inputs.properties(props)
+    filesMatching('fabric.mod.json') { expand(props) }
+    // The in-game changelog page.
+    from(rootProject.file('CHANGELOG.md')) { into('assets/cadeditor') }
+}
+
+tasks.named('jar') {
+    inputs.property('orielEmbedded', embedOriel)
+    from(rootProject.file('LICENSE'))
+    from(rootProject.file('NOTICE'))
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+    workingDir = layout.buildDirectory.dir('test-run').get().asFile
+    doFirst { workingDir.mkdirs() }
+}
+
+apply from: 'verification.gradle'
