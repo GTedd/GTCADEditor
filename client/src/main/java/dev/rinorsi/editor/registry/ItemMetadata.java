@@ -30,7 +30,14 @@ public final class ItemMetadata {
         registry.listElements()
                 .filter(h -> only == null || h.key().identifier().equals(only))
                 .sorted(java.util.Comparator.comparing(h -> h.key().identifier().toString()))
-                .forEach(h -> entries.add(entry(h.value(), access)));
+                .forEach(h -> {
+                    var entry = entry(h.value(), access);
+                    // The creative inventory categories that list the item (kindFromFacts sorts combat items by them).
+                    var tabs = new JsonArray();
+                    CreativeTabIndex.of(h.value()).forEach(tabs::add);
+                    entry.add("creative_tabs", tabs);
+                    entries.add(entry);
+                });
         return entries;
     }
 

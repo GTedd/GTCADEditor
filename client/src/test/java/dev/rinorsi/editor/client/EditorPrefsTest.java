@@ -33,6 +33,9 @@ public final class EditorPrefsTest {
                 {"uiScale", "0", "1", "2", "3", "4"},
                 {"codeFontSize", "8", "12", "20"},
                 {"pageOpacity", "30", "60", "100"},
+                {"backdropDim", "0", "40", "100"},
+                {"themeBlur", "0", "5", "20"},
+                {"themeMaterial", "\"clear\"", "\"frosted\"", "\"acrylic\"", "\"matte\""},
                 {"winX", "-1", "0", "32768"},
                 {"winY", "-1", "0", "32768"}
             }) {
@@ -92,8 +95,13 @@ public final class EditorPrefsTest {
                 send(store, "pageOpacity", bad);
             for (String key : new String[] {"winX", "winY"})
                 for (String bad : new String[] {"-2", "32769", "10.5", "\"10\""}) send(store, key, bad);
+            for (String bad : new String[] {"-1", "101", "4.5", "\"10\""}) send(store, "backdropDim", bad);
+            for (String bad : new String[] {"-1", "21", "8.5", "\"8\""}) send(store, "themeBlur", bad);
+            for (String bad : new String[] {"\"glass\"", "1", "true"}) send(store, "themeMaterial", bad);
             send(store, "uiTheme", "\"dark\"");
             check(store.read().equals(valid), "invalid messages ignored without coercion");
+            check(store.peek("themeBlur").equals(valid.get("themeBlur")), "peek sees a pending value");
+            check(store.peek("unknown") == null, "peek of an unset key");
             check(!Files.exists(path), "accept never writes immediately");
             now.set(499_999_999L);
             store.tick();
@@ -201,6 +209,7 @@ public final class EditorPrefsTest {
             draftTests(root);
             asyncTests(root);
             colorPresetTests(root);
+            backdropTests();
             EditorScalePrefsTest.run();
             dev.rinorsi.editor.registry.DraftUtf8CounterTest.main(new String[0]);
             dev.rinorsi.editor.registry.DraftWriteOrderTest.main(new String[0]);
@@ -275,6 +284,31 @@ public final class EditorPrefsTest {
                 reread.get("colorPresets").equals(valid.get("colorPresets"))
                         && reread.get("recentColors").equals(valid.get("recentColors")),
                 "presets persisted and read back through the same validation");
+    }
+
+    /** Which themes get vanilla's menu blur behind the editor, and how much (EditorBackdrop). */
+    private static void backdropTests() {
+        check(EditorBackdrop.blurRadius(null, null, null) == 0, "default theme is opaque: no blur");
+        check(EditorBackdrop.blurRadius(json("100"), json("\"frosted\""), json("8")) == 0, "opaque panels: no blur");
+        check(EditorBackdrop.blurRadius(json("60"), json("\"clear\""), json("8")) == 0, "clear material: no blur");
+        check(
+                EditorBackdrop.blurRadius(json("60"), null, null) == EditorBackdrop.DEFAULT_BLUR,
+                "translucent default is frosted at the default radius");
+        for (String material : new String[] {"\"frosted\"", "\"acrylic\"", "\"matte\""})
+            check(
+                    EditorBackdrop.blurRadius(json("99"), json(material), json("7")) == 7,
+                    "blurred material " + material);
+        check(EditorBackdrop.blurRadius(json("60"), json("\"frosted\""), json("0")) == 0, "radius 0: no blur");
+        check(
+                EditorBackdrop.blurRadius(json("60"), json("\"frosted\""), json("24")) == EditorBackdrop.MAX_BLUR,
+                "older wider radius is capped");
+        check(
+                EditorBackdrop.blurRadius(json("60"), json("1"), json("\"9\"")) == EditorBackdrop.DEFAULT_BLUR,
+                "invalid values fall back to the page defaults");
+    }
+
+    private static com.google.gson.JsonElement json(String text) {
+        return JsonParser.parseString(text);
     }
 
     private static void send(EditorPrefs.Store store, String key, String json) {

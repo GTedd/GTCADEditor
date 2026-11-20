@@ -28,6 +28,6 @@
     "fabric-api": "*",
     "minecraft": "${fabric_minecraft_version}",
     "java": ">=25",
-    "oriel": ">=${oriel_version} <0.16.0"
+    "oriel": ">=${oriel_min} <${oriel_max}"
   }
 }

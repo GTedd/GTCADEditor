@@ -137,11 +137,11 @@ public final class HistoryClient {
         driver.patch("history_result", result);
     }
 
-    private static final class HistoryScreen extends OrielScreen {
+    private static final class HistoryScreen extends EditorScreen {
         private final Screen previous;
 
         HistoryScreen(Screen previous) {
-            super(VaultClient.PAGE, null, -1);
+            super(VaultClient.PAGE);
             this.previous = previous;
         }
 

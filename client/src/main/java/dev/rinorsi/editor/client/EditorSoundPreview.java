@@ -348,8 +348,7 @@ public final class EditorSoundPreview {
             s.paused = paused;
             handle.execute(channel -> {
                 if (session != s || s.seekVersion != version) return;
-                var access = (dev.rinorsi.editor.mixin.client.EditorAudioChannelAccessor) (Object) channel;
-                int source = access.cadeditor$source();
+                int source = channel.source; // widened: Channel has no public source getter
                 int state = org.lwjgl.openal.AL10.alGetSourcei(source, org.lwjgl.openal.AL10.AL_SOURCE_STATE);
                 if (state != org.lwjgl.openal.AL10.AL_PLAYING && state != org.lwjgl.openal.AL10.AL_PAUSED) return;
                 EditorSeekableSoundStream replacement = null;
@@ -361,9 +360,9 @@ public final class EditorSoundPreview {
                         replacement = new EditorSeekableSoundStream(s.clip.encoded(), seconds);
                         if (session != s || s.seekVersion != version) return;
                         channel.stop();
-                        var old = access.cadeditor$stream();
-                        access.cadeditor$stream(null);
-                        access.cadeditor$removeProcessedBuffers();
+                        var old = channel.stream;
+                        channel.stream = null;
+                        channel.removeProcessedBuffers();
                         if (old != null) old.close();
                         channel.attachBufferStream(replacement);
                         replacement = null; // Channel.destroy owns it from here.
@@ -404,8 +403,7 @@ public final class EditorSoundPreview {
                 handle.execute(channel -> {
                     try {
                         if (session != s) return;
-                        int source = ((dev.rinorsi.editor.mixin.client.EditorAudioChannelAccessor) (Object) channel)
-                                .cadeditor$source();
+                        int source = channel.source;
                         int state = org.lwjgl.openal.AL10.alGetSourcei(source, org.lwjgl.openal.AL10.AL_SOURCE_STATE);
                         if (state != org.lwjgl.openal.AL10.AL_PLAYING && state != org.lwjgl.openal.AL10.AL_PAUSED)
                             return;

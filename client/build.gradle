@@ -19,18 +19,46 @@ sourceSets {
     test { resources.srcDir(rootProject.file('tools/fixtures/i18n')) }
 }
 
+// The Oriel settings: -P first, then the uncommitted local.properties (a developer's own Oriel build), then
+// gradle.properties.
+def localProperties = new Properties()
+if (rootProject.file('local.properties').isFile()) {
+    rootProject.file('local.properties').withReader('UTF-8') { localProperties.load(it) }
+}
+def oriel = { String key ->
+    (gradle.startParameter.projectProperties[key] ?: localProperties.getProperty(key) ?: project.property(key)).toString().trim()
+}
+// The runtime range in fabric.mod.json. Oriel keeps its API within a minor, and every minor the editor was checked on is
+// inside it. The full Oriel UI mod (X.Y.1 and up) must satisfy it too, or Fabric silently loads the embedded library in
+// its place.
+def orielMin = oriel('oriel_min')
+def orielMax = oriel('oriel_max')
+def versionKey = { String v -> v.tokenize('.').collect { it.isInteger() ? it as int : 0 } }
+def compareVersions = { String a, String b ->
+    def x = versionKey(a), y = versionKey(b)
+    for (int i = 0; i < Math.max(x.size(), y.size()); i++) {
+        int c = (i < x.size() ? x[i] : 0) <=> (i < y.size() ? y[i] : 0)
+        if (c != 0) return c
+    }
+    0
+}
+def orielVersion = oriel('oriel_version')
+if (compareVersions(orielVersion, orielMin) < 0 || compareVersions(orielVersion, orielMax) >= 0) {
+    throw new GradleException("oriel_version ${orielVersion} is outside the supported range [${orielMin}, ${orielMax})")
+}
+
 repositories {
     mavenCentral()
     maven {
         name = 'Oriel'
-        url = rootProject.file(orielRepository.toString()).toURI()
+        url = rootProject.file(oriel('orielRepository')).toURI()
         content { includeGroup('dev.oriel') }
     }
     mavenLocal { content { includeGroup('dev.oriel') } }
 }
 
-def orielModule = "dev.oriel:oriel-fabric-${minecraft_version}:${oriel_version}"
-def embedOriel = orielEmbedded.toString() == 'true'
+def orielModule = "dev.oriel:oriel-fabric-${minecraft_version}:${orielVersion}"
+def embedOriel = oriel('orielEmbedded') == 'true'
 dependencies {
     minecraft("com.mojang:minecraft:${minecraft_version}")
     implementation("net.fabricmc:fabric-loader:${fabric_loader_version}")
@@ -68,7 +96,7 @@ processResources {
     dependsOn(rootProject.tasks.named('checkEditorI18n'))
     filteringCharset = 'UTF-8'
     def props = [version: project.version.toString(), fabric_minecraft_version: fabric_minecraft_version.toString(),
-            fabric_loader_version: fabric_loader_version.toString(), oriel_version: oriel_version.toString()]
+            fabric_loader_version: fabric_loader_version.toString(), oriel_min: orielMin, oriel_max: orielMax]
     inputs.properties(props)
     filesMatching('fabric.mod.json') { expand(props) }
     // The in-game changelog page.

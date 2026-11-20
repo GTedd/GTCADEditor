@@ -1,6 +1,5 @@
 package dev.rinorsi.editor.client;
 
-import dev.oriel.mod.client.OrielScreen;
 import dev.rinorsi.editor.EditorI18n;
 import dev.rinorsi.editor.EditorWriteLog;
 import net.minecraft.client.Minecraft;
@@ -9,14 +8,14 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 
 /** Modal Editor layer over the exact inventory instance; the menu stays open. */
-public final class EditorLayerScreen extends OrielScreen {
+public final class EditorLayerScreen extends EditorScreen {
     private static Screen suspending;
     private final AbstractContainerScreen<?> parent;
     private final Object player, level, connection, menu;
     private boolean returning;
 
     EditorLayerScreen(String page, AbstractContainerScreen<?> parent) {
-        super(page, null, -1);
+        super(page);
         this.parent = parent;
         var mc = Minecraft.getInstance();
         player = mc.player;

@@ -21,7 +21,8 @@ public final class EditorClipboardHostTest {
             }
         }
         var subclasses = new HashSet<String>();
-        var subclass = Pattern.compile("class\\s+(\\w+)\\s+extends\\s+(?:[\\w.]+\\.)?OrielScreen\\b");
+        // EditorScreen (the editor's OrielScreen with its own backdrop) and its subclasses are checked as well.
+        var subclass = Pattern.compile("class\\s+(\\w+)\\s+extends\\s+(?:[\\w.]+\\.)?(?:OrielScreen|EditorScreen)\\b");
         for (var entry : sources.entrySet()) {
             if (exempt(entry.getKey())) continue;
             String source = entry.getValue();
@@ -44,15 +45,17 @@ public final class EditorClipboardHostTest {
             var hosted = Pattern.compile("(?:var|[\\w.]+)\\s+(\\w+)\\s*=\\s*new\\s+" + name
                     + "\\s*\\([^;]*;\\s*EditorPageHost\\.attachCommon\\(\\1\\s*,\\s*[^;]+\\);");
             for (var entry : sources.entrySet()) {
-                if (name.equals("EditorLayerScreen") && entry.getKey().equals("EditorPageHost.java")) {
+                if ((name.equals("EditorLayerScreen") || name.equals("EditorScreen"))
+                        && entry.getKey().equals("EditorPageHost.java")) {
                     String source = entry.getValue();
+                    String local = name.equals("EditorLayerScreen") ? "layer" : "plain";
                     long count = creation.matcher(source).results().count();
                     check(
                             count == 1
-                                    && source.contains("layer.driver().pushData(data.toString())")
-                                    && source.contains("screen = layer;")
+                                    && source.contains(local + ".driver().pushData(data.toString())")
+                                    && source.contains("screen = " + local + ";")
                                     && source.contains("attachCommon(screen, null)"),
-                            "inventory layer passes initial data and every common channel through the same host");
+                            name + " passes initial data and every common channel through the same host");
                     creations += (int) count;
                     continue;
                 }
@@ -91,7 +94,9 @@ public final class EditorClipboardHostTest {
                         && page.contains("return \"unknown\""),
                 "loader version lookup has an unknown fallback");
         check(
-                page.indexOf("declare(data);") < page.indexOf("OrielScreens.open(page, data)")
+                page.contains("declare(data);")
+                        && page.indexOf("declare(data);") < page.indexOf("layer.driver().pushData(data.toString())")
+                        && page.indexOf("declare(data);") < page.indexOf("plain.driver().pushData(data.toString())")
                         && page.contains("declare(dataOrNull);"),
                 "both page entry paths declare shared data");
         check(

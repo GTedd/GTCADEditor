@@ -45,6 +45,14 @@ public final class EditorPrefs {
         Holder.STORE.accept(message);
     }
 
+    /**
+     * One preference as saved or pending, without copying the store (for reads every frame); null when unset.
+     * Only for primitive keys: the value is the store's own.
+     */
+    static JsonElement peek(String key) {
+        return Holder.STORE.peek(key);
+    }
+
     static void tick() {
         Holder.STORE.tick();
     }
@@ -104,6 +112,13 @@ public final class EditorPrefs {
             JsonObject out = cached.deepCopy();
             pending.forEach((key, value) -> out.add(key, value.value.deepCopy()));
             return out;
+        }
+
+        JsonElement peek(String key) {
+            finishWrite(false);
+            if (cached == null) cached = readDisk();
+            Pending update = pending.get(key);
+            return update != null ? update.value : cached.get(key);
         }
 
         void accept(JsonElement message) {
@@ -297,6 +312,14 @@ public final class EditorPrefs {
                                     || primitive.getAsString().equals("smooth"))
                     ? value
                     : null;
+        if (key.equals("themeMaterial"))
+            return primitive.isString()
+                            && switch (primitive.getAsString()) {
+                                case "clear", "frosted", "acrylic", "matte" -> true;
+                                default -> false;
+                            }
+                    ? value
+                    : null;
         if (key.equals("heroView"))
             return primitive.isString()
                             && (primitive.getAsString().equals("2d")
@@ -338,6 +361,14 @@ public final class EditorPrefs {
             case "pageOpacity" -> {
                 min = 30;
                 max = 100;
+            }
+            case "backdropDim" -> {
+                min = 0;
+                max = 100;
+            }
+            case "themeBlur" -> {
+                min = 0;
+                max = EditorBackdrop.MAX_BLUR;
             }
             case "winX", "winY" -> {
                 min = -1;

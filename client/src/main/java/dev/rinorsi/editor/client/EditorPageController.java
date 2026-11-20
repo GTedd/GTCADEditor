@@ -144,7 +144,7 @@ public final class EditorPageController implements PageControllers.Controller {
                                 + "if(typeof UIOpen!=='undefined')for(var c in s.open)if(Object.prototype.hasOwnProperty.call(s.open,c))UIOpen[c]=s.open[c];"
                                 + "if(typeof applyUiMotion==='function')applyUiMotion(Prefs.get('uiAnimations',true)!==false);"
                                 + "if(typeof applyUiFont==='function')applyUiFont(Prefs.get('uiFont','mc'));"
-                                + "if(typeof applyPageOpacity==='function')applyPageOpacity(Prefs.get('pageOpacity',60));"
+                                + "if(typeof applyTheme==='function')applyTheme(themePrefs());"
                                 + "document.documentElement.setAttribute('data-editor-restore-stage',I18n.t('cadeditor.ui.common.painting'));"
                                 // Select under the loading guard, then paint once even when the restored UI was editing
                                 // raw text.

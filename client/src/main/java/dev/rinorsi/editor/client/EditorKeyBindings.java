@@ -2,7 +2,6 @@ package dev.rinorsi.editor.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import dev.oriel.kit.ReferenceContent;
-import dev.rinorsi.editor.mixin.client.EditorOptionsAccessor;
 import java.util.Arrays;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -29,10 +28,10 @@ final class EditorKeyBindings {
             removed = true;
         }
         if (!removed) return;
-        ((EditorOptionsAccessor) client.options)
-                .cadeditor$setKeyMappings(Arrays.stream(client.options.keyMappings)
-                        .filter(mapping -> !mapping.getName().equals("key.oriel.home"))
-                        .toArray(KeyMapping[]::new));
+        // keyMappings is final in vanilla; the access widener makes it assignable (no public removal API).
+        client.options.keyMappings = Arrays.stream(client.options.keyMappings)
+                .filter(mapping -> !mapping.getName().equals("key.oriel.home"))
+                .toArray(KeyMapping[]::new);
         // KeyMapping keeps a separate dispatch table; hiding the row alone leaves old keys active.
         KeyMapping.resetMapping();
     }

@@ -346,7 +346,7 @@ assert.deepEqual(Array.from(c.splitTags(undefined)), []);
   assert.equal(q(gen2, '.ab-head'), null, '高级页不带关于区（关于在自己的页签里）');
   assert.equal(text(gen).includes('调试模式'), false, '调试不在界面页');
   assert.ok(text(gen2).includes('调试模式') && text(gen2).includes('窗口布局'), '窗口和调试在高级页');
-  assert.ok(text(gen).includes('界面音效') && text(gen).includes('页面背景不透明度'), '音效、背景不透明度在界面页');
+  assert.ok(text(gen).includes('界面音效') && text(gen).includes('自定义主题'), '音效、自定义主题在界面页');
 }
 console.log(
   'PASS components: xNum/xToggle/xText/xSeg/xSelect, kInput onCommit, xList extras, modalShell, kColorPop, combo, variant preview, tooltips, labels / names.'

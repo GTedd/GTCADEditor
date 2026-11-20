@@ -19,7 +19,7 @@ html, body { margin: 0; height: 100%; }
   --warn: #f8af2b; --bad: #e25a5a; --info: #55c8ff; --ench: #c46aff;
   --cat: #6cc349;
 }
-.o-app { position: absolute; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.08); }
+.o-app { position: absolute; left: 0; top: 0; width: 100%; height: 100%; background: var(--backdrop-color, transparent); }
 .grow { flex: 1; min-width: 0; }
 * { box-sizing: border-box; }
 
@@ -643,6 +643,10 @@ textarea.ed-raw, textarea.ed-snbt, textarea.ed-out { width: 100%; color: var(--t
 /* 物品后面的光斑缓慢呼吸 */
 .ed-stage .plate { animation: ed-breathe 3.6s ease-in-out infinite; }
 @keyframes ed-breathe { 0%, 100% { opacity: 0.75; } 50% { opacity: 1; } }
+/* 类别色要等物品类别确定（物品数据到达）后才出现：之前不画光晕，类别标签是中性灰；确定后光晕淡入一次再呼吸 */
+.ew.cat-pending .ed-stage .plate { animation: none; opacity: 0; }
+.ew.cat-in .ed-stage .plate { animation: ed-cat-in 400ms var(--m-out) both; }
+@keyframes ed-cat-in { from { opacity: 0; } to { opacity: 0.75; } }
 /* 弹层：背景淡入，面板弹起（modal 与 popover 沿用 m-modal-in / ore-drop） */
 .k-modal { animation: m-modal-in var(--m-slow) var(--m-spring) both; }
 .k-toast.ok { animation: m-modal-in 180ms var(--m-out) both, m-success 520ms var(--m-spring) 180ms; }
@@ -1447,7 +1451,9 @@ textarea.world-snbt { min-height: 56px; }
 .ui-scale-number.auto { opacity: 0.55; }
 .ui-scale-number .k-numrow { gap: 0; flex-wrap: nowrap; }
 .ui-scale-tools > .k-btn { min-height: 22px; padding: 0 6px; }
-#editor-page-opacity { width: 230px; max-width: 100%; }
+#editor-page-opacity, #editor-backdrop-dim, #editor-material-blur { width: 230px; max-width: 100%; }
+/* 设置里暂时不起作用的一行（质感为“通透”时的模糊强度）：变淡，仍可调 */
+.set-off { opacity: 0.45; }
 .x-sec .grow { flex: 1 1 auto; }
 .x-adds { display: flex; flex-direction: column; margin-top: 2px; }
 .x-tgt { padding: 0 0 0 2px; line-height: 1.5; overflow-wrap: anywhere; }
@@ -2076,16 +2082,26 @@ html[data-motion=reduced] *, html[data-motion=reduced] *::before, html[data-moti
 .vt-iname { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .vt-irow-b { flex: none; display: flex; gap: 4px; }
 
-/* ==== 页面背景不透明度（设置 → 界面）：只让面板底色半透明，文字、按钮和物品预览保持不透明。
-   Ore 九宫格的中心是不透明的，所以保留边框、去掉填充，再垫一层按不透明度混合的底色；子窗口和浮层另加磨砂 ==== */
-html[data-page-translucent=true] .ew, html[data-page-translucent=true] .k-modal {
+/* ==== 自定义主题（设置 → 界面）：界面不透明度与质感（screens.js applyTheme 写入的变量）。
+   只让面板底色半透明，文字、按钮和物品预览保持不透明。Ore 九宫格的中心是不透明的，所以保留边框、去掉填充，
+   再垫一层按不透明度混合的底色。质感的模糊由宿主画在整个页面后面（原版菜单背景模糊，EditorBackdrop），
+   这里只给面板加一层固定的光：磨砂柔光、亚克力提亮、哑光压暗。
+   不要用 backdrop-filter：Oriel 0.15 每帧为每个 backdrop 做几遍整窗离屏绘制并重建渲染目标，切换质感时让 Vulkan 设备丢失。 ==== */
+html[data-page-translucent=true] .ew, html[data-page-translucent=true] .k-modal, html[data-page-translucent=true] .k-pop {
   border-image-slice: 2;
   background: color-mix(in srgb, var(--s1) var(--page-opacity, 100%), transparent);
 }
-html[data-page-translucent=true] .k-modal, html[data-page-translucent=true] .k-pop {
-  border-image-slice: 2;
-  background: color-mix(in srgb, var(--s1) var(--page-opacity, 60%), transparent);
-  backdrop-filter: blur(10px);
+html[data-page-translucent=true][data-material=frosted] .ew, html[data-page-translucent=true][data-material=frosted] .k-modal,
+html[data-page-translucent=true][data-material=frosted] .k-pop {
+  background: linear-gradient(rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.05)), color-mix(in srgb, var(--s1) var(--page-opacity, 100%), transparent);
+}
+html[data-page-translucent=true][data-material=acrylic] .ew, html[data-page-translucent=true][data-material=acrylic] .k-modal,
+html[data-page-translucent=true][data-material=acrylic] .k-pop {
+  background: linear-gradient(rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.07)), color-mix(in srgb, var(--s1) var(--page-opacity, 100%), transparent);
+}
+html[data-page-translucent=true][data-material=matte] .ew, html[data-page-translucent=true][data-material=matte] .k-modal,
+html[data-page-translucent=true][data-material=matte] .k-pop {
+  background: linear-gradient(rgba(0, 0, 0, 0.24), rgba(0, 0, 0, 0.24)), color-mix(in srgb, var(--s1) var(--page-opacity, 100%), transparent);
 }
 html[data-page-translucent=true] .worldwin .advmain,
 html[data-page-translucent=true] .worldwin > .k-mh { background: transparent; }

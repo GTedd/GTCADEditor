@@ -124,7 +124,11 @@ function kindFromFacts(id, dc, meta) {
     return 'book';
   if (meta.ranged_weapon) return 'ranged';
   if (has('blocks_attacks')) return 'shield';
-  /* 镐 / 铲 / 锄 也带 weapon 组件，所以“武器”要排除普通工具；斧头能让盾失效，算近战 */
+  /* 战斗用品：原版创造模式“战斗用品”页里带武器或工具组件的物品（剑、长矛、斧、锤、三叉戟）。26.3 的剑也带 tool
+     组件（能砍蜘蛛网），所以不能只看组件；镐 / 铲 / 锄只在“工具与实用物品”页。没有分类页信息时（模组物品不在原版页里）
+     按组件判断：镐 / 铲 / 锄也带 weapon 组件，所以“武器”要排除普通工具；斧头能让盾失效，算战斗用品 */
+  var tabs = Array.isArray(meta.creative_tabs) ? meta.creative_tabs : [];
+  if (tabs.indexOf('minecraft:combat') >= 0 && (meta.weapon || meta.tool)) return 'melee';
   if (meta.weapon && (!meta.tool || (isObj(dc.weapon) && dc.weapon.disable_blocking_for_seconds > 0))) return 'melee';
   if (meta.tool) return 'tool';
   if (meta.armor_slot) return 'armor';
@@ -151,6 +155,11 @@ function liveKind(id) {
     meta = Reg.itemMeta(full);
   if (!dc || meta === null) return null;
   return kindFromFacts(shortId(id), dc, meta || {});
+}
+/* 类别是否已确定：物品数据（默认组件、item_meta）到齐之前，kindOfItem 只能先给 generic。样例预览里总是确定的 */
+function kindKnown(id) {
+  if (typeof Reg === 'undefined' || Reg.preview()) return true;
+  return liveKind(id) !== null;
 }
 function kindOfItem(id) {
   var s = shortId(id),

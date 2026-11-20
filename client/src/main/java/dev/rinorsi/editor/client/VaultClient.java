@@ -77,11 +77,11 @@ public final class VaultClient {
         mc.gui.setScreen(screen);
     }
 
-    private static final class VaultScreen extends OrielScreen {
+    private static final class VaultScreen extends EditorScreen {
         private final Screen previous;
 
         VaultScreen(Screen previous) {
-            super(PAGE, null, -1);
+            super(PAGE);
             this.previous = previous;
         }
 

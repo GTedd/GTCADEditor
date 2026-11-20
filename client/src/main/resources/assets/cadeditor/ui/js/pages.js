@@ -1,7 +1,7 @@
 /* 页面编排：物品类别 → 分页 → 卡片。只显示与这类物品相关的内容；其余组件通过「添加设置」加入，显示在「附加设置」页。 */
 
 var KIND_INFO = {
-  melee: { name: I18n.t('cadeditor.ui.pages.melee_weapons'), color: '#e8663d', icon: 'sword' },
+  melee: { name: I18n.t('cadeditor.ui.pages.combat_items'), color: '#e8663d', icon: 'sword' },
   tool: { name: I18n.t('cadeditor.ui.pages.tools'), color: '#e5b417', icon: 'pickaxe' },
   ranged: { name: I18n.t('cadeditor.ui.pages.ranged_weapons'), color: '#7bc74d', icon: 'bow' },
   shield: { name: I18n.t('cadeditor.ui.pages.shield'), color: '#8fa3b8', icon: 'shield' },

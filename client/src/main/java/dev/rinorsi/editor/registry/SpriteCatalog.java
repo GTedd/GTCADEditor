@@ -2,7 +2,6 @@ package dev.rinorsi.editor.registry;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import dev.rinorsi.editor.mixin.client.EditorAtlasAccessor;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -26,7 +25,7 @@ public final class SpriteCatalog {
     public static Iterator<JsonObject> iterator(String kind) {
         List<Atlas> atlases = new ArrayList<>();
         Minecraft.getInstance().getAtlasManager().forEach((id, atlas) -> {
-            var sprites = ((EditorAtlasAccessor) atlas).cadeditor$sprites();
+            var sprites = atlas.texturesByName; // widened: the atlas has no public sprite enumeration
             atlases.add(new Atlas(id.toString(), sprites.keySet(), id.equals(AtlasIds.ITEMS)));
         });
         if (kind.equals("sprite_atlas"))

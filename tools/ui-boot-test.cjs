@@ -48,11 +48,29 @@ function frame(t) {
 
 {
   const b = start({
-    prefs: { winW: 720, winH: 410, winX: 40, winY: 30, pageOpacity: 75, uiAnimations: false, uiFont: 'smooth' }
+    prefs: {
+      winW: 720,
+      winH: 410,
+      winX: 40,
+      winY: 30,
+      pageOpacity: 75,
+      backdropDim: 20,
+      themeMaterial: 'matte',
+      themeBlur: 5,
+      uiAnimations: false,
+      uiFont: 'smooth'
+    }
   });
   const root = b.c.document.documentElement;
   assert.equal(root.style['--page-opacity'], '75%', 'page opacity before the first frame');
   assert.equal(root.getAttribute('data-page-translucent'), 'true');
+  assert.equal(
+    root.style['--backdrop-color'],
+    'rgba(0, 0, 0, 0.2)',
+    'background outside the UI before the first frame'
+  );
+  assert.equal(root.getAttribute('data-material'), 'matte');
+  assert.equal(root.style['--material-blur'], undefined, 'the blur is drawn by the host (EditorBackdrop)');
   assert.equal(root.getAttribute('data-motion'), 'reduced');
   assert.equal(root.getAttribute('data-ed-font'), 'smooth');
   assert.match(b.win.getAttribute('style'), /--ww:720px;--wh:410px;/, 'saved window size before the first frame');
@@ -82,7 +100,14 @@ function frame(t) {
 {
   const b = start({ prefs: { windowMode: 'maximized' } });
   assert.ok(b.win.classList.contains('max'), 'opening mode maximized applies to the shell');
-  assert.equal(b.c.document.documentElement.style['--page-opacity'], '60%', 'default page opacity');
+  assert.equal(b.c.document.documentElement.style['--page-opacity'], '100%', 'opaque by default');
+  assert.equal(b.c.document.documentElement.getAttribute('data-page-translucent'), 'false');
+  assert.equal(
+    b.c.document.documentElement.style['--backdrop-color'],
+    'rgba(0, 0, 0, 0)',
+    'clear outside the UI by default'
+  );
+  assert.equal(b.c.document.documentElement.getAttribute('data-material'), 'frosted');
   assert.equal(b.win.classList.contains('positioned'), false, 'no saved position: centred');
 }
 {

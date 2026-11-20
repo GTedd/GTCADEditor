@@ -74,19 +74,20 @@ var EditorBoot = (function () {
   function data() {
     return (typeof oriel !== 'undefined' && oriel && oriel.data) || {};
   }
-  /* 和 Prefs.init / applyPageOpacity / applyUiMotion / applyUiFont / applyWinStyle 同样的规则，只是提前到第一帧之前 */
+  /* 和 Prefs.init / applyTheme / applyUiMotion / applyUiFont / applyWinStyle 同样的规则，只是提前到第一帧之前 */
   function shell() {
     var d = data(),
       p = d.prefs && typeof d.prefs === 'object' ? d.prefs : {},
       root = document.documentElement,
       win = document.getElementById('win'),
       overlay = document.getElementById('boot-loading'),
-      opacity =
-        typeof p.pageOpacity === 'number' && isFinite(p.pageOpacity)
-          ? Math.min(100, Math.max(30, Math.round(p.pageOpacity)))
-          : 60;
+      opacity = between(p.pageOpacity, 30, 100, 100),
+      dim = between(p.backdropDim, 0, 100, 0),
+      material = ['clear', 'frosted', 'acrylic', 'matte'].indexOf(p.themeMaterial) >= 0 ? p.themeMaterial : 'frosted';
     root.style.setProperty('--page-opacity', opacity + '%');
+    root.style.setProperty('--backdrop-color', 'rgba(0, 0, 0, ' + dim / 100 + ')');
     root.setAttribute('data-page-translucent', opacity < 100 ? 'true' : 'false');
+    root.setAttribute('data-material', material);
     root.setAttribute('data-motion', p.uiAnimations === false ? 'reduced' : 'full');
     root.setAttribute('data-ed-font', p.uiFont === 'smooth' ? 'smooth' : 'mc');
     if (d.mode === 'vault' || d.mode === 'history') {
@@ -107,14 +108,20 @@ var EditorBoot = (function () {
       vh = window.innerHeight || 0;
     if (ww && vw) ww = Math.min(ww, vw - 20);
     if (wh && vh) wh = Math.min(wh, vh - 20);
-    var style = '--cat:#6cc349;',
+    // The item's category colour waits for its kind (applyWinStyle): neutral, no halo until then.
+    var style = '--cat:#8c8d90;',
       positioned = position(p.winX) !== null && position(p.winY) !== null;
     if (ww) style += '--ww:' + ww + 'px;';
     if (wh) style += '--wh:' + wh + 'px;';
     if (positioned) style += '--wx:' + p.winX + 'px;--wy:' + p.winY + 'px;';
     win.setAttribute('style', style);
     if (maxed) win.classList.add('max');
+    win.classList.add('cat-pending');
     if (positioned) win.classList.add('positioned');
+  }
+  /* themeInt 的同一规则：数字取整后夹到范围内，不是数字用默认值 */
+  function between(v, min, max, dflt) {
+    return typeof v === 'number' && isFinite(v) ? Math.min(max, Math.max(min, Math.round(v))) : dflt;
   }
   /* windowPos 的同一规则：0–32768 的整数，其余（含 -1）表示居中 */
   function position(v) {

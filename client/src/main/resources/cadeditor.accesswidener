@@ -4,6 +4,14 @@ accessible field net/minecraft/server/players/PlayerList stats Ljava/util/Map;
 accessible field net/minecraft/server/players/PlayerList advancements Ljava/util/Map;
 # Fabric's screen events expose keys, but not the hovered inventory slot.
 accessible field net/minecraft/client/gui/screens/inventory/AbstractContainerScreen hoveredSlot Lnet/minecraft/world/inventory/Slot;
+# Sprite search lists every loaded sprite: the atlas has no public sprite enumeration.
+accessible field net/minecraft/client/renderer/texture/TextureAtlas texturesByName Ljava/util/Map;
+# The sound preview seeks by swapping its own channel's stream: Channel exposes no source, stream or buffer API.
+accessible field com/mojang/blaze3d/audio/Channel source I
+accessible field com/mojang/blaze3d/audio/Channel stream Lnet/minecraft/client/sounds/AudioStream;
+accessible method com/mojang/blaze3d/audio/Channel removeProcessedBuffers ()I
+# Oriel's library-only shortcut is removed from the controls list after registration (no removal API).
+mutable field net/minecraft/client/Options keyMappings [Lnet/minecraft/client/KeyMapping;
 # Target only the preview instance: SoundManager has no per-instance pause API in 26.1.2.
 accessible field net/minecraft/client/sounds/SoundManager soundEngine Lnet/minecraft/client/sounds/SoundEngine;
 accessible field net/minecraft/client/sounds/SoundEngine instanceToChannel Ljava/util/Map;

@@ -74,8 +74,9 @@ open();
 run(9000, true);
 assert.equal(L.timer, null, 'never spins forever');
 assert.ok(perf[0][1].total_ms <= 8200);
-// A request the page's send limit dropped (oriel.send() === false) is asked again on the next lookup;
-// an accepted one is never repeated. Otherwise the item never becomes "ready" and only the fallbacks end the wait.
+// A request the page's send limit dropped (oriel.send() === false) waits in HostOutbox and is sent again shortly;
+// the next lookup does not repeat it, and an accepted one is never repeated. Otherwise the item never becomes
+// "ready" and only the fallbacks end the wait.
 {
   const t2 = H.create({ data: {} }),
     c2 = t2.c;
@@ -90,16 +91,20 @@ assert.ok(perf[0][1].total_ms <= 8200);
   const count = (n) => names.filter((x) => x === n).length;
   assert.equal(c2.Reg.defaultsOf('minecraft:stone'), null);
   c2.Reg.itemMeta('minecraft:stone');
+  assert.equal(c2.HostOutbox.pending(), 2, 'dropped requests wait in the outbox');
   accept = true;
   c2.Reg.defaultsOf('minecraft:stone');
   c2.Reg.itemMeta('minecraft:stone');
-  assert.equal(count('item_defaults_one'), 2, 'dropped defaults request asked again');
-  assert.equal(count('item_meta_one'), 2, 'dropped meta request asked again');
+  assert.equal(count('item_defaults_one'), 1, 'a queued request is not repeated by the lookup');
+  t2.timers.splice(0).forEach((x) => x.fn());
+  assert.equal(c2.HostOutbox.pending(), 0, 'the outbox sent them again');
+  assert.equal(count('item_defaults_one'), 2, 'dropped defaults request sent again');
+  assert.equal(count('item_meta_one'), 1, 'a request queued behind a dropped one is sent once, in order');
   c2.Reg.defaultsOf('minecraft:stone');
   c2.Reg.itemMeta('minecraft:stone');
   assert.equal(count('item_defaults_one'), 2, 'accepted request not repeated');
-  assert.equal(count('item_meta_one'), 2);
+  assert.equal(count('item_meta_one'), 1);
 }
 console.log(
-  'PASS loading overlay: closes right after the item data, no flash for fast data, final redraw, 1.5 s / 8 s fallbacks, dropped requests re-asked.'
+  'PASS loading overlay: closes right after the item data, no flash for fast data, final redraw, 1.5 s / 8 s fallbacks, dropped requests resent by the outbox.'
 );

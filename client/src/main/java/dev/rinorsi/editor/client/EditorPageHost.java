@@ -45,6 +45,30 @@ final class EditorPageHost {
                     var trace = traces.get(driver);
                     if (trace != null) trace.accept(value);
                 });
+                // The page batches its stage marks and log lines, so they don't use up its Oriel message budget.
+                driver.onMessage("diag_batch", value -> {
+                    if (!value.isJsonObject()
+                            || !value.getAsJsonObject().has("items")
+                            || !value.getAsJsonObject().get("items").isJsonArray()) return;
+                    var trace = traces.get(driver);
+                    int count = 0;
+                    for (var item : value.getAsJsonObject().getAsJsonArray("items")) {
+                        if (++count > 64) break;
+                        if (!item.isJsonObject()) continue;
+                        var entry = item.getAsJsonObject();
+                        var data = entry.get("data");
+                        if (data == null
+                                || !entry.has("channel")
+                                || !entry.get("channel").isJsonPrimitive()) continue;
+                        switch (entry.get("channel").getAsString()) {
+                            case "log" -> uiLog.accept(data);
+                            case "editor_ready" -> {
+                                if (trace != null) trace.accept(data);
+                            }
+                            default -> {}
+                        }
+                    }
+                });
                 driver.onMessage(
                         "editor_recovery_preview",
                         value -> Minecraft.getInstance().schedule(() -> EditorPageRecovery.preview(driver)));
@@ -77,7 +101,13 @@ final class EditorPageHost {
             layer.driver().pushData(data.toString());
             layer.show();
             screen = layer;
-        } else screen = OrielScreens.open(page, data);
+        } else {
+            // As OrielScreens.open does, with the editor's own background (EditorBackdrop).
+            var plain = new EditorScreen(page);
+            plain.driver().pushData(data.toString());
+            Minecraft.getInstance().gui.setScreen(plain);
+            screen = plain;
+        }
         attachCommon(screen, null);
         return screen;
     }

@@ -41,7 +41,7 @@ var Prefs = {
     Snd.on = this.get('uiSound', true) !== false;
     applyUiMotion(this.get('uiAnimations', true) !== false);
     applyUiFont(this.get('uiFont', 'mc'));
-    applyPageOpacity(this.get('pageOpacity', 60));
+    applyTheme(themePrefs());
     UI.winX = windowPos(this.get('winX', -1));
     UI.winY = windowPos(this.get('winY', -1));
     UI.stageOpen = this.get('stageOpen', true) !== false;
@@ -72,7 +72,10 @@ var Prefs = {
   },
   set: function (k, v) {
     this.vals[k] = v;
-    if (this.host && typeof oriel !== 'undefined' && oriel.send) oriel.send('prefs', { key: k, value: v });
+    // Queued if Oriel drops it for the message budget, so a changed preference is never silently lost.
+    if (this.host && typeof oriel !== 'undefined' && oriel.send)
+      if (typeof HostOutbox !== 'undefined') HostOutbox.send('prefs', { key: k, value: v }, 'prefs:' + k);
+      else oriel.send('prefs', { key: k, value: v });
   }
 };
 
@@ -92,15 +95,49 @@ function applyUiFont(v) {
   UI.font = v;
   document.documentElement.setAttribute('data-ed-font', v);
 }
-/* 页面背景不透明度（30–100，默认 60）：只让面板底色半透明，文字、按钮和物品预览保持不透明 */
-function pageOpacityClamp(v) {
-  return typeof v === 'number' && isFinite(v) ? clampN(Math.round(v), 30, 100) : 60;
+/* 自定义主题（设置 → 界面）：
+   - 界面不透明度 pageOpacity 30–100%（默认 100，不透明；低于 100 才有半透明、质感和模糊）：编辑器窗口、子窗口和浮层的底色，文字、按钮和物品预览保持不透明；
+   - 界面外背景 backdropDim 0–100%（默认 0，完全透明）：主窗口以外游戏画面的压暗，由 .o-app 画；宿主的编辑器屏幕不再叠原版的暗色渐变
+     （EditorBackdrop），所以 0 就是看得清周围。子窗口的遮罩是固定的浅色一层，不跟它走；
+   - 质感 themeMaterial：通透 clear / 磨砂 frosted（默认）/ 亚克力 acrylic / 哑光 matte。除通透外，宿主在页面后面画原版菜单背景同款模糊
+     （整个游戏画面，界面外也一起模糊），页面只给面板换底色。页面不用 backdrop-filter：Oriel 0.15 每帧为它做几遍整窗离屏绘制并重建渲染目标，
+     2026-11-17 切换质感时让 Vulkan 设备丢失（显卡驱动重置）；
+   - 模糊强度 themeBlur 0–20（原版模糊半径，默认 5；原版自己的选项最高 10），通透时不用。 */
+var THEME_DEFAULT = { pageOpacity: 100, backdropDim: 0, material: 'frosted', blur: 5 };
+var THEME_MATERIALS = ['clear', 'frosted', 'acrylic', 'matte'];
+function themeInt(v, min, max, dflt) {
+  return typeof v === 'number' && isFinite(v) ? clampN(Math.round(v), min, max) : dflt;
 }
-function applyPageOpacity(v) {
-  v = pageOpacityClamp(v);
-  UI.pageOpacity = v;
-  document.documentElement.style.setProperty('--page-opacity', v + '%');
-  document.documentElement.setAttribute('data-page-translucent', v < 100 ? 'true' : 'false');
+function themeOf(p) {
+  p = p || {};
+  return {
+    pageOpacity: themeInt(p.pageOpacity, 30, 100, THEME_DEFAULT.pageOpacity),
+    backdropDim: themeInt(p.backdropDim, 0, 100, THEME_DEFAULT.backdropDim),
+    material: THEME_MATERIALS.indexOf(p.material) >= 0 ? p.material : THEME_DEFAULT.material,
+    blur: themeInt(p.blur, 0, 20, THEME_DEFAULT.blur)
+  };
+}
+function themePrefs() {
+  return themeOf({
+    pageOpacity: Prefs.get('pageOpacity'),
+    backdropDim: Prefs.get('backdropDim'),
+    material: Prefs.get('themeMaterial'),
+    blur: Prefs.get('themeBlur')
+  });
+}
+function applyTheme(t) {
+  t = themeOf(t);
+  UI.theme = t;
+  var root = document.documentElement;
+  root.style.setProperty('--page-opacity', t.pageOpacity + '%');
+  root.style.setProperty('--backdrop-color', 'rgba(0, 0, 0, ' + t.backdropDim / 100 + ')');
+  root.setAttribute('data-page-translucent', t.pageOpacity < 100 ? 'true' : 'false');
+  root.setAttribute('data-material', t.material);
+}
+/* 改一项主题偏好：交给宿主保存并立即生效 */
+function setThemePref(key, value) {
+  Prefs.set(key, value);
+  applyTheme(themePrefs());
 }
 /* 窗口化时拖出来的位置（左上角，逻辑像素）；-1 或缺省 = 居中 */
 function windowPos(v) {
@@ -1093,10 +1130,16 @@ function openMoreTabs(anchor) {
 }
 
 /* 窗口的内联样式：品类色 + 用户拖出来的窗口 / 左栏尺寸；最大化是一个类 */
+/* 类别色的状态：物品类别确定之前是 "?"（中性灰、不画光晕），之后是类别名；没有物品（世界页等）是 "" */
+var CAT_PENDING = '#8c8d90';
+function catState(d) {
+  return !d ? '' : kindKnown(d.id) ? kindOfItem(d.id) : '?';
+}
 function applyWinStyle() {
   var d = Store.doc(),
-    info = d ? KIND_INFO[kindOfItem(d.id)] : null,
-    s = '--cat:' + (info ? info.color : '#6cc349') + ';';
+    cat = catState(d),
+    info = cat && cat !== '?' ? KIND_INFO[cat] : null,
+    s = '--cat:' + (info ? info.color : cat === '?' ? CAT_PENDING : '#6cc349') + ';';
   var vp = uiViewport(),
     vw = vp.width,
     vh = vp.height,
@@ -1112,6 +1155,16 @@ function applyWinStyle() {
   w.setAttribute('style', s);
   w.classList.toggle('max', !!UI.maxed);
   w.classList.toggle('positioned', positioned);
+  /* 类别刚确定：光晕淡入一次（cat-in），之后照常呼吸 */
+  if (UI.catState === '?' && cat !== '?') {
+    w.classList.add('cat-in');
+    setTimeout(function () {
+      var w2 = $('win');
+      if (w2) w2.classList.remove('cat-in');
+    }, 420);
+  }
+  w.classList.toggle('cat-pending', cat === '?');
+  UI.catState = cat;
   scheduleFit();
   if (!UI.dragging) {
     setTimeout(scheduleFit, 160);
@@ -4195,7 +4248,9 @@ function advSettings(host, page) {
   var box = h('div', { class: 'x-list set-list' });
   /* 一项设置 = 一行：图标 + 名称 / 一句说明 + 右侧控件（和子页的行同一个样式） */
   function row(icon, title, sub, control) {
-    box.appendChild(xRow({ icon: uiIcon(icon, 14), title: title, sub: sub, right: control }));
+    var line = xRow({ icon: uiIcon(icon, 14), title: title, sub: sub, right: control });
+    box.appendChild(line);
+    return line;
   }
   if (page === 'ui') {
     box.appendChild(xSec('maximize', I18n.t('cadeditor.ui.screens.display')));
@@ -4287,25 +4342,6 @@ function advSettings(host, page) {
       I18n.t('cadeditor.ui.screens.mc_defaults_game_fonts_smooth'),
       fontSeg.el
     );
-    var opacity = kNumber(UI.pageOpacity, {
-      min: 30,
-      max: 100,
-      softMin: 30,
-      softMax: 100,
-      step: 1,
-      unit: '%',
-      onChange: function (v) {
-        applyPageOpacity(v);
-        Prefs.set('pageOpacity', UI.pageOpacity);
-      }
-    });
-    opacity.el.id = 'editor-page-opacity';
-    row(
-      'palette',
-      I18n.t('cadeditor.ui.settings.page_opacity'),
-      I18n.t('cadeditor.ui.settings.page_opacity_hint'),
-      opacity.el
-    );
     var hv = kSeg(
       [
         { v: '3d', label: '3D' },
@@ -4319,6 +4355,10 @@ function advSettings(host, page) {
       }
     );
     row('cube', I18n.t('cadeditor.ui.screens.left_preview'), I18n.t('cadeditor.ui.screens.item_model_3_d_2'), hv.el);
+    themeSection(box, row, function () {
+      clear(host);
+      advSettings(host, page);
+    });
   } else {
     box.appendChild(xSec('maximize', I18n.t('cadeditor.ui.screens.window')));
     row(
@@ -4375,6 +4415,99 @@ function advSettings(host, page) {
       );
   }
   host.appendChild(box);
+}
+/* 设置 → 界面 → 自定义主题：每项改动立即生效并保存；redraw 重画整页（恢复默认之后） */
+function themeSection(box, row, redraw) {
+  var t = themePrefs(),
+    materialRow = null,
+    blurRow = null;
+  /* 不透明（100%）时没有质感和模糊；通透没有模糊：这些行变淡，仍可先调好 */
+  function paintOff() {
+    var th = UI.theme || t;
+    if (materialRow) materialRow.classList.toggle('set-off', th.pageOpacity >= 100);
+    if (blurRow) blurRow.classList.toggle('set-off', th.pageOpacity >= 100 || th.material === 'clear');
+  }
+  box.appendChild(xSec('palette', I18n.t('cadeditor.ui.settings.custom_theme')));
+  var opacity = kNumber(t.pageOpacity, {
+    min: 30,
+    max: 100,
+    softMin: 30,
+    softMax: 100,
+    step: 1,
+    unit: '%',
+    onChange: function (v) {
+      setThemePref('pageOpacity', themeOf({ pageOpacity: v }).pageOpacity);
+      paintOff();
+    }
+  });
+  opacity.el.id = 'editor-page-opacity';
+  row(
+    'layers',
+    I18n.t('cadeditor.ui.settings.page_opacity'),
+    I18n.t('cadeditor.ui.settings.page_opacity_hint'),
+    opacity.el
+  );
+  var dim = kNumber(t.backdropDim, {
+    min: 0,
+    max: 100,
+    softMin: 0,
+    softMax: 100,
+    step: 1,
+    unit: '%',
+    onChange: function (v) {
+      setThemePref('backdropDim', themeOf({ backdropDim: v }).backdropDim);
+    }
+  });
+  dim.el.id = 'editor-backdrop-dim';
+  row('eye', I18n.t('cadeditor.ui.settings.backdrop_dim'), I18n.t('cadeditor.ui.settings.backdrop_dim_hint'), dim.el);
+  var material = kSeg(
+    [
+      { v: 'clear', label: I18n.t('cadeditor.ui.settings.material_clear') },
+      { v: 'frosted', label: I18n.t('cadeditor.ui.settings.material_frosted') },
+      { v: 'acrylic', label: I18n.t('cadeditor.ui.settings.material_acrylic') },
+      { v: 'matte', label: I18n.t('cadeditor.ui.settings.material_matte') }
+    ],
+    t.material,
+    function (v) {
+      setThemePref('themeMaterial', v);
+      paintOff();
+    }
+  );
+  material.el.id = 'editor-material';
+  materialRow = row(
+    'sparkle',
+    I18n.t('cadeditor.ui.settings.material'),
+    I18n.t('cadeditor.ui.settings.material_hint'),
+    material.el
+  );
+  var blur = kNumber(t.blur, {
+    min: 0,
+    max: 20,
+    softMin: 0,
+    softMax: 20,
+    step: 1,
+    onChange: function (v) {
+      setThemePref('themeBlur', themeOf({ blur: v }).blur);
+    }
+  });
+  blur.el.id = 'editor-material-blur';
+  blurRow = row('cloud', I18n.t('cadeditor.ui.settings.blur'), I18n.t('cadeditor.ui.settings.blur_hint'), blur.el);
+  paintOff();
+  var reset = kBtn(
+    I18n.t('cadeditor.ui.common.reset'),
+    function () {
+      Prefs.set('pageOpacity', THEME_DEFAULT.pageOpacity);
+      Prefs.set('backdropDim', THEME_DEFAULT.backdropDim);
+      Prefs.set('themeMaterial', THEME_DEFAULT.material);
+      Prefs.set('themeBlur', THEME_DEFAULT.blur);
+      applyTheme(themePrefs());
+      redraw();
+      toast(I18n.t('cadeditor.ui.settings.theme_restored'), 'ok');
+    },
+    { icon: 'undo' }
+  );
+  reset.id = 'editor-theme-reset';
+  row('undo', I18n.t('cadeditor.ui.settings.theme_reset'), I18n.t('cadeditor.ui.settings.theme_reset_hint'), reset);
 }
 /* 关于：Logo、版本、作者和链接。链接用页面的 <a href>，点了 Oriel 会先让玩家确认；玩家把网页链接设成屏蔽时打不开，所以每行都有「复制」 */
 function aboutSection(host) {

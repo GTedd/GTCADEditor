@@ -795,7 +795,7 @@ function kCode(o) {
     var src = ta.value;
     try {
       if (typeof ta.setTextHighlights !== 'function')
-        throw new Error(I18n.t('cadeditor.ui.code.requires_matching_oriel_0_15'));
+        throw new Error(I18n.t('cadeditor.ui.code.requires_oriel_text_highlights'));
       var big = src.length > 32768;
       if (baseCache.src !== src) {
         baseCache.src = src;

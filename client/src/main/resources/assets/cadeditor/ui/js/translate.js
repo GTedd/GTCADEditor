@@ -39,7 +39,7 @@ var Tr = {
     var q = this.queue.splice(0);
     if (!q.length || typeof oriel === 'undefined' || !oriel.send) return;
     for (var i = 0; i < q.length; i += 200)
-      oriel.send('registry', {
+      regSend({
         name: 'translate',
         requestId: 'ui-lang-' + this.epoch + '-' + i,
         keys: q.slice(i, i + 200)

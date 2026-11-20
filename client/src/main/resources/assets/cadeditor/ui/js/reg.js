@@ -1,6 +1,12 @@
 /* 实时注册表（宿主推送，见 docs/registry-contract.md）：附魔、状态效果、音效等一律从游戏当前世界的注册表来，
    没有宿主（浏览器 / 文件夹预览）时才退回 data.js 里的内置数据，并在界面上标明。 */
 /* Scoped entity transport. Consumers only observe complete responses. */
+/* A registry request to the host: through HostOutbox (a request Oriel drops for the page message budget is sent
+   again), or straight to oriel.send when the outbox is not loaded. */
+function regSend(data, key) {
+  if (typeof HostOutbox !== 'undefined') return HostOutbox.send('registry', data, key);
+  return oriel.send('registry', data) !== false;
+}
 var RegWire = {
   pending: Object.create(null),
   active: Object.create(null),
@@ -24,6 +30,7 @@ var RegWire = {
     var p = this.pending[id];
     if (!p) return;
     clearTimeout(p.timer);
+    if (typeof HostOutbox !== 'undefined') HostOutbox.cancel('registry:' + id);
     delete this.pending[id];
     if (p.transfer && this.active[p.transfer]) {
       this.reserved -= this.active[p.transfer].size;
@@ -73,11 +80,8 @@ var RegWire = {
     }, 30000);
     var request = { name: name, requestId: token };
     if (id !== undefined) request.id = id;
-    try {
-      oriel.send('registry', request);
-    } catch (e) {
-      this.fail(token, String(e.message || e));
-    }
+    // A request Oriel drops for the page's message budget is sent again, not waited on for 30 seconds.
+    if (!regSend(request, 'registry:' + token)) this.fail(token, I18n.t('cadeditor.ui.reg.host_messages_queue_full'));
   },
   checksum: function (s) {
     var h = 0x811c9dc5;
@@ -362,6 +366,7 @@ var Reg = {
         this.esAt = {};
         this.ebase = {};
         this.ebAsk = {};
+        this.retries = {};
         this.einfo = {};
         this.eiAsk = {};
         this.eggMap = null;
@@ -512,7 +517,22 @@ var Reg = {
         val.reason || I18n.t('cadeditor.ui.reg.server_client_synchronization_complete')
       ); /* 远程服务器上的战利品表 / 配方等：空是“拿不到”，不是“没有” */
     if (val.error) k.error = String(val.error);
+    /* 按需取的实体表（装备槽组等）传输失败：清掉这次的空结果，过一会儿重新请求 */
+    if (val.error && RegWire.entity(kind) && !ents.length && !off) {
+      delete this.kinds[kind];
+      this.retryLater('table:' + kind, function () {
+        delete Reg.tblAsk[kind];
+        Reg.fire(kind);
+      });
+    }
     this.fire(kind);
+  },
+  /* 失败后的有限次重试：2、4、6…秒后各一次，最多 5 次；换世界（meta 换代）时清零 */
+  retries: {},
+  retryLater: function (key, run) {
+    var n = (this.retries[key] = (this.retries[key] || 0) + 1);
+    if (n > 5 || typeof setTimeout !== 'function') return;
+    setTimeout(run, 2000 * n);
   },
   /* 物品原型默认组件：按需向宿主要；未到不是空原型，也不能用预览样例替代。 */
   defs: {},
@@ -533,7 +553,7 @@ var Reg = {
     if (e === undefined && !this.defAsk[full] && typeof oriel !== 'undefined' && oriel.send) {
       this.defAsk[full] = 1;
       // A send the page's rate limit dropped is not "asked": the next lookup (the loading poll, a redraw) asks again.
-      if (oriel.send('registry', { name: 'item_defaults_one', id: full }) === false) delete this.defAsk[full];
+      if (regSend({ name: 'item_defaults_one', id: full }) === false) delete this.defAsk[full];
     }
     return null;
   },
@@ -561,7 +581,7 @@ var Reg = {
     if (h0 && h0.done) return h0.list.filter(Boolean);
     if (!h0 && !this.hintAsk[id] && typeof oriel !== 'undefined' && oriel.send) {
       this.hintAsk[id] = 1;
-      if (oriel.send('registry', { name: 'item_model_hints', id: id }) === false) delete this.hintAsk[id];
+      if (regSend({ name: 'item_model_hints', id: id }) === false) delete this.hintAsk[id];
     }
     return null;
   },
@@ -586,7 +606,7 @@ var Reg = {
     if (bulk) return this.bpAll && this.bpAll.done ? false : null;
     if (!this.bpAsk[full] && typeof oriel !== 'undefined' && oriel.send) {
       this.bpAsk[full] = 1;
-      if (oriel.send('registry', { name: 'block_properties', id: full }) === false) delete this.bpAsk[full];
+      if (regSend({ name: 'block_properties', id: full }) === false) delete this.bpAsk[full];
     }
     return null;
   },
@@ -595,7 +615,7 @@ var Reg = {
     if (this.bpAll && this.bpAll.done) return true;
     if (!this.bpAll && typeof oriel !== 'undefined' && oriel.send) {
       this.bpAll = { done: false };
-      if (oriel.send('registry', { name: 'block_properties' }) === false) this.bpAll = null;
+      if (regSend({ name: 'block_properties' }) === false) this.bpAll = null;
     }
     return false;
   },
@@ -624,7 +644,7 @@ var Reg = {
     if (!this.live()) return [];
     if (!this.tagAsk[k] && typeof oriel !== 'undefined' && oriel.send) {
       this.tagAsk[k] = 1;
-      if (oriel.send('registry', { name: kind, id: full }) === false) delete this.tagAsk[k];
+      if (regSend({ name: kind, id: full }) === false) delete this.tagAsk[k];
     }
     return null;
   },
@@ -729,7 +749,7 @@ var Reg = {
     if (this.imAll) return false;
     if (!this.imAsk[full] && typeof oriel !== 'undefined' && oriel.send) {
       this.imAsk[full] = 1;
-      if (oriel.send('registry', { name: 'item_meta_one', id: full }) === false) delete this.imAsk[full];
+      if (regSend({ name: 'item_meta_one', id: full }) === false) delete this.imAsk[full];
     }
     return null;
   },
@@ -750,6 +770,17 @@ var Reg = {
   ebAsk: {},
   ingestEB: function (v) {
     var ents = v.entries || [];
+    /* 没取到（传输失败、超时）不是“没有基础属性”：过一会儿再要一次，否则攻击伤害 / 速度会一直停在“正在读取” */
+    if (v.error && v.id && !ents.length) {
+      var failed = this.full(v.id);
+      delete this.ebase[failed];
+      this.retryLater('entity_base_attributes:' + failed, function () {
+        delete Reg.ebAsk[failed];
+        Reg.fire('entity_base_attributes');
+      });
+      this.fire('entity_base_attributes');
+      return;
+    }
     ents.forEach(function (e) {
       Reg.ebase[e.id] = e.attributes || {};
     });
@@ -822,7 +853,7 @@ var Reg = {
     if (r && r.done) return r.error ? null : r.list;
     if (!this.relAsk[k] && typeof oriel !== 'undefined' && oriel.send) {
       this.relAsk[k] = 1;
-      if (oriel.send('registry', { name: ref.name, id: ref.id, field: ref.field }) === false) delete this.relAsk[k];
+      if (regSend({ name: ref.name, id: ref.id, field: ref.field }) === false) delete this.relAsk[k];
     }
     return null; // 还没回来：当作未知，不是「没有」
   },
@@ -870,7 +901,7 @@ var Reg = {
     if (typeof oriel === 'undefined') return;
     /* 告诉宿主：这个页面会用搜索 / 精确查询取大目录，不必再把物品、方块、音效、标签等整张表推过来（lazy-catalog-v1）。必须是第一条 registry 消息 */
     try {
-      if (oriel.send) oriel.send('registry', { name: 'client_features', features: ['lazy-catalog-v1'] });
+      if (oriel.send) regSend({ name: 'client_features', features: ['lazy-catalog-v1'] });
     } catch (e) {}
     /* Root bags retain old keys; establish the current epoch before replaying any facts. */
     var d = oriel.data || {},
@@ -913,7 +944,7 @@ var Reg = {
   request: function (name) {
     if (typeof oriel !== 'undefined' && oriel.send && this.meta) {
       if (RegWire.entity(name)) RegWire.request(name);
-      else oriel.send('registry', { name: name });
+      else regSend({ name: name });
     }
   },
   live: function () {
@@ -1006,7 +1037,7 @@ var Reg = {
     st = this.formFacts[id] = { pending: !this.preview(), error: null };
     if (!st.pending) return st;
     try {
-      if (oriel.send('registry', { name: 'component_schema:' + id }) === false)
+      if (regSend({ name: 'component_schema:' + id }) === false)
         throw new Error(I18n.t('cadeditor.ui.reg.host_accept_default_value_request'));
       st.timer = setTimeout(function () {
         if (Reg.formFacts[id] !== st || !st.pending) return;
@@ -1119,7 +1150,7 @@ var Reg = {
     // Quick damage controls need their own actual Codec facts, independently.
     try {
       this.numericStatus('attribute_modifiers');
-      oriel.send('registry', { name: 'component_schema' });
+      regSend({ name: 'component_schema' });
     } catch (e) {
       this.csAsk = false;
       if (typeof EditorDiag !== 'undefined') EditorDiag.error('registry.component_schema.request', e);
@@ -1136,7 +1167,7 @@ var Reg = {
       return st;
     }
     try {
-      if (oriel.send('registry', { name: 'component_schema:' + id, rangesOnly: true }) === false)
+      if (regSend({ name: 'component_schema:' + id, rangesOnly: true }) === false)
         throw new Error(I18n.t('cadeditor.ui.reg.host_accept_field_information_request'));
       st.timer = setTimeout(function () {
         if (Reg.numericFacts[id] !== st || !st.pending) return;

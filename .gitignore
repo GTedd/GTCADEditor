@@ -19,3 +19,4 @@ run/
 /AGENTS.md
 node_modules/
 *.log
+/local.properties

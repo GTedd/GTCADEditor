@@ -302,8 +302,10 @@ function redrawRegistryPage(kinds) {
   var refreshShell = (kinds || []).some(function (kind) {
     return meta.indexOf(kind) >= 0;
   });
-  /* 不管收到的是哪类数据：只要这件物品现在判定的类别和顶部分页画的时候不一样，就必须重画分页 */
+  /* 不管收到的是哪类数据：只要这件物品现在判定的类别和顶部分页画的时候不一样，就必须重画分页；
+     窗口的类别色（--cat，左栏光晕和类别标签）也跟着换，否则要等下一次改窗口大小才变 */
   if (UI.shellKind !== kindOfItem(Store.doc().id)) refreshShell = true;
+  if (UI.catState !== catState(Store.doc())) applyWinStyle();
   if (refreshShell) {
     drawHero();
     drawTabbar();

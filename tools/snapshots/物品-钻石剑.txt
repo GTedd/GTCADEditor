@@ -18,7 +18,7 @@ div
     div.ed-name.k-mctext
       span [style="color:#FFFFFF;font-weight:normal;font-style:italic;"] "测试"
     div.ed-tags
-      span.k-tag "近战武器"
+      span.k-tag "战斗用品"
       span.dim.k-tag "常见"
     div.ed-stagehead
       span.fold-arrow
@@ -163,7 +163,7 @@ div
     div.ed-name.k-mctext
       span [style="color:#FFFFFF;font-weight:normal;font-style:italic;"] "测试"
     div.ed-tags
-      span.k-tag "近战武器"
+      span.k-tag "战斗用品"
       span.dim.k-tag "常见"
     div.ed-stagehead
       span.fold-arrow
@@ -454,7 +454,7 @@ div
     div.ed-name.k-mctext
       span [style="color:#FFFFFF;font-weight:normal;font-style:italic;"] "测试"
     div.ed-tags
-      span.k-tag "近战武器"
+      span.k-tag "战斗用品"
       span.dim.k-tag "常见"
     div.ed-stagehead
       span.fold-arrow
@@ -925,7 +925,7 @@ div
     div.ed-name.k-mctext
       span [style="color:#FFFFFF;font-weight:normal;font-style:italic;"] "测试"
     div.ed-tags
-      span.k-tag "近战武器"
+      span.k-tag "战斗用品"
       span.dim.k-tag "常见"
     div.ed-stagehead
       span.fold-arrow
@@ -1254,7 +1254,7 @@ div
     div.ed-name.k-mctext
       span [style="color:#FFFFFF;font-weight:normal;font-style:italic;"] "测试"
     div.ed-tags
-      span.k-tag "近战武器"
+      span.k-tag "战斗用品"
       span.dim.k-tag "常见"
     div.ed-stagehead
       span.fold-arrow

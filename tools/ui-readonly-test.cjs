@@ -59,7 +59,7 @@ for (const kind of ['block', 'entity']) {
   assert.equal(h.sent.length, before);
   c.openSettings(); // Viewing preferences remains available.
   assert.ok(h.doc.getElementById('modal'));
-  assert.match(h.root.textContent, /页面背景不透明度/);
+  assert.match(h.root.textContent, /界面不透明度/);
 }
 console.log(
   'PASS readonly world UI: block/entity, no editing controls, no writes, draft isolation, keyboard routing, settings.'
